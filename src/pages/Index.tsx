@@ -354,7 +354,7 @@ const Index = () => {
       </section>
 
       {/* Pricing Teaser */}
-      <section id="pricing" className="py-20 bg-gradient-to-b from-primary/5 to-background">
+      <section id="pricing" className="pt-20 pb-32 bg-gradient-to-b from-primary/5 to-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16 animate-on-scroll">
             <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-foreground">
