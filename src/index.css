@@ -220,6 +220,7 @@ All colors MUST be HSL.
     height: 50%;
     background: inherit;
     border-radius: 50%;
+    z-index: -1;
   }
 
   .cloud-shape::after {
@@ -231,5 +232,6 @@ All colors MUST be HSL.
     height: 60%;
     background: inherit;
     border-radius: 50%;
+    z-index: -1;
   }
 }
