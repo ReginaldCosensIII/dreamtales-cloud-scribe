@@ -426,7 +426,13 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="py-16 gradient-iridescent">
+      <footer className="relative py-16 overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60"
+          style={{ backgroundImage: `url(${heroClouds})` }}
+        />
+        <div className="absolute inset-0 gradient-dreamy opacity-40" />
+        <div className="relative z-10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div className="col-span-2 md:col-span-1">
@@ -485,6 +491,7 @@ const Index = () => {
             <p className="text-foreground/60">
               © 2024 DreamTales AI. All rights reserved. Made with ❤️ for families everywhere.
             </p>
+          </div>
           </div>
         </div>
       </footer>
