@@ -2,39 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+/* DreamTales AI Design System - Dreamy Cloud Aesthetic
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Dreamy pastel color palette */
+    --background: 240 100% 99%;
+    --foreground: 220 20% 20%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 220 20% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 220 20% 20%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Pastel pink primary */
+    --primary: 340 70% 85%;
+    --primary-foreground: 220 20% 20%;
+    --primary-glow: 340 80% 90%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Baby blue secondary */
+    --secondary: 200 80% 90%;
+    --secondary-foreground: 220 20% 20%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Light yellow accent */
+    --accent: 50 85% 88%;
+    --accent-foreground: 220 20% 20%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Soft muted tones */
+    --muted: 240 20% 96%;
+    --muted-foreground: 220 15% 50%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 240 30% 92%;
+    --input: 240 30% 96%;
+    --ring: 340 70% 85%;
+
+    /* Cloud gradients */
+    --gradient-cloud: linear-gradient(135deg, hsl(340 70% 85%) 0%, hsl(200 80% 90%) 50%, hsl(50 85% 88%) 100%);
+    --gradient-dreamy: linear-gradient(45deg, hsl(240 100% 99%) 0%, hsl(340 80% 95%) 50%, hsl(200 90% 95%) 100%);
+    --gradient-iridescent: linear-gradient(45deg, hsl(340 70% 85%), hsl(200 80% 90%), hsl(50 85% 88%), hsl(280 60% 88%));
+
+    /* Soft shadows */
+    --shadow-cloud: 0 10px 30px -5px hsl(340 70% 85% / 0.3);
+    --shadow-dreamy: 0 20px 40px -10px hsl(200 80% 90% / 0.4);
+    --shadow-gentle: 0 4px 20px -2px hsl(240 30% 80% / 0.3);
+
+    /* Animation values */
+    --transition-dreamy: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-cloud: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 
     --radius: 0.5rem;
 
@@ -100,6 +120,116 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground overflow-x-hidden;
+  }
+}
+
+@layer components {
+  /* Cloud animation keyframes */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    33% { transform: translateY(-10px) rotate(1deg); }
+    66% { transform: translateY(5px) rotate(-1deg); }
+  }
+
+  @keyframes drift {
+    0% { transform: translateX(-100px); }
+    100% { transform: translateX(calc(100vw + 100px)); }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  /* Utility classes */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-float-delayed {
+    animation: float 8s ease-in-out infinite;
+    animation-delay: -2s;
+  }
+
+  .animate-drift {
+    animation: drift 20s linear infinite;
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  .gradient-cloud {
+    background: var(--gradient-cloud);
+  }
+
+  .gradient-dreamy {
+    background: var(--gradient-dreamy);
+  }
+
+  .gradient-iridescent {
+    background: var(--gradient-iridescent);
+    background-size: 200% 200%;
+    animation: shimmer 3s ease-in-out infinite;
+  }
+
+  .shadow-cloud {
+    box-shadow: var(--shadow-cloud);
+  }
+
+  .shadow-dreamy {
+    box-shadow: var(--shadow-dreamy);
+  }
+
+  .shadow-gentle {
+    box-shadow: var(--shadow-gentle);
+  }
+
+  .transition-dreamy {
+    transition: var(--transition-dreamy);
+  }
+
+  .transition-cloud {
+    transition: var(--transition-cloud);
+  }
+
+  /* Cloud shapes */
+  .cloud-shape {
+    border-radius: 100px;
+    position: relative;
+  }
+
+  .cloud-shape::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: 10%;
+    width: 50%;
+    height: 50%;
+    background: inherit;
+    border-radius: 50%;
+  }
+
+  .cloud-shape::after {
+    content: '';
+    position: absolute;
+    top: -45%;
+    right: 15%;
+    width: 60%;
+    height: 60%;
+    background: inherit;
+    border-radius: 50%;
   }
 }
