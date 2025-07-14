@@ -65,16 +65,17 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Floating clouds animation */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-20 left-10 w-16 h-10 bg-card/30 rounded-full animate-float opacity-60"></div>
-        <div className="absolute top-40 right-20 w-20 h-12 bg-secondary/40 rounded-full animate-float-delayed opacity-50"></div>
-        <div className="absolute top-60 left-1/4 w-12 h-8 bg-accent/30 rounded-full animate-float opacity-40"></div>
-        <div className="absolute bottom-40 right-1/3 w-24 h-14 bg-primary/20 rounded-full animate-float-delayed opacity-30"></div>
+      {/* Floating clouds animation - More vivid */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-20 left-10 w-16 h-10 bg-secondary/60 rounded-full animate-float opacity-80"></div>
+        <div className="absolute top-40 right-20 w-20 h-12 bg-primary/50 rounded-full animate-float-delayed opacity-70"></div>
+        <div className="absolute top-60 left-1/4 w-12 h-8 bg-accent/60 rounded-full animate-float opacity-75"></div>
+        <div className="absolute bottom-40 right-1/3 w-24 h-14 bg-primary/40 rounded-full animate-float-delayed opacity-65"></div>
+        <div className="absolute top-1/3 left-1/2 w-18 h-11 bg-secondary/45 rounded-full animate-float opacity-60"></div>
       </div>
 
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
+      <nav className="fixed top-0 w-full z-50 bg-background/90 backdrop-blur-md border-b border-border/70">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
@@ -123,10 +124,10 @@ const Index = () => {
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60"
           style={{ backgroundImage: `url(${heroClouds})` }}
         />
-        <div className="absolute inset-0 gradient-dreamy opacity-50" />
+        <div className="absolute inset-0 gradient-dreamy opacity-40" />
         
         <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
           <div className="animate-fade-in-up">
@@ -140,7 +141,7 @@ const Index = () => {
               DreamTales AI
             </h1>
             
-            <p className="text-xl sm:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            <p className="text-xl sm:text-2xl text-foreground/80 mb-8 max-w-2xl mx-auto font-medium">
               Custom bedtime stories, crafted by imagination and AI.
             </p>
             
@@ -177,9 +178,9 @@ const Index = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <Card className="animate-on-scroll cloud-shape bg-card/50 backdrop-blur-sm border-border/50 shadow-gentle hover:shadow-cloud transition-cloud">
+            <Card className="animate-on-scroll cloud-shape bg-card/70 backdrop-blur-sm border-border/70 shadow-gentle hover:shadow-dreamy hover:scale-105 transition-cloud h-full">
               <CardHeader className="text-center">
-                <div className="mx-auto mb-4 p-3 bg-primary/10 rounded-full w-fit">
+                <div className="mx-auto mb-4 p-3 bg-primary/20 rounded-full w-fit">
                   <Heart className="h-8 w-8 text-primary" />
                 </div>
                 <CardTitle className="text-xl">Healthy Sleep Routine</CardTitle>
@@ -191,9 +192,9 @@ const Index = () => {
               </CardContent>
             </Card>
 
-            <Card className="animate-on-scroll cloud-shape bg-card/50 backdrop-blur-sm border-border/50 shadow-gentle hover:shadow-cloud transition-cloud">
+            <Card className="animate-on-scroll cloud-shape bg-card/70 backdrop-blur-sm border-border/70 shadow-gentle hover:shadow-dreamy hover:scale-105 transition-cloud h-full">
               <CardHeader className="text-center">
-                <div className="mx-auto mb-4 p-3 bg-secondary/10 rounded-full w-fit">
+                <div className="mx-auto mb-4 p-3 bg-secondary/20 rounded-full w-fit">
                   <Users className="h-8 w-8 text-secondary" />
                 </div>
                 <CardTitle className="text-xl">Creative Bonding</CardTitle>
@@ -205,9 +206,9 @@ const Index = () => {
               </CardContent>
             </Card>
 
-            <Card className="animate-on-scroll cloud-shape bg-card/50 backdrop-blur-sm border-border/50 shadow-gentle hover:shadow-cloud transition-cloud">
+            <Card className="animate-on-scroll cloud-shape bg-card/70 backdrop-blur-sm border-border/70 shadow-gentle hover:shadow-dreamy hover:scale-105 transition-cloud h-full">
               <CardHeader className="text-center">
-                <div className="mx-auto mb-4 p-3 bg-accent/10 rounded-full w-fit">
+                <div className="mx-auto mb-4 p-3 bg-accent/20 rounded-full w-fit">
                   <Printer className="h-8 w-8 text-accent" />
                 </div>
                 <CardTitle className="text-xl">Printable Stories</CardTitle>
@@ -400,7 +401,7 @@ const Index = () => {
                 variant: "iridescent" as const
               }
             ].map((plan, index) => (
-              <Card key={index} className={`animate-on-scroll cloud-shape relative ${plan.popular ? 'border-primary shadow-dreamy scale-105' : 'border-border/50 shadow-gentle'} bg-card/70 backdrop-blur-md hover:shadow-cloud transition-cloud`}>
+              <Card key={index} className={`animate-on-scroll cloud-shape relative h-full ${plan.popular ? 'border-primary shadow-dreamy scale-105' : 'border-border/50 shadow-gentle'} bg-card/70 backdrop-blur-md hover:shadow-dreamy hover:scale-105 transition-cloud`}>
                 {plan.popular && (
                   <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 gradient-cloud">
                     Most Popular
@@ -413,8 +414,8 @@ const Index = () => {
                     <span className="text-lg text-muted-foreground font-normal">/{plan.period}</span>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <ul className="space-y-3">
+                <CardContent className="space-y-4 flex flex-col h-full">
+                  <ul className="space-y-3 flex-grow">
                     {plan.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-center gap-2">
                         <Star className="h-4 w-4 text-primary fill-primary" />
@@ -422,7 +423,7 @@ const Index = () => {
                       </li>
                     ))}
                   </ul>
-                  <Button variant={plan.variant} className="w-full" size="lg">
+                  <Button variant={plan.variant} className="w-full mt-auto" size="lg">
                     {plan.cta}
                   </Button>
                 </CardContent>

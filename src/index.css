@@ -8,32 +8,32 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Dreamy pastel color palette */
+    /* Dreamy pastel color palette - Enhanced visibility */
     --background: 240 100% 99%;
-    --foreground: 220 20% 20%;
+    --foreground: 220 30% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 20% 20%;
+    --card-foreground: 220 30% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 20%;
+    --popover-foreground: 220 30% 15%;
 
-    /* Pastel pink primary */
-    --primary: 340 70% 85%;
-    --primary-foreground: 220 20% 20%;
-    --primary-glow: 340 80% 90%;
+    /* Pastel pink primary - More vivid */
+    --primary: 340 80% 70%;
+    --primary-foreground: 220 30% 15%;
+    --primary-glow: 340 90% 80%;
 
-    /* Baby blue secondary */
-    --secondary: 200 80% 90%;
-    --secondary-foreground: 220 20% 20%;
+    /* Baby blue secondary - More vivid */
+    --secondary: 200 90% 75%;
+    --secondary-foreground: 220 30% 15%;
 
-    /* Light yellow accent */
-    --accent: 50 85% 88%;
-    --accent-foreground: 220 20% 20%;
+    /* Light yellow accent - More vivid */
+    --accent: 50 95% 75%;
+    --accent-foreground: 220 30% 15%;
 
-    /* Soft muted tones */
-    --muted: 240 20% 96%;
-    --muted-foreground: 220 15% 50%;
+    /* Soft muted tones - Better contrast */
+    --muted: 240 25% 94%;
+    --muted-foreground: 220 25% 35%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -42,15 +42,15 @@ All colors MUST be HSL.
     --input: 240 30% 96%;
     --ring: 340 70% 85%;
 
-    /* Cloud gradients */
-    --gradient-cloud: linear-gradient(135deg, hsl(340 70% 85%) 0%, hsl(200 80% 90%) 50%, hsl(50 85% 88%) 100%);
-    --gradient-dreamy: linear-gradient(45deg, hsl(240 100% 99%) 0%, hsl(340 80% 95%) 50%, hsl(200 90% 95%) 100%);
-    --gradient-iridescent: linear-gradient(45deg, hsl(340 70% 85%), hsl(200 80% 90%), hsl(50 85% 88%), hsl(280 60% 88%));
+    /* Cloud gradients - More vivid */
+    --gradient-cloud: linear-gradient(135deg, hsl(340 80% 70%) 0%, hsl(200 90% 75%) 50%, hsl(50 95% 75%) 100%);
+    --gradient-dreamy: linear-gradient(45deg, hsl(240 100% 99%) 0%, hsl(340 90% 85%) 50%, hsl(200 95% 85%) 100%);
+    --gradient-iridescent: linear-gradient(45deg, hsl(340 80% 70%), hsl(200 90% 75%), hsl(50 95% 75%), hsl(280 70% 75%));
 
-    /* Soft shadows */
-    --shadow-cloud: 0 10px 30px -5px hsl(340 70% 85% / 0.3);
-    --shadow-dreamy: 0 20px 40px -10px hsl(200 80% 90% / 0.4);
-    --shadow-gentle: 0 4px 20px -2px hsl(240 30% 80% / 0.3);
+    /* Soft shadows - More vivid */
+    --shadow-cloud: 0 10px 30px -5px hsl(340 80% 70% / 0.4);
+    --shadow-dreamy: 0 20px 40px -10px hsl(200 90% 75% / 0.5);
+    --shadow-gentle: 0 4px 20px -2px hsl(240 40% 70% / 0.4);
 
     /* Animation values */
     --transition-dreamy: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -182,7 +182,7 @@ All colors MUST be HSL.
   .gradient-iridescent {
     background: var(--gradient-iridescent);
     background-size: 200% 200%;
-    animation: shimmer 3s ease-in-out infinite;
+    animation: shimmer 6s ease-in-out infinite;
   }
 
   .shadow-cloud {
