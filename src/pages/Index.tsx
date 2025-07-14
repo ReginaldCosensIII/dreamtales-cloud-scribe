@@ -80,7 +80,7 @@ const Index = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
               <Cloud className="h-8 w-8 text-primary" />
-              <span className="text-xl font-bold text-foreground drop-shadow-sm">DreamTales AI</span>
+              <span className="text-xl font-bold gradient-cloud bg-clip-text text-transparent">DreamTales AI</span>
             </div>
             
             {/* Desktop Navigation */}
@@ -137,7 +137,7 @@ const Index = () => {
               className="w-32 h-32 mx-auto mb-8 animate-float rounded-full"
             />
             
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold mb-6 text-foreground drop-shadow-lg">
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold mb-6 gradient-cloud bg-clip-text text-transparent">
               DreamTales AI
             </h1>
             
