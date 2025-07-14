@@ -65,13 +65,13 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Floating clouds animation - Deep behind all content */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-[9999]">
-        <div className="absolute top-20 left-10 w-16 h-10 bg-secondary/10 rounded-full animate-float opacity-15"></div>
-        <div className="absolute top-40 right-20 w-20 h-12 bg-primary/8 rounded-full animate-float-delayed opacity-12"></div>
-        <div className="absolute top-60 left-1/4 w-12 h-8 bg-accent/10 rounded-full animate-float opacity-14"></div>
-        <div className="absolute bottom-40 right-1/3 w-24 h-14 bg-primary/6 rounded-full animate-float-delayed opacity-10"></div>
-        <div className="absolute top-1/3 left-1/2 w-18 h-11 bg-secondary/8 rounded-full animate-float opacity-12"></div>
+      {/* Floating clouds animation - Completely behind background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: -99999 }}>
+        <div className="absolute top-20 left-10 w-16 h-10 bg-secondary/5 rounded-full animate-float opacity-8"></div>
+        <div className="absolute top-40 right-20 w-20 h-12 bg-primary/4 rounded-full animate-float-delayed opacity-6"></div>
+        <div className="absolute top-60 left-1/4 w-12 h-8 bg-accent/5 rounded-full animate-float opacity-7"></div>
+        <div className="absolute bottom-40 right-1/3 w-24 h-14 bg-primary/3 rounded-full animate-float-delayed opacity-5"></div>
+        <div className="absolute top-1/3 left-1/2 w-18 h-11 bg-secondary/4 rounded-full animate-float opacity-6"></div>
       </div>
 
       {/* Navigation */}
