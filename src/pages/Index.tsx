@@ -428,10 +428,10 @@ const Index = () => {
       {/* Footer */}
       <footer className="relative py-16 overflow-hidden">
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-80"
           style={{ backgroundImage: `url(${heroClouds})` }}
         />
-        <div className="absolute inset-0 gradient-dreamy opacity-40" />
+        <div className="absolute inset-0 gradient-dreamy opacity-20" />
         <div className="relative z-10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8 mb-12">
