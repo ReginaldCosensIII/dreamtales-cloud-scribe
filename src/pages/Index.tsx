@@ -170,7 +170,7 @@ const Index = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <Card className="animate-on-scroll cloud-shape bg-card/70 backdrop-blur-sm border-border/70 shadow-gentle hover:shadow-dreamy hover:scale-105 transition-cloud h-full">
+            <Card className="animate-on-scroll bg-card/70 backdrop-blur-sm border-border/70 shadow-gentle hover:shadow-dreamy hover:scale-105 transition-cloud h-full">
               <CardHeader className="text-center">
                 <div className="mx-auto mb-4 p-3 bg-primary/20 rounded-full w-fit">
                   <Heart className="h-8 w-8 text-primary" />
@@ -184,7 +184,7 @@ const Index = () => {
               </CardContent>
             </Card>
 
-            <Card className="animate-on-scroll cloud-shape bg-card/70 backdrop-blur-sm border-border/70 shadow-gentle hover:shadow-dreamy hover:scale-105 transition-cloud h-full">
+            <Card className="animate-on-scroll bg-card/70 backdrop-blur-sm border-border/70 shadow-gentle hover:shadow-dreamy hover:scale-105 transition-cloud h-full">
               <CardHeader className="text-center">
                 <div className="mx-auto mb-4 p-3 bg-secondary/20 rounded-full w-fit">
                   <Users className="h-8 w-8 text-secondary" />
@@ -198,7 +198,7 @@ const Index = () => {
               </CardContent>
             </Card>
 
-            <Card className="animate-on-scroll cloud-shape bg-card/70 backdrop-blur-sm border-border/70 shadow-gentle hover:shadow-dreamy hover:scale-105 transition-cloud h-full">
+            <Card className="animate-on-scroll bg-card/70 backdrop-blur-sm border-border/70 shadow-gentle hover:shadow-dreamy hover:scale-105 transition-cloud h-full">
               <CardHeader className="text-center">
                 <div className="mx-auto mb-4 p-3 bg-accent/20 rounded-full w-fit">
                   <Printer className="h-8 w-8 text-accent" />
@@ -228,7 +228,7 @@ const Index = () => {
               </p>
             </div>
 
-            <Card className="animate-on-scroll cloud-shape bg-card/70 backdrop-blur-md border-border/50 shadow-dreamy">
+            <Card className="animate-on-scroll bg-card/70 backdrop-blur-md border-border/50 shadow-dreamy">
               <CardHeader>
                 <CardTitle className="text-2xl text-center flex items-center justify-center gap-2">
                   <Sparkles className="h-6 w-6 text-primary" />
@@ -276,7 +276,7 @@ const Index = () => {
                 </div>
 
                 {generatedStory && (
-                  <Card className="cloud-shape bg-background/50 border-border/30">
+                  <Card className="bg-background/50 border-border/30">
                     <CardContent className="pt-6">
                       <div className="flex items-center gap-2 mb-4">
                         <Star className="h-5 w-5 text-primary fill-primary" />
@@ -333,7 +333,7 @@ const Index = () => {
                 avatar: "👩‍🦱"
               }
             ].map((testimonial, index) => (
-              <Card key={index} className="animate-on-scroll cloud-shape bg-card/60 backdrop-blur-sm border-border/50 shadow-gentle hover:shadow-cloud transition-cloud">
+              <Card key={index} className="animate-on-scroll bg-card/60 backdrop-blur-sm border-border/50 shadow-gentle hover:shadow-cloud transition-cloud">
                 <CardContent className="pt-6">
                   <Quote className="h-8 w-8 text-primary mb-4" />
                   <p className="text-muted-foreground mb-6 leading-relaxed">
@@ -393,7 +393,7 @@ const Index = () => {
                 variant: "iridescent" as const
               }
             ].map((plan, index) => (
-              <Card key={index} className={`animate-on-scroll cloud-shape relative h-full ${plan.popular ? 'border-primary shadow-dreamy scale-105' : 'border-border/50 shadow-gentle'} bg-card/70 backdrop-blur-md hover:shadow-dreamy hover:scale-105 transition-cloud`}>
+              <Card key={index} className={`animate-on-scroll relative h-full ${plan.popular ? 'border-primary shadow-dreamy scale-105' : 'border-border/50 shadow-gentle'} bg-card/70 backdrop-blur-md hover:shadow-dreamy hover:scale-105 transition-cloud`}>
                 {plan.popular && (
                   <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 gradient-cloud">
                     Most Popular
@@ -492,7 +492,7 @@ const Index = () => {
       {/* Auth Modal Placeholder */}
       {showAuthModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <Card className="w-full max-w-md cloud-shape bg-card shadow-dreamy">
+          <Card className="w-full max-w-md bg-card shadow-dreamy">
             <CardHeader>
               <div className="flex justify-between items-center">
                 <CardTitle>Sign In to DreamTales</CardTitle>
