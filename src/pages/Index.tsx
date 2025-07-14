@@ -438,7 +438,7 @@ const Index = () => {
             <div className="col-span-2 md:col-span-1">
               <div className="flex items-center space-x-2 mb-4">
                 <Cloud className="h-8 w-8 text-foreground" />
-                <span className="text-xl font-bold text-foreground">DreamTales AI</span>
+                <span className="text-xl font-bold gradient-cloud bg-clip-text text-transparent">DreamTales AI</span>
               </div>
               <p className="text-foreground/80 mb-4">
                 Creating magical bedtime moments, one story at a time.
