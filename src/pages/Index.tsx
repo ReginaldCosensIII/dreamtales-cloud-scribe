@@ -123,11 +123,6 @@ const Index = () => {
         
         <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
           <div className="animate-fade-in-up">
-            <img 
-              src={cloudCharacter} 
-              alt="DreamTales AI Cloud Character" 
-              className="w-32 h-32 mx-auto mb-8 animate-float"
-            />
             
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold mb-6 gradient-cloud bg-clip-text text-transparent">
               DreamTales AI
