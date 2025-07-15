@@ -126,7 +126,7 @@ const Index = () => {
             <img 
               src={cloudCharacter} 
               alt="DreamTales AI Cloud Character" 
-              className="w-32 h-32 mx-auto mb-8 animate-float rounded-full"
+              className="w-32 h-32 mx-auto mb-8 animate-float"
             />
             
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold mb-6 gradient-cloud bg-clip-text text-transparent">
