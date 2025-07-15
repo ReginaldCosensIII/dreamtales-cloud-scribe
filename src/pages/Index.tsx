@@ -371,21 +371,21 @@ const Index = () => {
                 variant: "outline" as const
               },
               {
-                name: "Premium Tales",
-                price: "$9",
-                period: "per month",
-                features: ["Unlimited stories", "Custom characters", "Priority support", "Printable formats"],
-                cta: "Go Premium",
-                variant: "dreamy" as const,
-                popular: true
-              },
-              {
                 name: "DreamBook",
                 price: "$29",
                 period: "per month",
                 features: ["Everything in Premium", "Professional illustrations", "Physical book printing", "Family sharing"],
                 cta: "Create Books",
-                variant: "iridescent" as const
+                variant: "outline" as const,
+                popular: true
+              },
+              {
+                name: "Premium Tales",
+                price: "$9",
+                period: "per month",
+                features: ["Unlimited stories", "Custom characters", "Priority support", "Printable formats"],
+                cta: "Go Premium",
+                variant: "outline" as const
               }
             ].map((plan, index) => (
               <Card key={index} className={`animate-on-scroll relative h-full ${plan.popular ? 'border-primary shadow-dreamy scale-105' : 'border-border/50 shadow-gentle'} bg-card/70 backdrop-blur-md hover:shadow-dreamy hover:scale-105 transition-cloud`}>
