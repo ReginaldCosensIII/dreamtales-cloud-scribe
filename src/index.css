@@ -181,8 +181,6 @@ All colors MUST be HSL.
 
   .gradient-iridescent {
     background: var(--gradient-iridescent);
-    background-size: 200% 200%;
-    animation: shimmer 40s ease-in-out infinite;
   }
 
   .shadow-cloud {
