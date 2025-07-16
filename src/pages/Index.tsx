@@ -81,7 +81,7 @@ const Index = () => {
               <Link to="/about" className="text-muted-foreground hover:text-foreground transition-dreamy">About</Link>
               <a href="#generator" className="text-muted-foreground hover:text-foreground transition-dreamy">Generator</a>
               <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-dreamy">Pricing</a>
-              <Button variant="outline" size="sm" onClick={() => setShowAuthModal(true)}>
+              <Button variant="secondary" size="sm" onClick={() => setShowAuthModal(true)}>
                 Sign In
               </Button>
             </div>
@@ -105,7 +105,7 @@ const Index = () => {
                 <Link to="/about" className="text-muted-foreground hover:text-foreground transition-dreamy">About</Link>
                 <a href="#generator" className="text-muted-foreground hover:text-foreground transition-dreamy">Generator</a>
                 <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-dreamy">Pricing</a>
-                <Button variant="outline" size="sm" onClick={() => setShowAuthModal(true)}>
+                <Button variant="secondary" size="sm" onClick={() => setShowAuthModal(true)}>
                   Sign In
                 </Button>
               </div>
@@ -134,11 +134,11 @@ const Index = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-              <Button variant="iridescent" size="xl" onClick={() => document.getElementById('generator')?.scrollIntoView({ behavior: 'smooth' })}>
+              <Button variant="accent" size="xl" onClick={() => document.getElementById('generator')?.scrollIntoView({ behavior: 'smooth' })}>
                 <Sparkles className="mr-2 h-5 w-5" />
                 Create Your First Story
               </Button>
-              <Button variant="cloud" size="lg" asChild>
+              <Button variant="secondary" size="lg" asChild>
                 <Link to="/about">
                   <BookOpen className="mr-2 h-4 w-4" />
                   Learn More
@@ -215,7 +215,7 @@ const Index = () => {
             <p className="text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
               Discover how DreamTales AI is transforming bedtime stories and strengthening family bonds around the world.
             </p>
-            <Button variant="cloud" size="lg" asChild>
+            <Button variant="secondary" size="lg" asChild>
               <Link to="/about">
                 <BookOpen className="mr-2 h-4 w-4" />
                 Learn More About Us
@@ -258,7 +258,7 @@ const Index = () => {
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button 
-                    variant="dreamy" 
+                    variant="accent" 
                     size="lg" 
                     onClick={handleGenerateStory}
                     disabled={isGenerating || !storyPrompt.trim()}
@@ -278,7 +278,7 @@ const Index = () => {
                   </Button>
                   
                   {generatedStory && (
-                    <Button variant="outline" size="lg">
+                    <Button variant="secondary" size="lg">
                       <Heart className="mr-2 h-4 w-4" />
                       Save Story
                     </Button>
@@ -425,7 +425,7 @@ const Index = () => {
                       </li>
                     ))}
                   </ul>
-                  <Button variant={plan.variant} className="w-full mt-auto" size="lg">
+                  <Button variant="secondary" className="w-full mt-auto" size="lg">
                     {plan.cta}
                   </Button>
                 </CardContent>
@@ -522,7 +522,7 @@ const Index = () => {
               <div className="text-center text-muted-foreground p-8">
                 <Cloud className="h-16 w-16 mx-auto mb-4 text-primary" />
                 <p className="mb-4">To enable authentication and story saving, you'll need to connect this project to Supabase.</p>
-                <Button variant="outline" onClick={() => setShowAuthModal(false)}>
+                <Button variant="secondary" onClick={() => setShowAuthModal(false)}>
                   Learn More About Setup
                 </Button>
               </div>

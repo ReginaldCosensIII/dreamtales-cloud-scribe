@@ -66,7 +66,7 @@ const About = () => {
               <Link to="/about" className="text-primary hover:text-primary/80 transition-dreamy font-medium">About</Link>
               <Link to="/#generator" className="text-muted-foreground hover:text-foreground transition-dreamy">Generator</Link>
               <Link to="/#pricing" className="text-muted-foreground hover:text-foreground transition-dreamy">Pricing</Link>
-              <Button variant="outline" size="sm">
+              <Button variant="secondary" size="sm">
                 Sign In
               </Button>
             </div>
@@ -90,7 +90,7 @@ const About = () => {
                 <Link to="/about" className="text-primary hover:text-primary/80 transition-dreamy font-medium">About</Link>
                 <Link to="/#generator" className="text-muted-foreground hover:text-foreground transition-dreamy">Generator</Link>
                 <Link to="/#pricing" className="text-muted-foreground hover:text-foreground transition-dreamy">Pricing</Link>
-                <Button variant="outline" size="sm">
+                <Button variant="secondary" size="sm">
                   Sign In
                 </Button>
               </div>
@@ -339,7 +339,7 @@ const About = () => {
                   </div>
                 </div>
 
-                <Button variant="iridescent" size="lg" asChild className="mt-8">
+                <Button variant="accent" size="lg" asChild className="mt-8">
                   <Link to="/#generator">
                     Try It Now
                     <ArrowRight className="ml-2 h-4 w-4" />
@@ -362,13 +362,13 @@ const About = () => {
               Join thousands of families who have already discovered the joy of personalized bedtime stories.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="iridescent" size="xl" asChild>
+              <Button variant="accent" size="xl" asChild>
                 <Link to="/#generator">
                   <Sparkles className="mr-2 h-5 w-5" />
                   Start Creating Stories
                 </Link>
               </Button>
-              <Button variant="outline" size="lg" asChild>
+              <Button variant="secondary" size="lg" asChild>
                 <Link to="/#pricing">
                   View Pricing Plans
                 </Link>

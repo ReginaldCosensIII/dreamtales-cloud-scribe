@@ -9,21 +9,12 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground shadow-cloud hover:shadow-dreamy hover:scale-105 transition-cloud",
-        destructive:
-          "bg-destructive text-destructive-foreground shadow-gentle hover:bg-destructive/90",
-        outline:
-          "border-2 border-primary bg-background/80 backdrop-blur-sm text-primary shadow-gentle hover:bg-primary hover:text-primary-foreground hover:shadow-cloud transition-cloud",
-        secondary:
-          "bg-secondary text-secondary-foreground shadow-gentle hover:bg-secondary/80 hover:shadow-cloud transition-cloud",
+        primary: "bg-primary text-primary-foreground shadow-cloud hover:shadow-dreamy hover:scale-105 transition-cloud",
+        secondary: "bg-card/90 backdrop-blur-md border border-border/50 text-foreground shadow-gentle hover:shadow-cloud hover:bg-card hover:border-accent hover:text-accent transition-cloud",
+        accent: "bg-gradient-to-r from-accent to-accent/80 text-accent-foreground shadow-dreamy hover:shadow-cloud hover:scale-105 transition-cloud font-semibold",
+        destructive: "bg-destructive text-destructive-foreground shadow-gentle hover:bg-destructive/90",
         ghost: "hover:bg-accent hover:text-accent-foreground transition-dreamy",
         link: "text-primary underline-offset-4 hover:underline transition-dreamy",
-        dreamy:
-          "gradient-cloud text-foreground shadow-cloud hover:shadow-dreamy hover:scale-105 transition-cloud font-semibold",
-        iridescent:
-          "gradient-iridescent text-foreground shadow-dreamy hover:shadow-cloud hover:scale-110 transition-cloud font-bold tracking-wide",
-        cloud:
-          "bg-card/90 backdrop-blur-md border border-border/50 text-foreground shadow-gentle hover:shadow-cloud hover:bg-card transition-cloud",
       },
       size: {
         default: "h-11 px-6 py-3",
@@ -34,7 +25,7 @@ const buttonVariants = cva(
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: "primary",
       size: "default",
     },
   }
