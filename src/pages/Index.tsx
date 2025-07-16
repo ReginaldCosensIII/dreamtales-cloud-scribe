@@ -78,8 +78,8 @@ const Index = () => {
             
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              <Link to="/" className="text-primary font-medium relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:gradient-iridescent after:scale-x-100 after:transition-transform after:duration-300">Home</Link>
-              <Link to="/about" className="text-muted-foreground hover:text-foreground transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:gradient-iridescent after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300">About</Link>
+              <Link to="/" className="text-primary font-medium relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary after:scale-x-100 after:transition-transform after:duration-300">Home</Link>
+              <Link to="/about" className="text-muted-foreground hover:text-foreground transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300">About</Link>
               <a href="#generator" className="text-muted-foreground hover:text-foreground transition-dreamy">Generator</a>
               <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-dreamy">Pricing</a>
               <Button variant="secondary" size="sm" onClick={() => setShowAuthModal(true)}>
