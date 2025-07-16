@@ -384,7 +384,7 @@ const Index = () => {
                 period: "forever",
                 features: ["3 stories per month", "Basic characters", "Email support"],
                 cta: "Start Free",
-                variant: "outline" as const
+                variant: "secondary" as const
               },
               {
                 name: "DreamBook",
@@ -392,7 +392,7 @@ const Index = () => {
                 period: "per month",
                 features: ["Everything in Premium", "Professional illustrations", "Physical book printing", "Family sharing"],
                 cta: "Create Books",
-                variant: "outline" as const,
+                variant: "accent" as const,
                 popular: true
               },
               {
@@ -401,7 +401,7 @@ const Index = () => {
                 period: "per month",
                 features: ["Unlimited stories", "Custom characters", "Priority support", "Printable formats"],
                 cta: "Go Premium",
-                variant: "outline" as const
+                variant: "secondary" as const
               }
             ].map((plan, index) => (
               <Card key={index} className={`animate-on-scroll relative h-full ${plan.popular ? 'border-primary shadow-dreamy scale-105' : 'border-border/50 shadow-gentle'} bg-card/70 backdrop-blur-md hover:shadow-dreamy hover:scale-105 transition-cloud`}>
@@ -426,7 +426,7 @@ const Index = () => {
                       </li>
                     ))}
                   </ul>
-                  <Button variant="secondary" className="w-full mt-auto" size="lg">
+                  <Button variant={plan.variant} className="w-full mt-auto" size="lg">
                     {plan.cta}
                   </Button>
                 </CardContent>
