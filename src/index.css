@@ -45,7 +45,7 @@ All colors MUST be HSL.
     /* Cloud gradients - More vivid */
     --gradient-cloud: linear-gradient(135deg, hsl(340 80% 70%) 0%, hsl(200 90% 75%) 50%, hsl(50 95% 75%) 100%);
     --gradient-dreamy: linear-gradient(45deg, hsl(240 100% 99%) 0%, hsl(340 90% 85%) 50%, hsl(200 95% 85%) 100%);
-    --gradient-iridescent: linear-gradient(45deg, hsl(340 80% 70%), hsl(200 90% 75%), hsl(50 95% 75%), hsl(280 70% 75%));
+    --gradient-iridescent: linear-gradient(45deg, hsl(340 80% 70%), hsl(200 90% 75%), hsl(50 95% 75%), hsl(340 80% 70%));
 
     /* Soft shadows - More vivid */
     --shadow-cloud: 0 10px 30px -5px hsl(340 80% 70% / 0.4);
