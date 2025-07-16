@@ -27,8 +27,8 @@ All colors MUST be HSL.
     --secondary: 200 90% 75%;
     --secondary-foreground: 220 30% 15%;
 
-    /* Light yellow accent - More vivid */
-    --accent: 50 95% 75%;
+    /* Soft lavender accent - More dreamy */
+    --accent: 280 70% 75%;
     --accent-foreground: 220 30% 15%;
 
     /* Soft muted tones - Better contrast */
