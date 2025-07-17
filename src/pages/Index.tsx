@@ -19,18 +19,23 @@ import {
   Twitter,
   Youtube,
   Menu,
-  X
+  X,
+  LogOut
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useStoryGeneration } from "@/hooks/useStoryGeneration";
+import { useUserData } from "@/hooks/useUserData";
 import heroClouds from "@/assets/hero-clouds.jpg";
 import cloudCharacter from "@/assets/cloud-character.jpg";
 
 const Index = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [storyPrompt, setStoryPrompt] = useState("");
+  const { user, signOut } = useAuth();
+  const { generateStory, isGenerating, error } = useStoryGeneration();
+  const { profile, stories } = useUserData();
   const [generatedStory, setGeneratedStory] = useState("");
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
 
   // Scroll animations
   useEffect(() => {
@@ -56,12 +61,25 @@ const Index = () => {
   const handleGenerateStory = async () => {
     if (!storyPrompt.trim()) return;
     
-    setIsGenerating(true);
-    // Placeholder for OpenAI integration - will need Supabase backend
-    setTimeout(() => {
-      setGeneratedStory(`Once upon a time, ${storyPrompt}... [This is a demo story. Connect to Supabase for AI generation!]`);
-      setIsGenerating(false);
-    }, 2000);
+    if (!user) {
+      // Redirect to auth if not logged in
+      window.location.href = '/auth';
+      return;
+    }
+
+    const result = await generateStory({
+      prompt: storyPrompt,
+      storyType: 'freeform',
+      length: 'medium'
+    });
+
+    if (result) {
+      setGeneratedStory(result.content);
+    }
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
   };
 
   return (
@@ -82,9 +100,24 @@ const Index = () => {
               <Link to="/about" className="text-muted-foreground hover:text-foreground transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300">About</Link>
               <a href="#generator" className="text-muted-foreground hover:text-foreground transition-dreamy">Generator</a>
               <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-dreamy">Pricing</a>
-              <Button variant="secondary" size="sm" onClick={() => setShowAuthModal(true)}>
-                Sign In
-              </Button>
+              {user ? (
+                <div className="flex items-center space-x-4">
+                  <span className="text-sm text-muted-foreground">
+                    Welcome, {profile?.display_name || user.email}
+                  </span>
+                  <Badge variant="secondary">
+                    {profile?.subscription_tier || 'free'}
+                  </Badge>
+                  <Button variant="secondary" size="sm" onClick={handleSignOut}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Sign Out
+                  </Button>
+                </div>
+              ) : (
+                <Button variant="secondary" size="sm" asChild>
+                  <Link to="/auth">Sign In</Link>
+                </Button>
+              )}
             </div>
 
             {/* Mobile menu button */}
@@ -106,9 +139,16 @@ const Index = () => {
                 <Link to="/about" className="text-muted-foreground hover:text-foreground transition-dreamy">About</Link>
                 <a href="#generator" className="text-muted-foreground hover:text-foreground transition-dreamy">Generator</a>
                 <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-dreamy">Pricing</a>
-                <Button variant="secondary" size="sm" onClick={() => setShowAuthModal(true)}>
-                  Sign In
-                </Button>
+                {user ? (
+                  <Button variant="secondary" size="sm" onClick={handleSignOut}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Sign Out
+                  </Button>
+                ) : (
+                  <Button variant="secondary" size="sm" asChild>
+                    <Link to="/auth">Sign In</Link>
+                  </Button>
+                )}
               </div>
             </div>
           )}
@@ -247,6 +287,42 @@ const Index = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
+                {error && (
+                  <Card className="bg-destructive/10 border-destructive/20">
+                    <CardContent className="pt-6">
+                      <p className="text-destructive text-sm">{error}</p>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {!user && (
+                  <Card className="bg-accent/10 border-accent/20">
+                    <CardContent className="pt-6 text-center">
+                      <p className="text-muted-foreground mb-4">
+                        Sign in to create and save your magical stories!
+                      </p>
+                      <Button variant="accent" asChild>
+                        <Link to="/auth">Get Started</Link>
+                      </Button>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {user && profile && (
+                  <Card className="bg-secondary/10 border-secondary/20">
+                    <CardContent className="pt-6">
+                      <div className="flex justify-between items-center text-sm">
+                        <span>Stories this month:</span>
+                        <Badge variant="secondary">
+                          {profile.subscription_tier === 'free' 
+                            ? `${profile.stories_this_month}/3` 
+                            : `${profile.stories_this_month} (unlimited)`}
+                        </Badge>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
                 <div>
                   <label className="text-sm font-medium mb-2 block">What should your story be about?</label>
                   <Textarea
@@ -278,7 +354,7 @@ const Index = () => {
                     )}
                   </Button>
                   
-                  {generatedStory && (
+                  {generatedStory && user && (
                     <Button variant="secondary" size="lg">
                       <Heart className="mr-2 h-4 w-4" />
                       Save Story
@@ -293,7 +369,7 @@ const Index = () => {
                         <Star className="h-5 w-5 text-primary fill-primary" />
                         <span className="font-medium">Your Dream Story</span>
                       </div>
-                      <p className="text-muted-foreground leading-relaxed">
+                      <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
                         {generatedStory}
                       </p>
                     </CardContent>
@@ -507,30 +583,7 @@ const Index = () => {
         </div>
       </footer>
 
-      {/* Auth Modal Placeholder */}
-      {showAuthModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <Card className="w-full max-w-md bg-card shadow-dreamy">
-            <CardHeader>
-              <div className="flex justify-between items-center">
-                <CardTitle>Sign In to DreamTales</CardTitle>
-                <Button variant="ghost" size="icon" onClick={() => setShowAuthModal(false)}>
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="text-center text-muted-foreground p-8">
-                <Cloud className="h-16 w-16 mx-auto mb-4 text-primary" />
-                <p className="mb-4">To enable authentication and story saving, you'll need to connect this project to Supabase.</p>
-                <Button variant="secondary" onClick={() => setShowAuthModal(false)}>
-                  Learn More About Setup
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+      {/* Auth Modal Placeholder - Removed since we have dedicated auth page */}
     </div>
   );
 };
