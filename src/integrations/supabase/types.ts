@@ -14,7 +14,129 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      characters: {
+        Row: {
+          age: string | null
+          appearance: string | null
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          traits: string[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          age?: string | null
+          appearance?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          traits?: string[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          age?: string | null
+          appearance?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          traits?: string[] | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string
+          id: string
+          stories_this_month: number | null
+          subscription_tier: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email: string
+          id?: string
+          stories_this_month?: number | null
+          subscription_tier?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string
+          id?: string
+          stories_this_month?: number | null
+          subscription_tier?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      stories: {
+        Row: {
+          characters: Json | null
+          content: string
+          created_at: string
+          generation_status: string | null
+          id: string
+          is_complete: boolean | null
+          length: string
+          parental_preferences: Json | null
+          prompt: string
+          setting: string | null
+          story_type: string
+          themes: string[] | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          characters?: Json | null
+          content: string
+          created_at?: string
+          generation_status?: string | null
+          id?: string
+          is_complete?: boolean | null
+          length: string
+          parental_preferences?: Json | null
+          prompt: string
+          setting?: string | null
+          story_type: string
+          themes?: string[] | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          characters?: Json | null
+          content?: string
+          created_at?: string
+          generation_status?: string | null
+          id?: string
+          is_complete?: boolean | null
+          length?: string
+          parental_preferences?: Json | null
+          prompt?: string
+          setting?: string | null
+          story_type?: string
+          themes?: string[] | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
