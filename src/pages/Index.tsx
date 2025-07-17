@@ -37,15 +37,9 @@ import cloudCharacter from "@/assets/cloud-character.jpg";
 
 const Index = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [generatorMode, setGeneratorMode] = useState<"structured" | "freeform">("structured");
+  const [storyPrompt, setStoryPrompt] = useState("");
   const { user, signOut } = useAuth();
-  const { generateStory, startStructuredFlow, continueStructuredFlow, isGenerating, error } = useStoryGeneration();
-  const { profile, stories } = useUserData();
-  const [currentStory, setCurrentStory] = useState<{
-    title: string;
-    content: string;
-    isComplete: boolean;
-  } | null>(null);
+  const { profile } = useUserData();
 
   // Scroll animations
   useEffect(() => {
@@ -68,54 +62,19 @@ const Index = () => {
     return () => observer.disconnect();
   }, []);
 
-  const handleStructuredGenerate = async (data: any) => {
+  const handleGetStarted = () => {
     if (!user) {
+      // Redirect to auth if not logged in
       window.location.href = '/auth';
       return;
     }
-
-    // Create a structured prompt from the form data
-    const structuredPrompt = `Write a ${data.theme} children's story about ${data.childName} in a ${data.setting}. 
-    Include these favorite things: ${data.favoriteThings.join(', ')}. 
-    ${data.additionalDetails ? `Additional details: ${data.additionalDetails}` : ''}
-    Make it age-appropriate, engaging, and about 3-5 paragraphs long.`;
-
-    const result = await generateStory({
-      prompt: structuredPrompt,
-      storyType: 'structured',
-      length: 'medium',
-      setting: data.setting,
-      themes: [data.theme],
-      characters: [{ name: data.childName, traits: data.favoriteThings }]
-    });
-
-    if (result) {
-      setCurrentStory({
-        title: result.title || `${data.childName}'s ${data.theme} Adventure`,
-        content: result.content,
-        isComplete: result.is_complete || false
-      });
-    }
-  };
-
-  const handleFreeformGenerate = async (data: any) => {
-    if (!user) {
-      window.location.href = '/auth';
-      return;
-    }
-
-    const result = await generateStory({
-      prompt: data.prompt,
-      storyType: 'freeform',
-      length: data.length
-    });
-
-    if (result) {
-      setCurrentStory({
-        title: result.title || "Your Custom Story",
-        content: result.content,
-        isComplete: result.is_complete || true
-      });
+    
+    if (storyPrompt.trim()) {
+      // Navigate to generator page with the prompt
+      window.location.href = `/generator?prompt=${encodeURIComponent(storyPrompt)}`;
+    } else {
+      // Navigate to generator page without prompt
+      window.location.href = '/generator';
     }
   };
 
@@ -139,7 +98,7 @@ const Index = () => {
             <div className="hidden md:flex items-center space-x-8">
               <Link to="/" className="text-primary font-medium relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary after:scale-x-100 after:transition-transform after:duration-300">Home</Link>
               <Link to="/about" className="text-muted-foreground hover:text-foreground transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300">About</Link>
-              <a href="#generator" className="text-muted-foreground hover:text-foreground transition-dreamy">Generator</a>
+              <a href="/generator" className="text-muted-foreground hover:text-foreground transition-dreamy">Generator</a>
               <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-dreamy">Pricing</a>
               {user ? (
                 <div className="flex items-center space-x-4">
@@ -178,7 +137,7 @@ const Index = () => {
             <div className="md:hidden pb-4">
               <div className="flex flex-col space-y-3">
                 <Link to="/about" className="text-muted-foreground hover:text-foreground transition-dreamy">About</Link>
-                <a href="#generator" className="text-muted-foreground hover:text-foreground transition-dreamy">Generator</a>
+                <a href="/generator" className="text-muted-foreground hover:text-foreground transition-dreamy">Generator</a>
                 <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-dreamy">Pricing</a>
                 {user ? (
                   <Button variant="secondary" size="sm" onClick={handleSignOut}>
@@ -216,7 +175,7 @@ const Index = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-              <Button variant="accent" size="xl" onClick={() => document.getElementById('generator')?.scrollIntoView({ behavior: 'smooth' })}>
+              <Button variant="accent" size="xl" onClick={() => window.location.href = '/generator'}>
                 <Sparkles className="mr-2 h-5 w-5" />
                 Create Your First Story
               </Button>
@@ -310,128 +269,81 @@ const Index = () => {
       {/* Generator Section */}
       <section id="generator" className="py-20 bg-gradient-to-b from-secondary/20 to-accent/10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-5xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12 animate-on-scroll">
               <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-foreground">
-                Create Your Perfect Story
+                Create Magic Together
               </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Choose your adventure: Build a story step-by-step with our guided mode, or let your imagination run wild with freeform creation.
+              <p className="text-lg text-muted-foreground">
+                Tell us about your child's adventure ideas, and we'll weave them into an enchanting bedtime story.
               </p>
             </div>
 
-            {/* Error Display */}
-            {error && (
-              <Card className="mb-6 bg-destructive/10 border-destructive/20 animate-on-scroll">
-                <CardContent className="pt-6">
-                  <p className="text-destructive text-sm">{error}</p>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Auth Check */}
-            {!user && (
-              <Card className="mb-6 bg-accent/10 border-accent/20 animate-on-scroll">
-                <CardContent className="pt-6 text-center">
-                  <p className="text-muted-foreground mb-4">
-                    Sign in to create and save your magical stories!
-                  </p>
-                  <Button variant="accent" asChild>
-                    <Link to="/auth">Get Started</Link>
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* User Stats */}
-            {user && profile && (
-              <Card className="mb-6 bg-secondary/10 border-secondary/20 animate-on-scroll">
-                <CardContent className="pt-6">
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div className="flex items-center gap-4">
-                      <div className="text-sm">
-                        <span className="text-muted-foreground">Welcome back, </span>
-                        <span className="font-medium">{profile.display_name || user.email}</span>
-                      </div>
-                      <Badge variant="secondary">
-                        {profile.subscription_tier || 'free'} plan
-                      </Badge>
-                    </div>
-                    <div className="text-sm">
-                      <span className="text-muted-foreground">Stories this month: </span>
-                      <Badge variant="outline">
-                        {profile.subscription_tier === 'free' 
-                          ? `${profile.stories_this_month}/3` 
-                          : `${profile.stories_this_month} (unlimited)`}
-                      </Badge>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {user && (
-              <div className="animate-on-scroll">
-                <Tabs value={generatorMode} onValueChange={(value: any) => setGeneratorMode(value)} className="w-full">
-                  <TabsList className="grid w-full grid-cols-2 mb-8 bg-background/50 backdrop-blur-sm">
-                    <TabsTrigger value="structured" className="flex items-center gap-2">
-                      <Wand2 className="h-4 w-4" />
-                      Guided Story Builder
-                    </TabsTrigger>
-                    <TabsTrigger value="freeform" className="flex items-center gap-2">
-                      <Edit3 className="h-4 w-4" />
-                      Freeform Creator
-                    </TabsTrigger>
-                  </TabsList>
-
-                  <TabsContent value="structured" className="space-y-6">
-                    <StoryBuilderForm 
-                      onGenerate={handleStructuredGenerate}
-                      isGenerating={isGenerating}
-                    />
-                  </TabsContent>
-
-                  <TabsContent value="freeform" className="space-y-6">
-                    <FreeformPromptForm 
-                      onGenerate={handleFreeformGenerate}
-                      isGenerating={isGenerating}
-                    />
-                  </TabsContent>
-                </Tabs>
-
-                {/* Story Output */}
-                {currentStory && (
-                  <div className="mt-8 animate-fade-in">
-                    <StoryOutputPreview 
-                      story={currentStory}
-                      onSave={() => {
-                        // TODO: Implement save functionality
-                        console.log('Saving story:', currentStory);
-                      }}
-                      onContinue={() => {
-                        // TODO: Implement continue functionality
-                        console.log('Continuing story:', currentStory);
-                      }}
-                      onRegenerate={() => {
-                        if (generatorMode === 'structured') {
-                          // Re-trigger structured generation
-                        } else {
-                          // Re-trigger freeform generation
-                        }
-                      }}
-                      isGenerating={isGenerating}
-                      canContinue={!currentStory.isComplete}
-                    />
-                  </div>
+            <Card className="animate-on-scroll bg-card/70 backdrop-blur-md border-border/50 shadow-dreamy">
+              <CardHeader>
+                <CardTitle className="text-2xl text-center flex items-center justify-center gap-2">
+                  <Sparkles className="h-6 w-6 text-primary" />
+                  Story Generator
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {!user && (
+                  <Card className="bg-accent/10 border-accent/20">
+                    <CardContent className="pt-6 text-center">
+                      <p className="text-muted-foreground mb-4">
+                        Sign in to create and save your magical stories!
+                      </p>
+                      <Button variant="accent" asChild>
+                        <Link to="/auth">Get Started</Link>
+                      </Button>
+                    </CardContent>
+                  </Card>
                 )}
 
-                <div className="text-center mt-8">
+                {user && profile && (
+                  <Card className="bg-secondary/10 border-secondary/20">
+                    <CardContent className="pt-6">
+                      <div className="flex justify-between items-center text-sm">
+                        <span>Stories this month:</span>
+                        <Badge variant="secondary">
+                          {profile.subscription_tier === 'free' 
+                            ? `${profile.stories_this_month}/3` 
+                            : `${profile.stories_this_month} (unlimited)`}
+                        </Badge>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                <div>
+                  <label className="text-sm font-medium mb-2 block">What should your story be about?</label>
+                  <Textarea
+                    placeholder="A brave little mouse who wants to become a pilot..."
+                    className="min-h-[100px] bg-background/50 border-border/50 focus:border-primary transition-dreamy"
+                    value={storyPrompt}
+                    onChange={(e) => setStoryPrompt(e.target.value)}
+                  />
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button 
+                    variant="accent" 
+                    size="lg" 
+                    onClick={handleGetStarted}
+                    className="flex-1 sm:flex-none"
+                  >
+                    <Moon className="mr-2 h-4 w-4" />
+                    Create Story
+                  </Button>
+                </div>
+
+                <div className="text-center">
                   <Badge variant="secondary" className="bg-muted/50">
-                    💡 Tip: Switch between modes to explore different ways of creating stories!
+                    💡 Tip: Be specific about characters, settings, or themes your child loves!
                   </Badge>
                 </div>
-              </div>
-            )}
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
