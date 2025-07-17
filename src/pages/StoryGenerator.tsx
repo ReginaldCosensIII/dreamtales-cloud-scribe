@@ -36,10 +36,10 @@ const StoryGenerator = () => {
     isComplete: boolean;
   } | null>(null);
 
-  // Redirect to auth if not logged in
+  // Redirect to auth if not logged in, preserving intent to return here
   useEffect(() => {
     if (!user) {
-      navigate('/auth');
+      navigate('/auth', { state: { from: '/generator' } });
     }
   }, [user, navigate]);
 
