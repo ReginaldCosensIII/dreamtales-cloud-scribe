@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -153,6 +154,25 @@ All colors MUST be HSL.
     100% { background-position: 200% 0; }
   }
 
+  /* New subtle cloud drift animations */
+  @keyframes cloudDriftGentle {
+    0%, 100% { 
+      transform: translateX(0px) translateY(0px); 
+    }
+    50% { 
+      transform: translateX(15px) translateY(-8px); 
+    }
+  }
+
+  @keyframes cloudDriftSlowReverse {
+    0%, 100% { 
+      transform: translateX(0px) translateY(0px) scale(1); 
+    }
+    50% { 
+      transform: translateX(-20px) translateY(5px) scale(1.01); 
+    }
+  }
+
   /* Utility classes */
   .animate-float {
     animation: float 6s ease-in-out infinite;
@@ -178,6 +198,17 @@ All colors MUST be HSL.
   .animate-cloud-drift-slow {
     animation: drift 25s linear infinite;
     animation-delay: -5s;
+  }
+
+  /* New gentle cloud animations */
+  .animate-cloud-drift-gentle {
+    animation: cloudDriftGentle 35s ease-in-out infinite;
+    animation-delay: -5s;
+  }
+
+  .animate-cloud-drift-slow-reverse {
+    animation: cloudDriftSlowReverse 45s ease-in-out infinite;
+    animation-delay: -15s;
   }
 
   .animate-fade-in-up {

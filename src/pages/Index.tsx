@@ -87,10 +87,20 @@ const Index = () => {
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60"
           style={{ backgroundImage: `url(${heroClouds})` }}
         />
-        <div className="absolute inset-0 gradient-dreamy opacity-40" />
         
-        {/* Subtle parallax effect on background */}
-        <div className="absolute inset-0 opacity-30 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 animate-pulse [animation-duration:8s]" />
+        {/* Animated cloud layers for subtle movement */}
+        <div className="absolute inset-0 opacity-20 animate-cloud-drift-gentle" style={{ 
+          backgroundImage: `url(${heroClouds})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }} />
+        <div className="absolute inset-0 opacity-15 animate-cloud-drift-slow-reverse" style={{ 
+          backgroundImage: `url(${heroClouds})`,
+          backgroundSize: '105% 105%',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }} />
         
         <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
           <div className="animate-fade-in-up">

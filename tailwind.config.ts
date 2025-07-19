@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -97,6 +98,22 @@ export default {
 				'shimmer': {
 					'0%': { backgroundPosition: '-200% 0' },
 					'100%': { backgroundPosition: '200% 0' }
+				},
+				'cloudDriftGentle': {
+					'0%, 100%': { 
+						transform: 'translateX(0px) translateY(0px)' 
+					},
+					'50%': { 
+						transform: 'translateX(15px) translateY(-8px)' 
+					}
+				},
+				'cloudDriftSlowReverse': {
+					'0%, 100%': { 
+						transform: 'translateX(0px) translateY(0px) scale(1)' 
+					},
+					'50%': { 
+						transform: 'translateX(-20px) translateY(5px) scale(1.01)' 
+					}
 				}
 			},
 			animation: {
@@ -104,7 +121,9 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'float': 'float 6s ease-in-out infinite',
 				'drift': 'drift 20s linear infinite',
-				'shimmer': 'shimmer 3s ease-in-out infinite'
+				'shimmer': 'shimmer 3s ease-in-out infinite',
+				'cloud-drift-gentle': 'cloudDriftGentle 35s ease-in-out infinite',
+				'cloud-drift-slow-reverse': 'cloudDriftSlowReverse 45s ease-in-out infinite'
 			}
 		}
 	},
