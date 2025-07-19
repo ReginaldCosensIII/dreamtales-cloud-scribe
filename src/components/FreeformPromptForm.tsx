@@ -16,6 +16,7 @@ interface FreeformData {
 interface FreeformPromptFormProps {
   onGenerate: (data: FreeformData) => void;
   isGenerating: boolean;
+  initialPrompt?: string;
 }
 
 const lengthOptions = [
@@ -30,9 +31,9 @@ const toneOptions = [
   { value: 'magical', label: 'Magical & Wonder', description: 'Enchanting and mysterious', icon: "✨" }
 ];
 
-export const FreeformPromptForm = ({ onGenerate, isGenerating }: FreeformPromptFormProps) => {
+export const FreeformPromptForm = ({ onGenerate, isGenerating, initialPrompt = "" }: FreeformPromptFormProps) => {
   const [formData, setFormData] = useState<FreeformData>({
-    prompt: "",
+    prompt: initialPrompt,
     length: 'medium',
     tone: 'magical'
   });

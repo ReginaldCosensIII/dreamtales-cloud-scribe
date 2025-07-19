@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { 
   Cloud, 
   Sparkles, 
@@ -13,9 +14,10 @@ import {
   LogOut,
   Wand2,
   Edit3,
-  ArrowLeft
+  ArrowLeft,
+  Info
 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useStoryGeneration } from "@/hooks/useStoryGeneration";
 import { useUserData } from "@/hooks/useUserData";
@@ -25,7 +27,9 @@ import { StoryOutputPreview } from "@/components/StoryOutputPreview";
 
 const StoryGenerator = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [generatorMode, setGeneratorMode] = useState<"structured" | "freeform">("structured");
+  const [generatorMode, setGeneratorMode] = useState<"structured" | "freeform">("freeform");
+  const [searchParams] = useSearchParams();
+  const [showModeInfo, setShowModeInfo] = useState(false);
   const { user, signOut } = useAuth();
   const { generateStory, isGenerating, error } = useStoryGeneration();
   const { profile } = useUserData();
@@ -42,6 +46,16 @@ const StoryGenerator = () => {
       navigate('/auth', { state: { from: '/generator' } });
     }
   }, [user, navigate]);
+
+  // Handle pre-loaded prompt from homepage
+  useEffect(() => {
+    const promptFromUrl = searchParams.get('prompt');
+    if (promptFromUrl && user) {
+      setGeneratorMode('freeform');
+      setShowModeInfo(true);
+      // The FreeformPromptForm will need to be updated to accept initial prompt
+    }
+  }, [searchParams, user]);
 
   const handleStructuredGenerate = async (data: any) => {
     if (!user) {
@@ -175,9 +189,23 @@ const StoryGenerator = () => {
               </TabsContent>
 
               <TabsContent value="freeform" className="space-y-6">
+                {showModeInfo && (
+                  <Alert className="mb-4">
+                    <Info className="h-4 w-4" />
+                    <AlertDescription>
+                      You're in Freeform Creator mode! Want more guidance? Try our <button 
+                        onClick={() => setGeneratorMode('structured')} 
+                        className="text-primary underline hover:no-underline"
+                      >
+                        Guided Story Builder
+                      </button> instead.
+                    </AlertDescription>
+                  </Alert>
+                )}
                 <FreeformPromptForm 
                   onGenerate={handleFreeformGenerate}
                   isGenerating={isGenerating}
+                  initialPrompt={searchParams.get('prompt') || ''}
                 />
               </TabsContent>
             </Tabs>

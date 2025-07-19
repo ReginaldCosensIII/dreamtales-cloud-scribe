@@ -107,18 +107,18 @@ const Index = () => {
               Custom bedtime stories, crafted by imagination and AI.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-              <Button variant="accent" size="xl" onClick={() => window.location.href = '/generator'}>
-                <Sparkles className="mr-2 h-5 w-5" />
-                Create Your First Story
-              </Button>
-              <Button variant="secondary" size="lg" asChild>
-                <Link to="/about">
-                  <BookOpen className="mr-2 h-4 w-4" />
-                  Learn More
-                </Link>
-              </Button>
-            </div>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+                  <Button variant="accent" size="xl" onClick={handleGetStarted}>
+                    <Sparkles className="mr-2 h-5 w-5" />
+                    Create Your First Story
+                  </Button>
+                  <Button variant="secondary" size="lg" asChild>
+                    <Link to="/about">
+                      <BookOpen className="mr-2 h-4 w-4" />
+                      Learn More
+                    </Link>
+                  </Button>
+                </div>
           </div>
         </div>
 
@@ -220,34 +220,6 @@ const Index = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                {!user && (
-                  <Card className="bg-accent/10 border-accent/20">
-                    <CardContent className="pt-6 text-center">
-                      <p className="text-muted-foreground mb-4">
-                        Sign in to create and save your magical stories!
-                      </p>
-                      <Button variant="accent" asChild>
-                        <Link to="/auth">Get Started</Link>
-                      </Button>
-                    </CardContent>
-                  </Card>
-                )}
-
-                {user && profile && (
-                  <Card className="bg-secondary/10 border-secondary/20">
-                    <CardContent className="pt-6">
-                      <div className="flex justify-between items-center text-sm">
-                        <span>Stories this month:</span>
-                        <Badge variant="secondary">
-                          {profile.subscription_tier === 'free' 
-                            ? `${profile.stories_this_month}/3` 
-                            : `${profile.stories_this_month} (unlimited)`}
-                        </Badge>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-
                 <div>
                   <label className="text-sm font-medium mb-2 block">What should your story be about?</label>
                   <Textarea
@@ -263,6 +235,7 @@ const Index = () => {
                     variant="accent" 
                     size="lg" 
                     onClick={handleGetStarted}
+                    disabled={!storyPrompt.trim()}
                     className="flex-1 sm:flex-none"
                   >
                     <Moon className="mr-2 h-4 w-4" />

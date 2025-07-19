@@ -41,9 +41,6 @@ const UserDropdown = () => {
             <span className="text-sm font-medium">
               {profile?.display_name || user?.email?.split('@')[0]}
             </span>
-            <Badge variant="secondary" className="text-xs h-auto py-0.5">
-              {profile?.subscription_tier || 'free'}
-            </Badge>
           </div>
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
         </Button>
