@@ -353,7 +353,7 @@ const Index = () => {
                 variant: "secondary" as const
               }
             ].map((plan, index) => (
-              <Card key={index} className={`animate-on-scroll relative h-full ${plan.popular ? 'border-primary shadow-dreamy scale-105' : 'border-border/50 shadow-gentle'} bg-card/70 backdrop-blur-md hover:shadow-dreamy hover:scale-105 transition-cloud`}>
+              <Card key={index} className={`animate-on-scroll relative h-full ${plan.popular ? 'border-primary shadow-dreamy scale-105 hover:scale-110' : 'border-border/50 shadow-gentle hover:scale-105'} bg-card/70 backdrop-blur-md hover:shadow-dreamy transition-cloud`}>
                 {plan.popular && (
                   <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 gradient-cloud">
                     Most Popular
