@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import UserDropdown from "@/components/UserDropdown";
 import { 
   Cloud, 
   Sparkles, 
@@ -38,7 +39,7 @@ import cloudCharacter from "@/assets/cloud-character.jpg";
 const Index = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [storyPrompt, setStoryPrompt] = useState("");
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const { profile } = useUserData();
 
   // Scroll animations
@@ -78,10 +79,6 @@ const Index = () => {
     }
   };
 
-  const handleSignOut = async () => {
-    await signOut();
-  };
-
   return (
     <div className="min-h-screen bg-background">
 
@@ -101,18 +98,7 @@ const Index = () => {
               <a href="/generator" className="text-muted-foreground hover:text-foreground transition-dreamy">Generator</a>
               <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-dreamy">Pricing</a>
               {user ? (
-                <div className="flex items-center space-x-4">
-                  <span className="text-sm text-muted-foreground">
-                    Welcome, {profile?.display_name || user.email}
-                  </span>
-                  <Badge variant="secondary">
-                    {profile?.subscription_tier || 'free'}
-                  </Badge>
-                  <Button variant="secondary" size="sm" onClick={handleSignOut}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Sign Out
-                  </Button>
-                </div>
+                <UserDropdown />
               ) : (
                 <Button variant="secondary" size="sm" asChild>
                   <Link to="/auth">Sign In</Link>
@@ -140,10 +126,7 @@ const Index = () => {
                 <a href="/generator" className="text-muted-foreground hover:text-foreground transition-dreamy">Generator</a>
                 <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-dreamy">Pricing</a>
                 {user ? (
-                  <Button variant="secondary" size="sm" onClick={handleSignOut}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Sign Out
-                  </Button>
+                  <UserDropdown />
                 ) : (
                   <Button variant="secondary" size="sm" asChild>
                     <Link to="/auth">Sign In</Link>
@@ -158,10 +141,17 @@ const Index = () => {
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60 animate-cloud-float"
           style={{ backgroundImage: `url(${heroClouds})` }}
         />
         <div className="absolute inset-0 gradient-dreamy opacity-40" />
+        
+        {/* Animated floating clouds */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-24 h-12 bg-white/10 rounded-full animate-cloud-drift" />
+          <div className="absolute top-1/3 right-1/4 w-32 h-16 bg-white/8 rounded-full animate-cloud-drift-slow" />
+          <div className="absolute bottom-1/3 left-1/3 w-20 h-10 bg-white/12 rounded-full animate-cloud-float" />
+        </div>
         
         <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
           <div className="animate-fade-in-up">

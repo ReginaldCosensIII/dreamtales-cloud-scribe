@@ -167,6 +167,19 @@ All colors MUST be HSL.
     animation: drift 20s linear infinite;
   }
 
+  .animate-cloud-float {
+    animation: float 8s ease-in-out infinite;
+  }
+
+  .animate-cloud-drift {
+    animation: drift 15s linear infinite;
+  }
+
+  .animate-cloud-drift-slow {
+    animation: drift 25s linear infinite;
+    animation-delay: -5s;
+  }
+
   .animate-fade-in-up {
     animation: fadeInUp 0.8s ease-out;
   }
