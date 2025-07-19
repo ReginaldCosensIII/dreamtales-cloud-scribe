@@ -51,57 +51,8 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-background">
-
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-background/95 backdrop-blur-md border-b border-border/70">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link to="/" className="flex items-center space-x-2">
-              <Cloud className="h-8 w-8 text-primary" />
-              <span className="text-xl font-bold gradient-cloud bg-clip-text text-transparent">DreamTales AI</span>
-            </Link>
-            
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300">Home</Link>
-              <Link to="/about" className="text-primary font-medium relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary after:scale-x-100 after:transition-transform after:duration-300">About</Link>
-              <Link to="/#generator" className="text-muted-foreground hover:text-foreground transition-dreamy">Generator</Link>
-              <Link to="/#pricing" className="text-muted-foreground hover:text-foreground transition-dreamy">Pricing</Link>
-              <Button variant="secondary" size="sm">
-                Sign In
-              </Button>
-            </div>
-
-            {/* Mobile menu button */}
-            <div className="md:hidden">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-              >
-                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </Button>
-            </div>
-          </div>
-
-          {/* Mobile Navigation */}
-          {isMenuOpen && (
-            <div className="md:hidden pb-4">
-              <div className="flex flex-col space-y-3">
-                <Link to="/about" className="text-primary hover:text-primary/80 transition-dreamy font-medium">About</Link>
-                <Link to="/#generator" className="text-muted-foreground hover:text-foreground transition-dreamy">Generator</Link>
-                <Link to="/#pricing" className="text-muted-foreground hover:text-foreground transition-dreamy">Pricing</Link>
-                <Button variant="secondary" size="sm">
-                  Sign In
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
-      </nav>
-
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
+      <section className="relative pt-16 pb-20 overflow-hidden">
         <div className="absolute inset-0 gradient-dreamy opacity-20" />
         
         <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
@@ -379,53 +330,6 @@ const About = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-background border-t border-border/50 py-12">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <Cloud className="h-8 w-8 text-primary" />
-                <span className="text-xl font-bold gradient-cloud bg-clip-text text-transparent">DreamTales AI</span>
-              </div>
-              <p className="text-muted-foreground text-sm">
-                Creating magical bedtime moments with AI-powered personalized stories.
-              </p>
-            </div>
-            
-            <div>
-              <h3 className="font-semibold mb-4">Product</h3>
-              <div className="space-y-2 text-sm text-muted-foreground">
-                <Link to="/#generator" className="block hover:text-foreground transition-dreamy">Story Generator</Link>
-                <Link to="/#pricing" className="block hover:text-foreground transition-dreamy">Pricing</Link>
-                <div className="block hover:text-foreground transition-dreamy cursor-pointer">Features</div>
-              </div>
-            </div>
-            
-            <div>
-              <h3 className="font-semibold mb-4">Company</h3>
-              <div className="space-y-2 text-sm text-muted-foreground">
-                <Link to="/about" className="block hover:text-foreground transition-dreamy">About</Link>
-                <div className="block hover:text-foreground transition-dreamy cursor-pointer">Blog</div>
-                <div className="block hover:text-foreground transition-dreamy cursor-pointer">Contact</div>
-              </div>
-            </div>
-            
-            <div>
-              <h3 className="font-semibold mb-4">Connect</h3>
-              <div className="flex space-x-4">
-                <Instagram className="h-5 w-5 text-muted-foreground hover:text-foreground transition-dreamy cursor-pointer" />
-                <Twitter className="h-5 w-5 text-muted-foreground hover:text-foreground transition-dreamy cursor-pointer" />
-                <Youtube className="h-5 w-5 text-muted-foreground hover:text-foreground transition-dreamy cursor-pointer" />
-              </div>
-            </div>
-          </div>
-          
-          <div className="border-t border-border/50 mt-8 pt-8 text-center text-sm text-muted-foreground">
-            © 2024 DreamTales AI. All rights reserved.
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };

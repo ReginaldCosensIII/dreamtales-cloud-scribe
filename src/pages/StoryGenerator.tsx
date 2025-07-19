@@ -105,69 +105,8 @@ const StoryGenerator = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-background/95 backdrop-blur-md border-b border-border/70">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link to="/" className="flex items-center space-x-2">
-              <Cloud className="h-8 w-8 text-primary" />
-              <span className="text-xl font-bold gradient-cloud bg-clip-text text-transparent">DreamTales AI</span>
-            </Link>
-            
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300">
-                <ArrowLeft className="inline mr-2 h-4 w-4" />
-                Back to Home
-              </Link>
-              <Link to="/about" className="text-muted-foreground hover:text-foreground transition-colors">About</Link>
-              <div className="flex items-center space-x-4">
-                <span className="text-sm text-muted-foreground">
-                  Welcome, {profile?.display_name || user.email}
-                </span>
-                <Badge variant="secondary">
-                  {profile?.subscription_tier || 'free'}
-                </Badge>
-                <Button variant="secondary" size="sm" onClick={handleSignOut}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Sign Out
-                </Button>
-              </div>
-            </div>
-
-            {/* Mobile menu button */}
-            <div className="md:hidden">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-              >
-                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </Button>
-            </div>
-          </div>
-
-          {/* Mobile Navigation */}
-          {isMenuOpen && (
-            <div className="md:hidden pb-4">
-              <div className="flex flex-col space-y-3">
-                <Link to="/" className="text-muted-foreground hover:text-foreground transition-dreamy">
-                  <ArrowLeft className="inline mr-2 h-4 w-4" />
-                  Back to Home
-                </Link>
-                <Link to="/about" className="text-muted-foreground hover:text-foreground transition-dreamy">About</Link>
-                <Button variant="secondary" size="sm" onClick={handleSignOut}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Sign Out
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
-      </nav>
-
       {/* Main Content */}
-      <main className="pt-20 pb-16 min-h-screen bg-gradient-to-b from-secondary/20 to-accent/10">
+      <main className="pb-16 min-h-screen bg-gradient-to-b from-secondary/20 to-accent/10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-12">

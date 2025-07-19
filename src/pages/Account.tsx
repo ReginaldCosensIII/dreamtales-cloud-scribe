@@ -14,7 +14,7 @@ const Account = () => {
   const [displayName, setDisplayName] = useState(profile?.display_name || '');
 
   return (
-    <div className="min-h-screen bg-background py-20">
+    <div className="min-h-screen bg-background py-8">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
         <div className="mb-8">
           <h1 className="text-3xl font-bold gradient-cloud bg-clip-text text-transparent mb-2">
