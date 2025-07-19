@@ -2,11 +2,21 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { z } from "zod";
 import { Card, CardContent } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Badge } from "@/components/ui/badge";
 import { Instagram, Twitter, Youtube, Star, Heart, MessageCircle, Share2 } from "lucide-react";
 import { toast } from "sonner";
+
+// Form validation schema
+const partnershipSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters").max(100, "Name too long"),
+  email: z.string().email("Please enter a valid email address"),
+  platform: z.string().min(2, "Platform is required").max(50, "Platform name too long"),
+  followers: z.string().min(1, "Follower count is required").max(20, "Please use a shorter format"),
+  message: z.string().min(10, "Please provide more details").max(1000, "Message too long")
+});
 
 const SocialPartnership = () => {
   const [formData, setFormData] = useState({
@@ -16,12 +26,31 @@ const SocialPartnership = () => {
     followers: "",
     message: ""
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement form submission
-    toast.success("Partnership inquiry submitted! We'll be in touch soon.");
-    setFormData({ name: "", email: "", platform: "", followers: "", message: "" });
+    
+    // Validate form data
+    try {
+      partnershipSchema.parse(formData);
+      setErrors({});
+      
+      // TODO: Implement form submission
+      toast.success("Partnership inquiry submitted! We'll be in touch soon.");
+      setFormData({ name: "", email: "", platform: "", followers: "", message: "" });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const newErrors: Record<string, string> = {};
+        error.errors.forEach((err) => {
+          if (err.path[0]) {
+            newErrors[err.path[0] as string] = err.message;
+          }
+        });
+        setErrors(newErrors);
+        toast.error("Please fix the form errors before submitting.");
+      }
+    }
   };
 
   const socialSlides = [
@@ -168,7 +197,9 @@ const SocialPartnership = () => {
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="Your full name"
+                      className={errors.name ? "border-destructive" : ""}
                     />
+                    {errors.name && <p className="text-sm text-destructive mt-1">{errors.name}</p>}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">
@@ -180,7 +211,9 @@ const SocialPartnership = () => {
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="your@email.com"
+                      className={errors.email ? "border-destructive" : ""}
                     />
+                    {errors.email && <p className="text-sm text-destructive mt-1">{errors.email}</p>}
                   </div>
                 </div>
 
@@ -195,7 +228,9 @@ const SocialPartnership = () => {
                       value={formData.platform}
                       onChange={(e) => setFormData({ ...formData, platform: e.target.value })}
                       placeholder="Instagram, YouTube, TikTok, etc."
+                      className={errors.platform ? "border-destructive" : ""}
                     />
+                    {errors.platform && <p className="text-sm text-destructive mt-1">{errors.platform}</p>}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">
@@ -207,7 +242,9 @@ const SocialPartnership = () => {
                       value={formData.followers}
                       onChange={(e) => setFormData({ ...formData, followers: e.target.value })}
                       placeholder="e.g., 50K, 1M"
+                      className={errors.followers ? "border-destructive" : ""}
                     />
+                    {errors.followers && <p className="text-sm text-destructive mt-1">{errors.followers}</p>}
                   </div>
                 </div>
 
@@ -221,7 +258,9 @@ const SocialPartnership = () => {
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     placeholder="Describe your content style, audience demographics, and how you'd like to collaborate with DreamTales..."
                     rows={5}
+                    className={errors.message ? "border-destructive" : ""}
                   />
+                  {errors.message && <p className="text-sm text-destructive mt-1">{errors.message}</p>}
                 </div>
 
                 <Button type="submit" className="w-full">
