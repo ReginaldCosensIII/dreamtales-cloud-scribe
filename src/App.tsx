@@ -10,6 +10,7 @@ import Auth from "./pages/Auth";
 import StoryGenerator from "./pages/StoryGenerator";
 import Account from "./pages/Account";
 import NotFound from "./pages/NotFound";
+import SocialPartnership from "./pages/SocialPartnership";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/generator" element={<StoryGenerator />} />
             <Route path="/account" element={<Account />} />
+            <Route path="/social-partnership" element={<SocialPartnership />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

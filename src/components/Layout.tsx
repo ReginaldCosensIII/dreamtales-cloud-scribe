@@ -187,6 +187,9 @@ const Layout = ({ children }: LayoutProps) => {
                 <a href="#" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
                   Terms of Service
                 </a>
+                <Link to="/social-partnership" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  Creator Partnership
+                </Link>
               </div>
             </div>
 
