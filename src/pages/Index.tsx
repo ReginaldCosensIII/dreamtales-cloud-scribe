@@ -89,12 +89,8 @@ const Index = () => {
         />
         <div className="absolute inset-0 gradient-dreamy opacity-40" />
         
-        {/* Animated floating clouds */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-24 h-12 bg-white/10 rounded-full animate-cloud-drift" />
-          <div className="absolute top-1/3 right-1/4 w-32 h-16 bg-white/8 rounded-full animate-cloud-drift-slow" />
-          <div className="absolute bottom-1/3 left-1/3 w-20 h-10 bg-white/12 rounded-full animate-cloud-float" />
-        </div>
+        {/* Subtle parallax effect on background */}
+        <div className="absolute inset-0 opacity-30 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 animate-pulse [animation-duration:8s]" />
         
         <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
           <div className="animate-fade-in-up">

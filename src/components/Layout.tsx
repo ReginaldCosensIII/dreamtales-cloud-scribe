@@ -131,12 +131,8 @@ const Layout = ({ children }: LayoutProps) => {
 
       {/* Footer */}
       <footer className="relative bg-card/50 backdrop-blur-sm border-t border-border/50 mt-auto overflow-hidden">
-        {/* Cloud background */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-4 left-1/4 w-16 h-8 bg-primary/10 rounded-full animate-cloud-float" />
-          <div className="absolute top-8 right-1/3 w-20 h-10 bg-primary/8 rounded-full animate-cloud-drift-slow" />
-          <div className="absolute bottom-4 left-1/2 w-12 h-6 bg-primary/12 rounded-full animate-cloud-drift" />
-        </div>
+        {/* Subtle gradient overlay */}
+        <div className="absolute inset-0 opacity-10 bg-gradient-to-t from-primary/20 via-transparent to-transparent" />
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {/* Brand */}
