@@ -9,6 +9,7 @@ import {
   Instagram,
   Twitter,
   Youtube,
+  Facebook,
   Heart
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -57,15 +58,7 @@ const Layout = ({ children }: LayoutProps) => {
                   location.pathname === '/generator' ? 'text-primary font-medium after:scale-x-100' : 'after:scale-x-0 hover:after:scale-x-100'
                 }`}
               >
-                Generator
-              </Link>
-              <Link 
-                to="/creator" 
-                className={`text-muted-foreground hover:text-foreground transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary after:transition-transform after:duration-300 ${
-                  location.pathname === '/creator' ? 'text-primary font-medium after:scale-x-100' : 'after:scale-x-0 hover:after:scale-x-100'
-                }`}
-              >
-                Creator
+                Story Generator
               </Link>
               {user ? (
                 <UserDropdown />
@@ -117,16 +110,7 @@ const Layout = ({ children }: LayoutProps) => {
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Generator
-                </Link>
-                <Link 
-                  to="/creator" 
-                  className={`transition-colors ${
-                    location.pathname === '/creator' ? 'text-primary font-medium' : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Creator
+                  Story Generator
                 </Link>
                 {user ? (
                   <UserDropdown />
@@ -176,9 +160,6 @@ const Layout = ({ children }: LayoutProps) => {
                 <Link to="/generator" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
                   Story Generator
                 </Link>
-                <Link to="/creator" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Story Creator
-                </Link>
                 {user && (
                   <Link to="/account" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
                     Account
@@ -194,9 +175,9 @@ const Layout = ({ children }: LayoutProps) => {
                 <a href="#" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
                   Help Center
                 </a>
-                <a href="#" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/contact" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
                   Contact Us
-                </a>
+                </Link>
                 <a href="#" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
                   Privacy Policy
                 </a>
@@ -213,14 +194,21 @@ const Layout = ({ children }: LayoutProps) => {
             <div>
               <h3 className="font-semibold text-foreground mb-4">Follow Us</h3>
               <div className="flex space-x-4">
-                <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
-                  <Instagram className="h-5 w-5" />
+                <a href="#" className="group relative">
+                  <Instagram className="h-5 w-5 text-muted-foreground group-hover:text-transparent transition-all duration-300" />
+                  <Instagram className="h-5 w-5 absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 gradient-cloud bg-clip-text text-transparent" style={{ backgroundImage: 'var(--gradient-cloud)' }} />
                 </a>
-                <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
-                  <Twitter className="h-5 w-5" />
+                <a href="#" className="group relative">
+                  <Twitter className="h-5 w-5 text-muted-foreground group-hover:text-transparent transition-all duration-300" />
+                  <Twitter className="h-5 w-5 absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 gradient-cloud bg-clip-text text-transparent" style={{ backgroundImage: 'var(--gradient-cloud)' }} />
                 </a>
-                <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
-                  <Youtube className="h-5 w-5" />
+                <a href="#" className="group relative">
+                  <Youtube className="h-5 w-5 text-muted-foreground group-hover:text-transparent transition-all duration-300" />
+                  <Youtube className="h-5 w-5 absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 gradient-cloud bg-clip-text text-transparent" style={{ backgroundImage: 'var(--gradient-cloud)' }} />
+                </a>
+                <a href="#" className="group relative">
+                  <Facebook className="h-5 w-5 text-muted-foreground group-hover:text-transparent transition-all duration-300" />
+                  <Facebook className="h-5 w-5 absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 gradient-cloud bg-clip-text text-transparent" style={{ backgroundImage: 'var(--gradient-cloud)' }} />
                 </a>
               </div>
             </div>
