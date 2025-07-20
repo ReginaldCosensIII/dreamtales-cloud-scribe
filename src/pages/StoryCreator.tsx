@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import Layout from '@/components/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -256,530 +255,526 @@ export default function StoryCreator() {
 
   if (!user) {
     return (
-      <Layout>
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <Card className="w-full max-w-md">
-            <CardContent className="pt-6 text-center">
-              <BookOpen className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-              <h2 className="text-xl font-semibold mb-2">Sign In Required</h2>
-              <p className="text-muted-foreground">
-                Please sign in to create and manage your stories, characters, and places.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </Layout>
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Card className="w-full max-w-md">
+          <CardContent className="pt-6 text-center">
+            <BookOpen className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+            <h2 className="text-xl font-semibold mb-2">Sign In Required</h2>
+            <p className="text-muted-foreground">
+              Please sign in to create and manage your stories, characters, and places.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   return (
-    <Layout>
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Story Creator</h1>
-          <p className="text-muted-foreground">
-            Create characters, design places, and generate amazing stories with AI.
-          </p>
-        </div>
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold mb-2">Story Creator</h1>
+        <p className="text-muted-foreground">
+          Create characters, design places, and generate amazing stories with AI.
+        </p>
+      </div>
 
-        {/* User Stats */}
-        {profile && (
-          <Card className="mb-6 bg-secondary/10 border-secondary/20">
-            <CardContent className="pt-6">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="text-sm">
-                    <span className="text-muted-foreground">Welcome back, </span>
-                    <span className="font-medium">{profile.display_name || user.email}</span>
-                  </div>
-                  <Badge variant="secondary">
-                    {profile.subscription_tier || 'free'} plan
-                  </Badge>
-                </div>
+      {/* User Stats */}
+      {profile && (
+        <Card className="mb-6 bg-secondary/10 border-secondary/20">
+          <CardContent className="pt-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div className="flex items-center gap-4">
                 <div className="text-sm">
-                  <span className="text-muted-foreground">Stories this month: </span>
-                  <Badge variant="outline">
-                    {profile.subscription_tier === 'free' 
-                      ? `${profile.stories_this_month}/30` 
-                      : `${profile.stories_this_month} (unlimited)`}
-                  </Badge>
+                  <span className="text-muted-foreground">Welcome back, </span>
+                  <span className="font-medium">{profile.display_name || user.email}</span>
                 </div>
+                <Badge variant="secondary">
+                  {profile.subscription_tier || 'free'} plan
+                </Badge>
               </div>
-            </CardContent>
-          </Card>
-        )}
-
-        <Tabs defaultValue="guided" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="guided" className="flex items-center gap-2">
-              <Wand2 className="h-4 w-4" />
-              Guided
-            </TabsTrigger>
-            <TabsTrigger value="freeform" className="flex items-center gap-2">
-              <Edit3 className="h-4 w-4" />
-              Freeform
-            </TabsTrigger>
-            <TabsTrigger value="advanced" className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4" />
-              Advanced
-            </TabsTrigger>
-            <TabsTrigger value="characters" className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              Characters
-            </TabsTrigger>
-            <TabsTrigger value="places" className="flex items-center gap-2">
-              <MapPin className="h-4 w-4" />
-              Places
-            </TabsTrigger>
-            <TabsTrigger value="stories" className="flex items-center gap-2">
-              <BookOpen className="h-4 w-4" />
-              My Stories
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Guided Story Builder Tab */}
-          <TabsContent value="guided" className="space-y-6">
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold mb-2">Guided Story Builder</h2>
-              <p className="text-muted-foreground">
-                Follow our step-by-step guide to create personalized bedtime stories.
-              </p>
+              <div className="text-sm">
+                <span className="text-muted-foreground">Stories this month: </span>
+                <Badge>
+                  {profile.subscription_tier === 'free' 
+                    ? `${profile.stories_this_month}/30` 
+                    : `${profile.stories_this_month} (unlimited)`}
+                </Badge>
+              </div>
             </div>
-            <StoryBuilderForm 
-              onGenerate={handleStructuredGenerate}
-              isGenerating={isGeneratingSimple}
-            />
-          </TabsContent>
+          </CardContent>
+        </Card>
+      )}
 
-          {/* Freeform Creator Tab */}
-          <TabsContent value="freeform" className="space-y-6">
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold mb-2">Freeform Creator</h2>
+      <Tabs defaultValue="guided" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-6">
+          <TabsTrigger value="guided" className="flex items-center gap-2">
+            <Wand2 className="h-4 w-4" />
+            Guided
+          </TabsTrigger>
+          <TabsTrigger value="freeform" className="flex items-center gap-2">
+            <Edit3 className="h-4 w-4" />
+            Freeform
+          </TabsTrigger>
+          <TabsTrigger value="advanced" className="flex items-center gap-2">
+            <Sparkles className="h-4 w-4" />
+            Advanced
+          </TabsTrigger>
+          <TabsTrigger value="characters" className="flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            Characters
+          </TabsTrigger>
+          <TabsTrigger value="places" className="flex items-center gap-2">
+            <MapPin className="h-4 w-4" />
+            Places
+          </TabsTrigger>
+          <TabsTrigger value="stories" className="flex items-center gap-2">
+            <BookOpen className="h-4 w-4" />
+            My Stories
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Guided Story Builder Tab */}
+        <TabsContent value="guided" className="space-y-6">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-bold mb-2">Guided Story Builder</h2>
+            <p className="text-muted-foreground">
+              Follow our step-by-step guide to create personalized bedtime stories.
+            </p>
+          </div>
+          <StoryBuilderForm 
+            onGenerate={handleStructuredGenerate}
+            isGenerating={isGeneratingSimple}
+          />
+        </TabsContent>
+
+        {/* Freeform Creator Tab */}
+        <TabsContent value="freeform" className="space-y-6">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-bold mb-2">Freeform Creator</h2>
+            <p className="text-muted-foreground">
+              Let your imagination run wild with complete creative freedom.
+            </p>
+          </div>
+          {showModeInfo && (
+            <Alert className="mb-4">
+              <Info className="h-4 w-4" />
+              <AlertDescription>
+                You're in Freeform Creator mode! Want more guidance? Try our{' '}
+                <button 
+                  onClick={() => setGeneratorMode('structured')} 
+                  className="text-primary underline hover:no-underline"
+                >
+                  Guided Story Builder
+                </button>{' '}
+                instead.
+              </AlertDescription>
+            </Alert>
+          )}
+          <FreeformPromptForm 
+            onGenerate={handleFreeformGenerate}
+            isGenerating={isGeneratingSimple}
+            initialPrompt={searchParams.get('prompt') || ''}
+          />
+        </TabsContent>
+
+        {/* Advanced Creator Tab (with custom characters and places) */}
+        <TabsContent value="advanced" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5" />
+                Advanced Story Creator
+              </CardTitle>
               <p className="text-muted-foreground">
-                Let your imagination run wild with complete creative freedom.
+                Use your custom characters and places to create unique stories.
               </p>
-            </div>
-            {showModeInfo && (
-              <Alert className="mb-4">
-                <Info className="h-4 w-4" />
-                <AlertDescription>
-                  You're in Freeform Creator mode! Want more guidance? Try our{' '}
-                  <button 
-                    onClick={() => setGeneratorMode('structured')} 
-                    className="text-primary underline hover:no-underline"
-                  >
-                    Guided Story Builder
-                  </button>{' '}
-                  instead.
-                </AlertDescription>
-              </Alert>
-            )}
-            <FreeformPromptForm 
-              onGenerate={handleFreeformGenerate}
-              isGenerating={isGeneratingSimple}
-              initialPrompt={searchParams.get('prompt') || ''}
-            />
-          </TabsContent>
-
-          {/* Advanced Creator Tab (with custom characters and places) */}
-          <TabsContent value="advanced" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Sparkles className="h-5 w-5" />
-                  Advanced Story Creator
-                </CardTitle>
-                <p className="text-muted-foreground">
-                  Use your custom characters and places to create unique stories.
-                </p>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid gap-4">
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid gap-4">
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Story Prompt</label>
+                  <Textarea
+                    value={storyForm.prompt}
+                    onChange={(e) => setStoryForm(prev => ({ ...prev, prompt: e.target.value }))}
+                    placeholder="Describe the story you want to create..."
+                    rows={3}
+                  />
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Story Prompt</label>
-                    <Textarea
-                      value={storyForm.prompt}
-                      onChange={(e) => setStoryForm(prev => ({ ...prev, prompt: e.target.value }))}
-                      placeholder="Describe the story you want to create..."
-                      rows={3}
-                    />
+                    <label className="text-sm font-medium mb-2 block">Story Length</label>
+                    <Select 
+                      value={storyForm.length} 
+                      onValueChange={(value: 'short' | 'medium' | 'long') => 
+                        setStoryForm(prev => ({ ...prev, length: value }))
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="short">Short (2-3 paragraphs)</SelectItem>
+                        <SelectItem value="medium">Medium (4-6 paragraphs)</SelectItem>
+                        <SelectItem value="long">Long (7+ paragraphs)</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">Story Length</label>
-                      <Select 
-                        value={storyForm.length} 
-                        onValueChange={(value: 'short' | 'medium' | 'long') => 
-                          setStoryForm(prev => ({ ...prev, length: value }))
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="short">Short (2-3 paragraphs)</SelectItem>
-                          <SelectItem value="medium">Medium (4-6 paragraphs)</SelectItem>
-                          <SelectItem value="long">Long (7+ paragraphs)</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">Themes (optional)</label>
-                      <Input
-                        value={storyForm.themes}
-                        onChange={(e) => setStoryForm(prev => ({ ...prev, themes: e.target.value }))}
-                        placeholder="adventure, friendship, magic (comma-separated)"
-                      />
-                    </div>
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">Themes (optional)</label>
+                    <Input
+                      value={storyForm.themes}
+                      onChange={(e) => setStoryForm(prev => ({ ...prev, themes: e.target.value }))}
+                      placeholder="adventure, friendship, magic (comma-separated)"
+                    />
                   </div>
                 </div>
+              </div>
 
-                {/* Character Selection */}
-                <div>
-                  <h3 className="text-lg font-semibold mb-3">Select Characters</h3>
-                  {characters.length === 0 ? (
-                    <p className="text-muted-foreground text-sm">
-                      No characters yet. Create some in the Characters tab!
-                    </p>
-                  ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {characters.map((character) => (
-                        <CharacterCard
-                          key={character.id}
-                          character={character}
-                          onUpdate={() => Promise.resolve(null)}
-                          onDelete={() => Promise.resolve(false)}
-                          selectable
-                          selected={selectedCharacters.includes(character.id)}
-                          onSelect={handleCharacterSelection}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Place Selection */}
-                <div>
-                  <h3 className="text-lg font-semibold mb-3">Select Places</h3>
-                  {places.length === 0 ? (
-                    <p className="text-muted-foreground text-sm">
-                      No places yet. Create some in the Places tab!
-                    </p>
-                  ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {places.map((place) => (
-                        <PlaceCard
-                          key={place.id}
-                          place={place}
-                          onUpdate={() => Promise.resolve(null)}
-                          onDelete={() => Promise.resolve(false)}
-                          selectable
-                          selected={selectedPlaces.includes(place.id)}
-                          onSelect={handlePlaceSelection}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Selection Summary */}
-                {(selectedCharacters.length > 0 || selectedPlaces.length > 0) && (
-                  <div className="bg-muted/50 rounded-lg p-4">
-                    <h4 className="font-medium mb-2">Selected Elements:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedCharacters.map((id) => {
-                        const character = characters.find(c => c.id === id);
-                        return character ? (
-                          <Badge key={id} variant="default">
-                            👤 {character.name}
-                          </Badge>
-                        ) : null;
-                      })}
-                      {selectedPlaces.map((id) => {
-                        const place = places.find(p => p.id === id);
-                        return place ? (
-                          <Badge key={id} variant="secondary">
-                            📍 {place.name}
-                          </Badge>
-                        ) : null;
-                      })}
-                    </div>
+              {/* Character Selection */}
+              <div>
+                <h3 className="text-lg font-semibold mb-3">Select Characters</h3>
+                {characters.length === 0 ? (
+                  <p className="text-muted-foreground text-sm">
+                    No characters yet. Create some in the Characters tab!
+                  </p>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {characters.map((character) => (
+                      <CharacterCard
+                        key={character.id}
+                        character={character}
+                        onUpdate={() => Promise.resolve(null)}
+                        onDelete={() => Promise.resolve(false)}
+                        selectable
+                        selected={selectedCharacters.includes(character.id)}
+                        onSelect={handleCharacterSelection}
+                      />
+                    ))}
                   </div>
                 )}
+              </div>
 
-                <Button 
-                  onClick={handleGenerateStory}
-                  disabled={isGenerating || !storyForm.prompt.trim()}
-                  className="w-full"
-                  size="lg"
-                >
-                  {isGenerating ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Generating Story...
-                    </>
-                  ) : (
-                    <>
-                      <Wand2 className="mr-2 h-4 w-4" />
-                      Generate Story
-                    </>
-                  )}
+              {/* Place Selection */}
+              <div>
+                <h3 className="text-lg font-semibold mb-3">Select Places</h3>
+                {places.length === 0 ? (
+                  <p className="text-muted-foreground text-sm">
+                    No places yet. Create some in the Places tab!
+                  </p>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {places.map((place) => (
+                      <PlaceCard
+                        key={place.id}
+                        place={place}
+                        onUpdate={() => Promise.resolve(null)}
+                        onDelete={() => Promise.resolve(false)}
+                        selectable
+                        selected={selectedPlaces.includes(place.id)}
+                        onSelect={handlePlaceSelection}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Selection Summary */}
+              {(selectedCharacters.length > 0 || selectedPlaces.length > 0) && (
+                <div className="bg-muted/50 rounded-lg p-4">
+                  <h4 className="font-medium mb-2">Selected Elements:</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedCharacters.map((id) => {
+                      const character = characters.find(c => c.id === id);
+                      return character ? (
+                        <Badge key={id} variant="default">
+                          👤 {character.name}
+                        </Badge>
+                      ) : null;
+                    })}
+                    {selectedPlaces.map((id) => {
+                      const place = places.find(p => p.id === id);
+                      return place ? (
+                        <Badge key={id} variant="secondary">
+                          📍 {place.name}
+                        </Badge>
+                      ) : null;
+                    })}
+                  </div>
+                </div>
+              )}
+
+              <Button 
+                onClick={handleGenerateStory}
+                disabled={isGenerating || !storyForm.prompt.trim()}
+                className="w-full"
+                size="lg"
+              >
+                {isGenerating ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Generating Story...
+                  </>
+                ) : (
+                  <>
+                    <Wand2 className="mr-2 h-4 w-4" />
+                    Generate Story
+                  </>
+                )}
+              </Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Characters Tab */}
+        <TabsContent value="characters" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold">My Characters</h2>
+            <Dialog open={showCharacterDialog} onOpenChange={setShowCharacterDialog}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="mr-2 h-4 w-4" />
+                  New Character
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Create New Character</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium">Name</label>
+                    <Input
+                      value={characterForm.name}
+                      onChange={(e) => setCharacterForm(prev => ({ ...prev, name: e.target.value }))}
+                      placeholder="Character name"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Age</label>
+                    <Input
+                      value={characterForm.age}
+                      onChange={(e) => setCharacterForm(prev => ({ ...prev, age: e.target.value }))}
+                      placeholder="Age or age range"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Description</label>
+                    <Textarea
+                      value={characterForm.description}
+                      onChange={(e) => setCharacterForm(prev => ({ ...prev, description: e.target.value }))}
+                      placeholder="Describe this character..."
+                      rows={2}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Appearance</label>
+                    <Textarea
+                      value={characterForm.appearance}
+                      onChange={(e) => setCharacterForm(prev => ({ ...prev, appearance: e.target.value }))}
+                      placeholder="Physical appearance..."
+                      rows={2}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Personality Traits</label>
+                    <Input
+                      value={characterForm.traits}
+                      onChange={(e) => setCharacterForm(prev => ({ ...prev, traits: e.target.value }))}
+                      placeholder="brave, kind, curious (comma-separated)"
+                    />
+                  </div>
+                  <Button onClick={handleCreateCharacter} className="w-full">
+                    Create Character
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          {characters.length === 0 ? (
+            <Card>
+              <CardContent className="pt-6 text-center">
+                <Users className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                <h3 className="text-lg font-semibold mb-2">No Characters Yet</h3>
+                <p className="text-muted-foreground mb-4">
+                  Create your first character to start building amazing stories.
+                </p>
+                <Button onClick={() => setShowCharacterDialog(true)}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Create First Character
                 </Button>
               </CardContent>
             </Card>
-          </TabsContent>
-
-          {/* Characters Tab */}
-          <TabsContent value="characters" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold">My Characters</h2>
-              <Dialog open={showCharacterDialog} onOpenChange={setShowCharacterDialog}>
-                <DialogTrigger asChild>
-                  <Button>
-                    <Plus className="mr-2 h-4 w-4" />
-                    New Character
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Create New Character</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-medium">Name</label>
-                      <Input
-                        value={characterForm.name}
-                        onChange={(e) => setCharacterForm(prev => ({ ...prev, name: e.target.value }))}
-                        placeholder="Character name"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium">Age</label>
-                      <Input
-                        value={characterForm.age}
-                        onChange={(e) => setCharacterForm(prev => ({ ...prev, age: e.target.value }))}
-                        placeholder="Age or age range"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium">Description</label>
-                      <Textarea
-                        value={characterForm.description}
-                        onChange={(e) => setCharacterForm(prev => ({ ...prev, description: e.target.value }))}
-                        placeholder="Describe this character..."
-                        rows={2}
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium">Appearance</label>
-                      <Textarea
-                        value={characterForm.appearance}
-                        onChange={(e) => setCharacterForm(prev => ({ ...prev, appearance: e.target.value }))}
-                        placeholder="Physical appearance..."
-                        rows={2}
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium">Personality Traits</label>
-                      <Input
-                        value={characterForm.traits}
-                        onChange={(e) => setCharacterForm(prev => ({ ...prev, traits: e.target.value }))}
-                        placeholder="brave, kind, curious (comma-separated)"
-                      />
-                    </div>
-                    <Button onClick={handleCreateCharacter} className="w-full">
-                      Create Character
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {characters.map((character) => (
+                <CharacterCard
+                  key={character.id}
+                  character={character}
+                  onUpdate={async (id, data) => {
+                    // Handle update through useUserData
+                    await refetch();
+                    return null;
+                  }}
+                  onDelete={async (id) => {
+                    // Handle delete through useUserData
+                    await refetch();
+                    return true;
+                  }}
+                />
+              ))}
             </div>
+          )}
+        </TabsContent>
 
-            {characters.length === 0 ? (
-              <Card>
-                <CardContent className="pt-6 text-center">
-                  <Users className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                  <h3 className="text-lg font-semibold mb-2">No Characters Yet</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Create your first character to start building amazing stories.
-                  </p>
-                  <Button onClick={() => setShowCharacterDialog(true)}>
-                    <Plus className="mr-2 h-4 w-4" />
-                    Create First Character
-                  </Button>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {characters.map((character) => (
-                  <CharacterCard
-                    key={character.id}
-                    character={character}
-                    onUpdate={async (id, data) => {
-                      // Handle update through useUserData
-                      await refetch();
-                      return null;
-                    }}
-                    onDelete={async (id) => {
-                      // Handle delete through useUserData
-                      await refetch();
-                      return true;
-                    }}
-                  />
-                ))}
-              </div>
-            )}
-          </TabsContent>
-
-          {/* Places Tab */}
-          <TabsContent value="places" className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold">My Places</h2>
-              <Dialog open={showPlaceDialog} onOpenChange={setShowPlaceDialog}>
-                <DialogTrigger asChild>
-                  <Button>
-                    <Plus className="mr-2 h-4 w-4" />
-                    New Place
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Create New Place</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-medium">Name</label>
-                      <Input
-                        value={placeForm.name}
-                        onChange={(e) => setPlaceForm(prev => ({ ...prev, name: e.target.value }))}
-                        placeholder="Place name"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium">Location Type</label>
-                      <Input
-                        value={placeForm.location_type}
-                        onChange={(e) => setPlaceForm(prev => ({ ...prev, location_type: e.target.value }))}
-                        placeholder="forest, castle, city, spaceship, etc."
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium">Description</label>
-                      <Textarea
-                        value={placeForm.description}
-                        onChange={(e) => setPlaceForm(prev => ({ ...prev, description: e.target.value }))}
-                        placeholder="Describe this place..."
-                        rows={3}
-                      />
-                    </div>
-                    <Button 
-                      onClick={handleCreatePlace} 
-                      className="w-full"
-                      disabled={isCreatingPlace}
-                    >
-                      {isCreatingPlace ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Creating...
-                        </>
-                      ) : (
-                        'Create Place'
-                      )}
-                    </Button>
+        {/* Places Tab */}
+        <TabsContent value="places" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold">My Places</h2>
+            <Dialog open={showPlaceDialog} onOpenChange={setShowPlaceDialog}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="mr-2 h-4 w-4" />
+                  New Place
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Create New Place</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium">Name</label>
+                    <Input
+                      value={placeForm.name}
+                      onChange={(e) => setPlaceForm(prev => ({ ...prev, name: e.target.value }))}
+                      placeholder="Place name"
+                    />
                   </div>
-                </DialogContent>
-              </Dialog>
-            </div>
-
-            {places.length === 0 ? (
-              <Card>
-                <CardContent className="pt-6 text-center">
-                  <MapPin className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                  <h3 className="text-lg font-semibold mb-2">No Places Yet</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Create your first place to set the scene for your stories.
-                  </p>
-                  <Button onClick={() => setShowPlaceDialog(true)}>
-                    <Plus className="mr-2 h-4 w-4" />
-                    Create First Place
+                  <div>
+                    <label className="text-sm font-medium">Location Type</label>
+                    <Input
+                      value={placeForm.location_type}
+                      onChange={(e) => setPlaceForm(prev => ({ ...prev, location_type: e.target.value }))}
+                      placeholder="forest, castle, city, spaceship, etc."
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Description</label>
+                    <Textarea
+                      value={placeForm.description}
+                      onChange={(e) => setPlaceForm(prev => ({ ...prev, description: e.target.value }))}
+                      placeholder="Describe this place..."
+                      rows={3}
+                    />
+                  </div>
+                  <Button 
+                    onClick={handleCreatePlace} 
+                    className="w-full"
+                    disabled={isCreatingPlace}
+                  >
+                    {isCreatingPlace ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Creating...
+                      </>
+                    ) : (
+                      'Create Place'
+                    )}
                   </Button>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {places.map((place) => (
-                  <PlaceCard
-                    key={place.id}
-                    place={place}
-                    onUpdate={updatePlace}
-                    onDelete={deletePlace}
-                  />
-                ))}
-              </div>
-            )}
-          </TabsContent>
-
-          {/* Stories Tab */}
-          <TabsContent value="stories" className="space-y-6">
-            <h2 className="text-2xl font-bold">My Stories</h2>
-            
-            {stories.length === 0 ? (
-              <Card>
-                <CardContent className="pt-6 text-center">
-                  <BookOpen className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                  <h3 className="text-lg font-semibold mb-2">No Stories Yet</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Generate your first story using the Create Story tab.
-                  </p>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {stories.map((story) => (
-                  <StoryCard
-                    key={story.id}
-                    story={story}
-                    onUpdate={async (id, data) => {
-                      // Handle story updates
-                      await refetch();
-                    }}
-                    onDelete={async (id) => {
-                      // Handle story deletion
-                      await refetch();
-                    }}
-                    onGenerateImage={generateStoryImage}
-                  />
-                ))}
-              </div>
-            )}
-          </TabsContent>
-        </Tabs>
-
-        {/* Story Output - shown after generation */}
-        {currentStory && (
-          <div className="mt-8 animate-fade-in">
-            <StoryOutputPreview 
-              story={currentStory}
-              onSave={() => {
-                // TODO: Implement save functionality
-                console.log('Saving story:', currentStory);
-              }}
-              onContinue={() => {
-                // TODO: Implement continue functionality
-                console.log('Continuing story:', currentStory);
-              }}
-              onRegenerate={() => {
-                // Clear current story to allow regeneration
-                setCurrentStory(null);
-              }}
-              isGenerating={isGeneratingSimple}
-              canContinue={!currentStory.isComplete}
-            />
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
-        )}
-      </div>
-    </Layout>
+
+          {places.length === 0 ? (
+            <Card>
+              <CardContent className="pt-6 text-center">
+                <MapPin className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                <h3 className="text-lg font-semibold mb-2">No Places Yet</h3>
+                <p className="text-muted-foreground mb-4">
+                  Create your first place to set the scene for your stories.
+                </p>
+                <Button onClick={() => setShowPlaceDialog(true)}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Create First Place
+                </Button>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {places.map((place) => (
+                <PlaceCard
+                  key={place.id}
+                  place={place}
+                  onUpdate={updatePlace}
+                  onDelete={deletePlace}
+                />
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
+        {/* Stories Tab */}
+        <TabsContent value="stories" className="space-y-6">
+          <h2 className="text-2xl font-bold">My Stories</h2>
+          
+          {stories.length === 0 ? (
+            <Card>
+              <CardContent className="pt-6 text-center">
+                <BookOpen className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                <h3 className="text-lg font-semibold mb-2">No Stories Yet</h3>
+                <p className="text-muted-foreground mb-4">
+                  Generate your first story using the Create Story tab.
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {stories.map((story) => (
+                <StoryCard
+                  key={story.id}
+                  story={story}
+                  onUpdate={async (id, data) => {
+                    // Handle story updates
+                    await refetch();
+                  }}
+                  onDelete={async (id) => {
+                    // Handle story deletion
+                    await refetch();
+                  }}
+                  onGenerateImage={generateStoryImage}
+                />
+              ))}
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
+
+      {/* Story Output - shown after generation */}
+      {currentStory && (
+        <div className="mt-8 animate-fade-in">
+          <StoryOutputPreview 
+            story={currentStory}
+            onSave={() => {
+              // TODO: Implement save functionality
+              console.log('Saving story:', currentStory);
+            }}
+            onContinue={() => {
+              // TODO: Implement continue functionality
+              console.log('Continuing story:', currentStory);
+            }}
+            onRegenerate={() => {
+              // Clear current story to allow regeneration
+              setCurrentStory(null);
+            }}
+            isGenerating={isGeneratingSimple}
+            canContinue={!currentStory.isComplete}
+          />
+        </div>
+      )}
+    </div>
   );
 }
