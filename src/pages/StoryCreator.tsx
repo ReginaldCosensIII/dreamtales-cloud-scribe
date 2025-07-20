@@ -8,7 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { toast } from 'sonner';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { 
   Plus, 
   Users, 
@@ -16,19 +18,28 @@ import {
   BookOpen, 
   Wand2, 
   Loader2,
-  Sparkles
+  Sparkles,
+  Edit3,
+  Info
 } from 'lucide-react';
 
 import { CharacterCard } from '@/components/CharacterCard';
 import { PlaceCard } from '@/components/PlaceCard';
 import { StoryCard } from '@/components/StoryCard';
+import { StoryBuilderForm } from '@/components/StoryBuilderForm';
+import { FreeformPromptForm } from '@/components/FreeformPromptForm';
+import { StoryOutputPreview } from '@/components/StoryOutputPreview';
 import { useStoryCreation } from '@/hooks/useStoryCreation';
+import { useStoryGeneration } from '@/hooks/useStoryGeneration';
 import { useUserData } from '@/hooks/useUserData';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function StoryCreator() {
   const { user } = useAuth();
-  const { createCharacter } = useUserData();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const { createCharacter, profile } = useUserData();
+  const { generateStory, isGenerating: isGeneratingSimple, error: generationError } = useStoryGeneration();
   const {
     places,
     stories,
@@ -44,6 +55,31 @@ export default function StoryCreator() {
     generateStoryImage,
     refetch
   } = useStoryCreation();
+
+  // Generator modes and states
+  const [generatorMode, setGeneratorMode] = useState<"structured" | "freeform">("freeform");
+  const [showModeInfo, setShowModeInfo] = useState(false);
+  const [currentStory, setCurrentStory] = useState<{
+    title: string;
+    content: string;
+    isComplete: boolean;
+  } | null>(null);
+
+  // Redirect if not signed in
+  useEffect(() => {
+    if (!user) {
+      navigate('/auth', { state: { from: '/creator' } });
+    }
+  }, [user, navigate]);
+
+  // Handle pre-loaded prompt from homepage
+  useEffect(() => {
+    const promptFromUrl = searchParams.get('prompt');
+    if (promptFromUrl && user) {
+      setGeneratorMode('freeform');
+      setShowModeInfo(true);
+    }
+  }, [searchParams, user]);
 
   // Form states
   const [characterForm, setCharacterForm] = useState({
@@ -79,10 +115,61 @@ export default function StoryCreator() {
   }, [user]);
 
   useEffect(() => {
-    if (error) {
-      toast.error(error);
+    if (error || generationError) {
+      toast.error(error || generationError);
     }
-  }, [error]);
+  }, [error, generationError]);
+
+  // Generator handlers from original StoryGenerator
+  const handleStructuredGenerate = async (data: any) => {
+    if (!user) {
+      navigate('/auth');
+      return;
+    }
+
+    const structuredPrompt = `Write a ${data.theme} children's story about ${data.childName} in a ${data.setting}. 
+    Include these favorite things: ${data.favoriteThings.join(', ')}. 
+    ${data.additionalDetails ? `Additional details: ${data.additionalDetails}` : ''}
+    Make it age-appropriate, engaging, and about 3-5 paragraphs long.`;
+
+    const result = await generateStory({
+      prompt: structuredPrompt,
+      storyType: 'structured',
+      length: 'medium',
+      setting: data.setting,
+      themes: [data.theme],
+      characters: [{ name: data.childName, traits: data.favoriteThings }]
+    });
+
+    if (result) {
+      setCurrentStory({
+        title: result.title || `${data.childName}'s ${data.theme} Adventure`,
+        content: result.content,
+        isComplete: result.is_complete || false
+      });
+    }
+  };
+
+  const handleFreeformGenerate = async (data: any) => {
+    if (!user) {
+      navigate('/auth');
+      return;
+    }
+
+    const result = await generateStory({
+      prompt: data.prompt,
+      storyType: 'freeform',
+      length: data.length
+    });
+
+    if (result) {
+      setCurrentStory({
+        title: result.title || "Your Custom Story",
+        content: result.content,
+        isComplete: result.is_complete || true
+      });
+    }
+  };
 
   const handleCreateCharacter = async () => {
     if (!characterForm.name.trim()) {
@@ -195,11 +282,46 @@ export default function StoryCreator() {
           </p>
         </div>
 
-        <Tabs defaultValue="create" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="create" className="flex items-center gap-2">
+        {/* User Stats */}
+        {profile && (
+          <Card className="mb-6 bg-secondary/10 border-secondary/20">
+            <CardContent className="pt-6">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="text-sm">
+                    <span className="text-muted-foreground">Welcome back, </span>
+                    <span className="font-medium">{profile.display_name || user.email}</span>
+                  </div>
+                  <Badge variant="secondary">
+                    {profile.subscription_tier || 'free'} plan
+                  </Badge>
+                </div>
+                <div className="text-sm">
+                  <span className="text-muted-foreground">Stories this month: </span>
+                  <Badge variant="outline">
+                    {profile.subscription_tier === 'free' 
+                      ? `${profile.stories_this_month}/30` 
+                      : `${profile.stories_this_month} (unlimited)`}
+                  </Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        <Tabs defaultValue="guided" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-6">
+            <TabsTrigger value="guided" className="flex items-center gap-2">
+              <Wand2 className="h-4 w-4" />
+              Guided
+            </TabsTrigger>
+            <TabsTrigger value="freeform" className="flex items-center gap-2">
+              <Edit3 className="h-4 w-4" />
+              Freeform
+            </TabsTrigger>
+            <TabsTrigger value="advanced" className="flex items-center gap-2">
               <Sparkles className="h-4 w-4" />
-              Create Story
+              Advanced
             </TabsTrigger>
             <TabsTrigger value="characters" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
@@ -215,14 +337,61 @@ export default function StoryCreator() {
             </TabsTrigger>
           </TabsList>
 
-          {/* Create Story Tab */}
-          <TabsContent value="create" className="space-y-6">
+          {/* Guided Story Builder Tab */}
+          <TabsContent value="guided" className="space-y-6">
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-bold mb-2">Guided Story Builder</h2>
+              <p className="text-muted-foreground">
+                Follow our step-by-step guide to create personalized bedtime stories.
+              </p>
+            </div>
+            <StoryBuilderForm 
+              onGenerate={handleStructuredGenerate}
+              isGenerating={isGeneratingSimple}
+            />
+          </TabsContent>
+
+          {/* Freeform Creator Tab */}
+          <TabsContent value="freeform" className="space-y-6">
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-bold mb-2">Freeform Creator</h2>
+              <p className="text-muted-foreground">
+                Let your imagination run wild with complete creative freedom.
+              </p>
+            </div>
+            {showModeInfo && (
+              <Alert className="mb-4">
+                <Info className="h-4 w-4" />
+                <AlertDescription>
+                  You're in Freeform Creator mode! Want more guidance? Try our{' '}
+                  <button 
+                    onClick={() => setGeneratorMode('structured')} 
+                    className="text-primary underline hover:no-underline"
+                  >
+                    Guided Story Builder
+                  </button>{' '}
+                  instead.
+                </AlertDescription>
+              </Alert>
+            )}
+            <FreeformPromptForm 
+              onGenerate={handleFreeformGenerate}
+              isGenerating={isGeneratingSimple}
+              initialPrompt={searchParams.get('prompt') || ''}
+            />
+          </TabsContent>
+
+          {/* Advanced Creator Tab (with custom characters and places) */}
+          <TabsContent value="advanced" className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Wand2 className="h-5 w-5" />
-                  Generate New Story
+                  <Sparkles className="h-5 w-5" />
+                  Advanced Story Creator
                 </CardTitle>
+                <p className="text-muted-foreground">
+                  Use your custom characters and places to create unique stories.
+                </p>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid gap-4">
@@ -587,6 +756,29 @@ export default function StoryCreator() {
             )}
           </TabsContent>
         </Tabs>
+
+        {/* Story Output - shown after generation */}
+        {currentStory && (
+          <div className="mt-8 animate-fade-in">
+            <StoryOutputPreview 
+              story={currentStory}
+              onSave={() => {
+                // TODO: Implement save functionality
+                console.log('Saving story:', currentStory);
+              }}
+              onContinue={() => {
+                // TODO: Implement continue functionality
+                console.log('Continuing story:', currentStory);
+              }}
+              onRegenerate={() => {
+                // Clear current story to allow regeneration
+                setCurrentStory(null);
+              }}
+              isGenerating={isGeneratingSimple}
+              canContinue={!currentStory.isComplete}
+            />
+          </div>
+        )}
       </div>
     </Layout>
   );
