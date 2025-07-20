@@ -31,7 +31,7 @@ interface Story {
   updated_at: string;
 }
 
-interface Character {
+export interface Character {
   id: string;
   user_id: string;
   name: string;

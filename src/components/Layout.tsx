@@ -59,6 +59,14 @@ const Layout = ({ children }: LayoutProps) => {
               >
                 Generator
               </Link>
+              <Link 
+                to="/creator" 
+                className={`text-muted-foreground hover:text-foreground transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary after:transition-transform after:duration-300 ${
+                  location.pathname === '/creator' ? 'text-primary font-medium after:scale-x-100' : 'after:scale-x-0 hover:after:scale-x-100'
+                }`}
+              >
+                Creator
+              </Link>
               {user ? (
                 <UserDropdown />
               ) : (
@@ -111,6 +119,15 @@ const Layout = ({ children }: LayoutProps) => {
                 >
                   Generator
                 </Link>
+                <Link 
+                  to="/creator" 
+                  className={`transition-colors ${
+                    location.pathname === '/creator' ? 'text-primary font-medium' : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Creator
+                </Link>
                 {user ? (
                   <UserDropdown />
                 ) : (
@@ -158,6 +175,9 @@ const Layout = ({ children }: LayoutProps) => {
                 </Link>
                 <Link to="/generator" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
                   Story Generator
+                </Link>
+                <Link to="/creator" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  Story Creator
                 </Link>
                 {user && (
                   <Link to="/account" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
