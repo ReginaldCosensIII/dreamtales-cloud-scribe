@@ -7,7 +7,6 @@ import Layout from "./components/Layout";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Auth from "./pages/Auth";
-import StoryGenerator from "./pages/StoryGenerator";
 import StoryCreator from "./pages/StoryCreator";
 import Account from "./pages/Account";
 import NotFound from "./pages/NotFound";
