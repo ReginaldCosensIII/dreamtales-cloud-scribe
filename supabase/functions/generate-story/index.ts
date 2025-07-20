@@ -49,7 +49,7 @@ serve(async (req) => {
     }
 
     // Check story limits based on tier
-    if (profile.subscription_tier === 'free' && profile.stories_this_month >= 3) {
+    if (profile.subscription_tier === 'free' && profile.stories_this_month >= 30) {
       return new Response(JSON.stringify({ 
         error: 'Story limit reached. Upgrade to Premium for unlimited stories!' 
       }), {
