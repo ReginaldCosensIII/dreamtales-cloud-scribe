@@ -306,30 +306,30 @@ export default function StoryCreator() {
       )}
 
       <Tabs defaultValue="guided" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-6">
-          <TabsTrigger value="guided" className="flex items-center gap-2">
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
+          <TabsTrigger value="guided" className="flex items-center gap-1 sm:gap-2">
             <Wand2 className="h-4 w-4" />
-            Guided
+            <span className="hidden sm:inline">Guided</span>
           </TabsTrigger>
-          <TabsTrigger value="freeform" className="flex items-center gap-2">
+          <TabsTrigger value="freeform" className="flex items-center gap-1 sm:gap-2">
             <Edit3 className="h-4 w-4" />
-            Freeform
+            <span className="hidden sm:inline">Freeform</span>
           </TabsTrigger>
-          <TabsTrigger value="advanced" className="flex items-center gap-2">
+          <TabsTrigger value="advanced" className="flex items-center gap-1 sm:gap-2">
             <Sparkles className="h-4 w-4" />
-            Advanced
+            <span className="hidden sm:inline">Advanced</span>
           </TabsTrigger>
-          <TabsTrigger value="characters" className="flex items-center gap-2">
+          <TabsTrigger value="characters" className="flex items-center gap-1 sm:gap-2">
             <Users className="h-4 w-4" />
-            Characters
+            <span className="hidden sm:inline">Characters</span>
           </TabsTrigger>
-          <TabsTrigger value="places" className="flex items-center gap-2">
+          <TabsTrigger value="places" className="flex items-center gap-1 sm:gap-2">
             <MapPin className="h-4 w-4" />
-            Places
+            <span className="hidden sm:inline">Places</span>
           </TabsTrigger>
-          <TabsTrigger value="stories" className="flex items-center gap-2">
+          <TabsTrigger value="stories" className="flex items-center gap-1 sm:gap-2">
             <BookOpen className="h-4 w-4" />
-            My Stories
+            <span className="hidden sm:inline">Stories</span>
           </TabsTrigger>
         </TabsList>
 
