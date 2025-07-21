@@ -306,30 +306,84 @@ export default function StoryCreator() {
       )}
 
       <Tabs defaultValue="guided" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
-          <TabsTrigger value="guided" className="flex items-center gap-1 sm:gap-2">
+        {/* Mobile dropdown navigation */}
+        <div className="block sm:hidden">
+          <Select defaultValue="guided" onValueChange={(value) => {
+            // Find the tab trigger and click it
+            const tabTrigger = document.querySelector(`[data-value="${value}"]`) as HTMLElement;
+            if (tabTrigger) {
+              tabTrigger.click();
+            }
+          }}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select a section" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="guided">
+                <div className="flex items-center gap-2">
+                  <Wand2 className="h-4 w-4" />
+                  Guided Story Builder
+                </div>
+              </SelectItem>
+              <SelectItem value="freeform">
+                <div className="flex items-center gap-2">
+                  <Edit3 className="h-4 w-4" />
+                  Freeform Creator
+                </div>
+              </SelectItem>
+              <SelectItem value="advanced">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-4 w-4" />
+                  Advanced Creator
+                </div>
+              </SelectItem>
+              <SelectItem value="characters">
+                <div className="flex items-center gap-2">
+                  <Users className="h-4 w-4" />
+                  Manage Characters
+                </div>
+              </SelectItem>
+              <SelectItem value="places">
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4" />
+                  Manage Places
+                </div>
+              </SelectItem>
+              <SelectItem value="stories">
+                <div className="flex items-center gap-2">
+                  <BookOpen className="h-4 w-4" />
+                  My Stories
+                </div>
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Desktop/tablet tabs */}
+        <TabsList className="hidden sm:grid w-full grid-cols-3 lg:grid-cols-6">
+          <TabsTrigger value="guided" className="flex items-center gap-2" data-value="guided">
             <Wand2 className="h-4 w-4" />
-            <span className="hidden sm:inline">Guided</span>
+            <span className="hidden lg:inline">Guided</span>
           </TabsTrigger>
-          <TabsTrigger value="freeform" className="flex items-center gap-1 sm:gap-2">
+          <TabsTrigger value="freeform" className="flex items-center gap-2" data-value="freeform">
             <Edit3 className="h-4 w-4" />
-            <span className="hidden sm:inline">Freeform</span>
+            <span className="hidden lg:inline">Freeform</span>
           </TabsTrigger>
-          <TabsTrigger value="advanced" className="flex items-center gap-1 sm:gap-2">
+          <TabsTrigger value="advanced" className="flex items-center gap-2" data-value="advanced">
             <Sparkles className="h-4 w-4" />
-            <span className="hidden sm:inline">Advanced</span>
+            <span className="hidden lg:inline">Advanced</span>
           </TabsTrigger>
-          <TabsTrigger value="characters" className="flex items-center gap-1 sm:gap-2">
+          <TabsTrigger value="characters" className="flex items-center gap-2" data-value="characters">
             <Users className="h-4 w-4" />
-            <span className="hidden sm:inline">Characters</span>
+            <span className="hidden lg:inline">Characters</span>
           </TabsTrigger>
-          <TabsTrigger value="places" className="flex items-center gap-1 sm:gap-2">
+          <TabsTrigger value="places" className="flex items-center gap-2" data-value="places">
             <MapPin className="h-4 w-4" />
-            <span className="hidden sm:inline">Places</span>
+            <span className="hidden lg:inline">Places</span>
           </TabsTrigger>
-          <TabsTrigger value="stories" className="flex items-center gap-1 sm:gap-2">
+          <TabsTrigger value="stories" className="flex items-center gap-2" data-value="stories">
             <BookOpen className="h-4 w-4" />
-            <span className="hidden sm:inline">Stories</span>
+            <span className="hidden lg:inline">Stories</span>
           </TabsTrigger>
         </TabsList>
 
