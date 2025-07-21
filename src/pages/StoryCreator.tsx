@@ -58,6 +58,7 @@ export default function StoryCreator() {
   // Generator modes and states
   const [generatorMode, setGeneratorMode] = useState<"structured" | "freeform">("freeform");
   const [showModeInfo, setShowModeInfo] = useState(false);
+  const [activeTab, setActiveTab] = useState("guided");
   const [currentStory, setCurrentStory] = useState<{
     title: string;
     content: string;
@@ -305,16 +306,10 @@ export default function StoryCreator() {
         </Card>
       )}
 
-      <Tabs defaultValue="guided" className="space-y-6">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         {/* Mobile dropdown navigation */}
         <div className="block sm:hidden">
-          <Select defaultValue="guided" onValueChange={(value) => {
-            // Find the tab trigger and click it
-            const tabTrigger = document.querySelector(`[data-value="${value}"]`) as HTMLElement;
-            if (tabTrigger) {
-              tabTrigger.click();
-            }
-          }}>
+          <Select value={activeTab} onValueChange={setActiveTab}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select a section" />
             </SelectTrigger>
@@ -360,30 +355,30 @@ export default function StoryCreator() {
         </div>
 
         {/* Desktop/tablet tabs */}
-        <TabsList className="hidden sm:grid w-full grid-cols-3 lg:grid-cols-6">
-          <TabsTrigger value="guided" className="flex items-center gap-2" data-value="guided">
+        <TabsList className="hidden sm:grid w-full grid-cols-6">
+          <TabsTrigger value="guided" className="flex items-center gap-1 sm:gap-2">
             <Wand2 className="h-4 w-4" />
-            <span className="hidden lg:inline">Guided</span>
+            <span className="hidden sm:inline">Guided</span>
           </TabsTrigger>
-          <TabsTrigger value="freeform" className="flex items-center gap-2" data-value="freeform">
+          <TabsTrigger value="freeform" className="flex items-center gap-1 sm:gap-2">
             <Edit3 className="h-4 w-4" />
-            <span className="hidden lg:inline">Freeform</span>
+            <span className="hidden sm:inline">Freeform</span>
           </TabsTrigger>
-          <TabsTrigger value="advanced" className="flex items-center gap-2" data-value="advanced">
+          <TabsTrigger value="advanced" className="flex items-center gap-1 sm:gap-2">
             <Sparkles className="h-4 w-4" />
-            <span className="hidden lg:inline">Advanced</span>
+            <span className="hidden sm:inline">Advanced</span>
           </TabsTrigger>
-          <TabsTrigger value="characters" className="flex items-center gap-2" data-value="characters">
+          <TabsTrigger value="characters" className="flex items-center gap-1 sm:gap-2">
             <Users className="h-4 w-4" />
-            <span className="hidden lg:inline">Characters</span>
+            <span className="hidden sm:inline">Characters</span>
           </TabsTrigger>
-          <TabsTrigger value="places" className="flex items-center gap-2" data-value="places">
+          <TabsTrigger value="places" className="flex items-center gap-1 sm:gap-2">
             <MapPin className="h-4 w-4" />
-            <span className="hidden lg:inline">Places</span>
+            <span className="hidden sm:inline">Places</span>
           </TabsTrigger>
-          <TabsTrigger value="stories" className="flex items-center gap-2" data-value="stories">
+          <TabsTrigger value="stories" className="flex items-center gap-1 sm:gap-2">
             <BookOpen className="h-4 w-4" />
-            <span className="hidden lg:inline">Stories</span>
+            <span className="hidden sm:inline">Stories</span>
           </TabsTrigger>
         </TabsList>
 
