@@ -88,17 +88,17 @@ export const FreeformPromptForm = ({ onGenerate, isGenerating, initialPrompt = "
           <Label className="text-sm font-medium mb-3 block">
             Need inspiration? Try these examples:
           </Label>
-          <div className="grid gap-2">
+          <div className="grid gap-2 sm:grid-cols-2">
             {examplePrompts.map((prompt, index) => (
               <Button
                 key={index}
                 variant="secondary"
                 size="sm"
-                className="justify-start text-left h-auto p-3 text-muted-foreground hover:text-foreground"
+                className="justify-start text-left h-auto p-3 text-muted-foreground hover:text-foreground whitespace-normal"
                 onClick={() => useExamplePrompt(prompt)}
               >
-                <Palette className="h-3 w-3 mr-2 flex-shrink-0" />
-                <span className="text-xs">{prompt}</span>
+                <Palette className="h-3 w-3 mr-2 flex-shrink-0 mt-0.5" />
+                <span className="text-xs leading-relaxed">{prompt}</span>
               </Button>
             ))}
           </div>
