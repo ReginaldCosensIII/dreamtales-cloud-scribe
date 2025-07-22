@@ -5,12 +5,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sparkles, Clock, Smile, Palette } from "lucide-react";
+import { CharacterCard } from "@/components/CharacterCard";
+import { PlaceCard } from "@/components/PlaceCard";
+import { useUserData } from "@/hooks/useUserData";
+import { useStoryCreation } from "@/hooks/useStoryCreation";
+import { Sparkles, Clock, Smile, Palette, Users, MapPin } from "lucide-react";
 
 interface FreeformData {
   prompt: string;
   length: 'short' | 'medium' | 'long';
   tone: 'calm' | 'funny' | 'magical';
+  selectedCharacters: string[];
+  selectedPlaces: string[];
 }
 
 interface FreeformPromptFormProps {
@@ -32,10 +38,14 @@ const toneOptions = [
 ];
 
 export const FreeformPromptForm = ({ onGenerate, isGenerating, initialPrompt = "" }: FreeformPromptFormProps) => {
+  const { characters } = useUserData();
+  const { places } = useStoryCreation();
   const [formData, setFormData] = useState<FreeformData>({
     prompt: initialPrompt,
     length: 'medium',
-    tone: 'magical'
+    tone: 'magical',
+    selectedCharacters: [],
+    selectedPlaces: []
   });
 
   const handleGenerate = () => {
@@ -167,6 +177,66 @@ export const FreeformPromptForm = ({ onGenerate, isGenerating, initialPrompt = "
             ))}
           </div>
         </div>
+
+        {/* Saved Characters */}
+        {characters && characters.length > 0 && (
+          <div>
+            <Label className="text-base font-medium flex items-center gap-2 mb-3">
+              <Users className="h-4 w-4" />
+              Use Saved Characters (Optional)
+            </Label>
+            <div className="grid gap-2 sm:grid-cols-2 max-h-60 overflow-y-auto">
+              {characters.map((character) => (
+                <CharacterCard
+                  key={character.id}
+                  character={character}
+                  selectable
+                  selected={formData.selectedCharacters.includes(character.id)}
+                  onSelect={(id) => {
+                    setFormData(prev => ({
+                      ...prev,
+                      selectedCharacters: prev.selectedCharacters.includes(id)
+                        ? prev.selectedCharacters.filter(cId => cId !== id)
+                        : [...prev.selectedCharacters, id]
+                    }));
+                  }}
+                  onUpdate={async () => null}
+                  onDelete={async () => false}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Saved Places */}
+        {places && places.length > 0 && (
+          <div>
+            <Label className="text-base font-medium flex items-center gap-2 mb-3">
+              <MapPin className="h-4 w-4" />
+              Use Saved Places (Optional)
+            </Label>
+            <div className="grid gap-2 sm:grid-cols-2 max-h-60 overflow-y-auto">
+              {places.map((place) => (
+                <PlaceCard
+                  key={place.id}
+                  place={place}
+                  selectable
+                  selected={formData.selectedPlaces.includes(place.id)}
+                  onSelect={(id) => {
+                    setFormData(prev => ({
+                      ...prev,
+                      selectedPlaces: prev.selectedPlaces.includes(id)
+                        ? prev.selectedPlaces.filter(pId => pId !== id)
+                        : [...prev.selectedPlaces, id]
+                    }));
+                  }}
+                  onUpdate={async () => null}
+                  onDelete={async () => false}
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         <Button 
           onClick={handleGenerate}

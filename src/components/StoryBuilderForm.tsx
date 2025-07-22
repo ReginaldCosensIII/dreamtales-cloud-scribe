@@ -6,7 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { User, Heart, Wand2, MapPin, ChevronRight, Plus, X } from "lucide-react";
+import { User, Heart, Wand2, MapPin, ChevronRight, Plus, X, Users } from "lucide-react";
+import { CharacterCard } from "@/components/CharacterCard";
+import { PlaceCard } from "@/components/PlaceCard";
+import { useUserData } from "@/hooks/useUserData";
+import { useStoryCreation } from "@/hooks/useStoryCreation";
 
 interface StoryBuilderData {
   childName: string;
@@ -14,6 +18,8 @@ interface StoryBuilderData {
   theme: string;
   setting: string;
   additionalDetails: string;
+  selectedCharacters: string[];
+  selectedPlaces: string[];
 }
 
 interface StoryBuilderFormProps {
@@ -40,13 +46,17 @@ const settings = [
 ];
 
 export const StoryBuilderForm = ({ onGenerate, isGenerating }: StoryBuilderFormProps) => {
+  const { characters } = useUserData();
+  const { places } = useStoryCreation();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<StoryBuilderData>({
     childName: "",
     favoriteThings: [],
     theme: "",
     setting: "",
-    additionalDetails: ""
+    additionalDetails: "",
+    selectedCharacters: [],
+    selectedPlaces: []
   });
   const [newFavoriteThing, setNewFavoriteThing] = useState("");
 
@@ -68,7 +78,7 @@ export const StoryBuilderForm = ({ onGenerate, isGenerating }: StoryBuilderFormP
   };
 
   const handleNext = () => {
-    if (step < 4) setStep(step + 1);
+    if (step < 6) setStep(step + 1);
   };
 
   const handleBack = () => {
@@ -85,6 +95,8 @@ export const StoryBuilderForm = ({ onGenerate, isGenerating }: StoryBuilderFormP
       case 2: return formData.favoriteThings.length > 0;
       case 3: return formData.theme !== "";
       case 4: return formData.setting !== "";
+      case 5: return true; // Characters optional
+      case 6: return true; // Places optional
       default: return true;
     }
   };
@@ -97,10 +109,10 @@ export const StoryBuilderForm = ({ onGenerate, isGenerating }: StoryBuilderFormP
             <Wand2 className="h-5 w-5 text-primary" />
             Story Builder
           </CardTitle>
-          <Badge variant="secondary">Step {step} of 4</Badge>
+          <Badge variant="secondary">Step {step} of 6</Badge>
         </div>
         <div className="flex gap-2 mt-4">
-          {[1, 2, 3, 4].map((num) => (
+          {[1, 2, 3, 4, 5, 6].map((num) => (
             <div
               key={num}
               className={`h-2 flex-1 rounded-full transition-colors ${
@@ -252,6 +264,86 @@ export const StoryBuilderForm = ({ onGenerate, isGenerating }: StoryBuilderFormP
           </div>
         )}
 
+        {step === 5 && (
+          <div className="space-y-4 animate-fade-in">
+            <div className="text-center mb-6">
+              <Users className="h-12 w-12 text-primary mx-auto mb-2" />
+              <h3 className="text-lg font-semibold">Add saved characters? (Optional)</h3>
+              <p className="text-muted-foreground text-sm">Select any saved characters to include in the story</p>
+            </div>
+            
+            {characters && characters.length > 0 ? (
+              <div className="grid gap-3 max-h-80 overflow-y-auto">
+                {characters.map((character) => (
+                  <CharacterCard
+                    key={character.id}
+                    character={character}
+                    selectable
+                    selected={formData.selectedCharacters.includes(character.id)}
+                    onSelect={(id) => {
+                      setFormData(prev => ({
+                        ...prev,
+                        selectedCharacters: prev.selectedCharacters.includes(id)
+                          ? prev.selectedCharacters.filter(cId => cId !== id)
+                          : [...prev.selectedCharacters, id]
+                      }));
+                    }}
+                    onUpdate={async () => null}
+                    onDelete={async () => false}
+                  />
+                ))}
+              </div>
+            ) : (
+              <Card className="border-dashed border-2 border-muted-foreground/25">
+                <CardContent className="p-6 text-center">
+                  <p className="text-muted-foreground">No saved characters yet</p>
+                  <p className="text-sm text-muted-foreground mt-1">Skip this step for now</p>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        )}
+
+        {step === 6 && (
+          <div className="space-y-4 animate-fade-in">
+            <div className="text-center mb-6">
+              <MapPin className="h-12 w-12 text-primary mx-auto mb-2" />
+              <h3 className="text-lg font-semibold">Add saved places? (Optional)</h3>
+              <p className="text-muted-foreground text-sm">Select any saved places to include in the story</p>
+            </div>
+            
+            {places && places.length > 0 ? (
+              <div className="grid gap-3 max-h-80 overflow-y-auto">
+                {places.map((place) => (
+                  <PlaceCard
+                    key={place.id}
+                    place={place}
+                    selectable
+                    selected={formData.selectedPlaces.includes(place.id)}
+                    onSelect={(id) => {
+                      setFormData(prev => ({
+                        ...prev,
+                        selectedPlaces: prev.selectedPlaces.includes(id)
+                          ? prev.selectedPlaces.filter(pId => pId !== id)
+                          : [...prev.selectedPlaces, id]
+                      }));
+                    }}
+                    onUpdate={async () => null}
+                    onDelete={async () => false}
+                  />
+                ))}
+              </div>
+            ) : (
+              <Card className="border-dashed border-2 border-muted-foreground/25">
+                <CardContent className="p-6 text-center">
+                  <p className="text-muted-foreground">No saved places yet</p>
+                  <p className="text-sm text-muted-foreground mt-1">Skip this step for now</p>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        )}
+
         <div className="flex justify-between pt-4">
           <Button 
             variant="secondary" 
@@ -261,7 +353,7 @@ export const StoryBuilderForm = ({ onGenerate, isGenerating }: StoryBuilderFormP
             Back
           </Button>
           
-          {step < 4 ? (
+          {step < 6 ? (
             <Button 
               onClick={handleNext}
               disabled={!isStepValid()}

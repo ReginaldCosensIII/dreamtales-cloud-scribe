@@ -47,11 +47,16 @@ serve(async (req) => {
       throw new Error(`TTS generation failed: ${error.error?.message || 'Unknown error'}`);
     }
 
-    // Convert audio buffer to base64
+    // Convert audio buffer to base64 in chunks to prevent stack overflow
     const arrayBuffer = await response.arrayBuffer();
-    const base64Audio = btoa(
-      String.fromCharCode(...new Uint8Array(arrayBuffer))
-    );
+    const uint8Array = new Uint8Array(arrayBuffer);
+    let base64Audio = '';
+    const chunkSize = 8192;
+    
+    for (let i = 0; i < uint8Array.length; i += chunkSize) {
+      const chunk = uint8Array.slice(i, i + chunkSize);
+      base64Audio += btoa(String.fromCharCode.apply(null, Array.from(chunk)));
+    }
 
     return new Response(JSON.stringify({
       success: true,

@@ -163,22 +163,6 @@ export const StoryOutputPreview = ({
             <Button
               variant="ghost"
               size="icon"
-              onClick={toggleReading}
-              disabled={isGeneratingAudio}
-              className="h-8 w-8"
-              title="Play Audio"
-            >
-              {isGeneratingAudio ? (
-                <div className="animate-spin h-3 w-3 border-2 border-current border-t-transparent rounded-full" />
-              ) : isReading ? (
-                <Pause className="h-4 w-4" />
-              ) : (
-                <Play className="h-4 w-4" />
-              )}
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
               onClick={handleShare}
               className="h-8 w-8"
               title="Share Story"
@@ -198,9 +182,9 @@ export const StoryOutputPreview = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-wrap gap-3 pt-4 border-t border-border/50">
-          {/* Primary Actions */}
-          <div className="flex gap-2 flex-1 min-w-0">
+        <div className="flex flex-col gap-3 pt-4 border-t border-border/50">
+          {/* Primary Actions Row */}
+          <div className="flex gap-2">
             {onSave && (
               <Button variant="primary" size="sm" onClick={onSave} className="flex-1">
                 <Heart className="mr-2 h-4 w-4" />
@@ -231,16 +215,16 @@ export const StoryOutputPreview = ({
             )}
           </div>
 
-          {/* Secondary Actions */}
-          <div className="flex gap-2">
-            <Button variant="secondary" size="sm" onClick={handleDownload}>
-              <Download className="mr-2 h-4 w-4" />
-              Download
+          {/* Secondary Actions Row */}
+          <div className="flex gap-2 flex-wrap">
+            <Button variant="secondary" size="sm" onClick={handleDownload} className="flex-1 min-w-0">
+              <Download className="mr-1 h-3 w-3" />
+              <span className="hidden sm:inline">Download</span>
             </Button>
             
-            <Button variant="secondary" size="sm" onClick={() => window.print()}>
-              <Printer className="mr-2 h-4 w-4" />
-              Print
+            <Button variant="secondary" size="sm" onClick={() => window.print()} className="flex-1 min-w-0">
+              <Printer className="mr-1 h-3 w-3" />
+              <span className="hidden sm:inline">Print</span>
             </Button>
             
             {onRegenerate && (
@@ -249,9 +233,10 @@ export const StoryOutputPreview = ({
                 size="sm" 
                 onClick={onRegenerate}
                 disabled={isGenerating}
+                className="flex-1 min-w-0"
               >
-                <RotateCcw className="mr-2 h-4 w-4" />
-                Retry
+                <RotateCcw className="mr-1 h-3 w-3" />
+                <span className="hidden sm:inline">Retry</span>
               </Button>
             )}
           </div>

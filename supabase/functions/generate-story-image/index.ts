@@ -62,7 +62,7 @@ serve(async (req) => {
         prompt: `Children's storybook illustration: ${requestData.prompt}. Style: colorful, friendly, age-appropriate, digital art`,
         n: 1,
         size: '1024x1024',
-        quality: 'standard'
+        quality: 'high'
       }),
     });
 
