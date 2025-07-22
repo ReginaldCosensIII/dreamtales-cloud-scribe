@@ -147,6 +147,14 @@ export default function StoryCreator() {
         content: result.content,
         isComplete: result.is_complete || false
       });
+      toast.success('Story generated successfully!');
+      // Scroll to the generated story
+      setTimeout(() => {
+        const storyElement = document.querySelector('[data-story-output]');
+        if (storyElement) {
+          storyElement.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
     }
   };
 
@@ -168,6 +176,14 @@ export default function StoryCreator() {
         content: result.content,
         isComplete: result.is_complete || true
       });
+      toast.success('Story generated successfully!');
+      // Scroll to the generated story
+      setTimeout(() => {
+        const storyElement = document.querySelector('[data-story-output]');
+        if (storyElement) {
+          storyElement.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
     }
   };
 
@@ -326,12 +342,6 @@ export default function StoryCreator() {
                   Freeform Creator
                 </div>
               </SelectItem>
-              <SelectItem value="advanced">
-                <div className="flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" />
-                  Advanced Creator
-                </div>
-              </SelectItem>
               <SelectItem value="characters">
                 <div className="flex items-center gap-2">
                   <Users className="h-4 w-4" />
@@ -355,7 +365,7 @@ export default function StoryCreator() {
         </div>
 
         {/* Desktop/tablet tabs */}
-        <TabsList className="hidden sm:grid w-full grid-cols-6">
+        <TabsList className="hidden sm:grid w-full grid-cols-5">
           <TabsTrigger value="guided" className="flex items-center gap-1 sm:gap-2">
             <Wand2 className="h-4 w-4" />
             <span className="hidden sm:inline">Guided</span>
@@ -363,10 +373,6 @@ export default function StoryCreator() {
           <TabsTrigger value="freeform" className="flex items-center gap-1 sm:gap-2">
             <Edit3 className="h-4 w-4" />
             <span className="hidden sm:inline">Freeform</span>
-          </TabsTrigger>
-          <TabsTrigger value="advanced" className="flex items-center gap-1 sm:gap-2">
-            <Sparkles className="h-4 w-4" />
-            <span className="hidden sm:inline">Advanced</span>
           </TabsTrigger>
           <TabsTrigger value="characters" className="flex items-center gap-1 sm:gap-2">
             <Users className="h-4 w-4" />
@@ -426,155 +432,6 @@ export default function StoryCreator() {
           />
         </TabsContent>
 
-        {/* Advanced Creator Tab (with custom characters and places) */}
-        <TabsContent value="advanced" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5" />
-                Advanced Story Creator
-              </CardTitle>
-              <p className="text-muted-foreground">
-                Use your custom characters and places to create unique stories.
-              </p>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid gap-4">
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Story Prompt</label>
-                  <Textarea
-                    value={storyForm.prompt}
-                    onChange={(e) => setStoryForm(prev => ({ ...prev, prompt: e.target.value }))}
-                    placeholder="Describe the story you want to create..."
-                    rows={3}
-                  />
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Story Length</label>
-                    <Select 
-                      value={storyForm.length} 
-                      onValueChange={(value: 'short' | 'medium' | 'long') => 
-                        setStoryForm(prev => ({ ...prev, length: value }))
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="short">Short (2-3 paragraphs)</SelectItem>
-                        <SelectItem value="medium">Medium (4-6 paragraphs)</SelectItem>
-                        <SelectItem value="long">Long (7+ paragraphs)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Themes (optional)</label>
-                    <Input
-                      value={storyForm.themes}
-                      onChange={(e) => setStoryForm(prev => ({ ...prev, themes: e.target.value }))}
-                      placeholder="adventure, friendship, magic (comma-separated)"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Character Selection */}
-              <div>
-                <h3 className="text-lg font-semibold mb-3">Select Characters</h3>
-                {characters.length === 0 ? (
-                  <p className="text-muted-foreground text-sm">
-                    No characters yet. Create some in the Characters tab!
-                  </p>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {characters.map((character) => (
-                      <CharacterCard
-                        key={character.id}
-                        character={character}
-                        onUpdate={() => Promise.resolve(null)}
-                        onDelete={() => Promise.resolve(false)}
-                        selectable
-                        selected={selectedCharacters.includes(character.id)}
-                        onSelect={handleCharacterSelection}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Place Selection */}
-              <div>
-                <h3 className="text-lg font-semibold mb-3">Select Places</h3>
-                {places.length === 0 ? (
-                  <p className="text-muted-foreground text-sm">
-                    No places yet. Create some in the Places tab!
-                  </p>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {places.map((place) => (
-                      <PlaceCard
-                        key={place.id}
-                        place={place}
-                        onUpdate={() => Promise.resolve(null)}
-                        onDelete={() => Promise.resolve(false)}
-                        selectable
-                        selected={selectedPlaces.includes(place.id)}
-                        onSelect={handlePlaceSelection}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Selection Summary */}
-              {(selectedCharacters.length > 0 || selectedPlaces.length > 0) && (
-                <div className="bg-muted/50 rounded-lg p-4">
-                  <h4 className="font-medium mb-2">Selected Elements:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedCharacters.map((id) => {
-                      const character = characters.find(c => c.id === id);
-                      return character ? (
-                        <Badge key={id} variant="default">
-                          👤 {character.name}
-                        </Badge>
-                      ) : null;
-                    })}
-                    {selectedPlaces.map((id) => {
-                      const place = places.find(p => p.id === id);
-                      return place ? (
-                        <Badge key={id} variant="secondary">
-                          📍 {place.name}
-                        </Badge>
-                      ) : null;
-                    })}
-                  </div>
-                </div>
-              )}
-
-              <Button 
-                onClick={handleGenerateStory}
-                disabled={isGenerating || !storyForm.prompt.trim()}
-                className="w-full"
-                size="lg"
-              >
-                {isGenerating ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Generating Story...
-                  </>
-                ) : (
-                  <>
-                    <Wand2 className="mr-2 h-4 w-4" />
-                    Generate Story
-                  </>
-                )}
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
 
         {/* Characters Tab */}
         <TabsContent value="characters" className="space-y-6">
@@ -804,12 +661,13 @@ export default function StoryCreator() {
 
       {/* Story Output - shown after generation */}
       {currentStory && (
-        <div className="mt-8 animate-fade-in">
+        <div className="mt-8 animate-fade-in" data-story-output>
           <StoryOutputPreview 
             story={currentStory}
             onSave={() => {
               // TODO: Implement save functionality
               console.log('Saving story:', currentStory);
+              toast.success('Story saved successfully!');
             }}
             onContinue={() => {
               // TODO: Implement continue functionality

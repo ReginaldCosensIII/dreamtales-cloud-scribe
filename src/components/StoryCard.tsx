@@ -3,7 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Edit, Trash2, Check, X, Image, Book, Calendar } from 'lucide-react';
+import { StoryReadingMode } from '@/components/StoryReadingMode';
+import { Edit, Trash2, Check, X, Image, Book, Calendar, BookOpen } from 'lucide-react';
 
 interface Story {
   id: string;
@@ -35,6 +36,7 @@ export const StoryCard = ({ story, onUpdate, onDelete, onGenerateImage }: StoryC
   const [editContent, setEditContent] = useState(story.content);
   const [imagePrompt, setImagePrompt] = useState('');
   const [showImageForm, setShowImageForm] = useState(false);
+  const [showReadingMode, setShowReadingMode] = useState(false);
 
   const handleSave = async () => {
     if (onUpdate) {
@@ -78,11 +80,20 @@ export const StoryCard = ({ story, onUpdate, onDelete, onGenerateImage }: StoryC
           </div>
           
           <div className="flex gap-2">
+            <Button 
+              size="sm" 
+              variant="ghost" 
+              onClick={() => setShowReadingMode(true)}
+              title="Read Story"
+            >
+              <BookOpen className="h-4 w-4" />
+            </Button>
             {onGenerateImage && (
               <Button 
                 size="sm" 
                 variant="ghost" 
                 onClick={() => setShowImageForm(!showImageForm)}
+                title="Generate Image"
               >
                 <Image className="h-4 w-4" />
               </Button>
@@ -191,6 +202,20 @@ export const StoryCard = ({ story, onUpdate, onDelete, onGenerateImage }: StoryC
           </div>
         )}
       </CardContent>
+
+      {/* Reading Mode Modal */}
+      {showReadingMode && (
+        <StoryReadingMode
+          story={{
+            id: story.id,
+            title: story.title,
+            content: story.content,
+            setting: story.setting,
+            themes: story.themes
+          }}
+          onClose={() => setShowReadingMode(false)}
+        />
+      )}
     </Card>
   );
 };

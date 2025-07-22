@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { StoryReadingMode } from "@/components/StoryReadingMode";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import { 
   Star, 
   Heart, 
@@ -11,14 +14,18 @@ import {
   RotateCcw,
   Edit3,
   Share2,
-  Printer
+  Printer,
+  BookOpen
 } from "lucide-react";
 
 interface StoryOutputPreviewProps {
   story: {
+    id?: string;
     title: string;
     content: string;
     isComplete: boolean;
+    setting?: string;
+    themes?: string[];
   };
   onSave?: () => void;
   onContinue?: () => void;
@@ -38,10 +45,58 @@ export const StoryOutputPreview = ({
   canContinue = false
 }: StoryOutputPreviewProps) => {
   const [isReading, setIsReading] = useState(false);
+  const [showReadingMode, setShowReadingMode] = useState(false);
+  const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
+  const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
 
-  const toggleReading = () => {
-    setIsReading(!isReading);
-    // In a real implementation, this would control text-to-speech
+  const toggleReading = async () => {
+    if (currentAudio && !currentAudio.paused) {
+      currentAudio.pause();
+      setIsReading(false);
+      return;
+    }
+
+    try {
+      setIsGeneratingAudio(true);
+      
+      const { data, error } = await supabase.functions.invoke('text-to-speech', {
+        body: { 
+          text: story.content,
+          voice: 'alloy'
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.success && data.audioContent) {
+        // Stop any currently playing audio
+        if (currentAudio) {
+          currentAudio.pause();
+          currentAudio.src = '';
+        }
+
+        // Create new audio element
+        const audio = new Audio(`data:audio/mp3;base64,${data.audioContent}`);
+        
+        audio.onplay = () => setIsReading(true);
+        audio.onpause = () => setIsReading(false);
+        audio.onended = () => setIsReading(false);
+        audio.onerror = () => {
+          toast.error('Failed to play audio');
+          setIsReading(false);
+        };
+
+        setCurrentAudio(audio);
+        await audio.play();
+      } else {
+        throw new Error('Failed to generate audio');
+      }
+    } catch (error) {
+      console.error('Error generating audio:', error);
+      toast.error('Failed to generate audio. Please try again.');
+    } finally {
+      setIsGeneratingAudio(false);
+    }
   };
 
   const handleDownload = () => {
@@ -67,8 +122,13 @@ export const StoryOutputPreview = ({
       }
     } else {
       // Fallback: copy to clipboard
-      navigator.clipboard.writeText(`${story.title}\n\n${story.content}`);
+      await navigator.clipboard.writeText(`${story.title}\n\n${story.content}`);
+      toast.success('Story copied to clipboard!');
     }
+  };
+
+  const openReadingMode = () => {
+    setShowReadingMode(true);
   };
 
   return (
@@ -94,16 +154,34 @@ export const StoryOutputPreview = ({
             <Button
               variant="ghost"
               size="icon"
-              onClick={toggleReading}
+              onClick={openReadingMode}
               className="h-8 w-8"
+              title="Story Mode"
             >
-              {isReading ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+              <BookOpen className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleReading}
+              disabled={isGeneratingAudio}
+              className="h-8 w-8"
+              title="Play Audio"
+            >
+              {isGeneratingAudio ? (
+                <div className="animate-spin h-3 w-3 border-2 border-current border-t-transparent rounded-full" />
+              ) : isReading ? (
+                <Pause className="h-4 w-4" />
+              ) : (
+                <Play className="h-4 w-4" />
+              )}
             </Button>
             <Button
               variant="ghost"
               size="icon"
               onClick={handleShare}
               className="h-8 w-8"
+              title="Share Story"
             >
               <Share2 className="h-4 w-4" />
             </Button>
@@ -191,6 +269,20 @@ export const StoryOutputPreview = ({
           </div>
         )}
       </CardContent>
+
+      {/* Reading Mode Modal */}
+      {showReadingMode && (
+        <StoryReadingMode
+          story={{
+            id: story.id || '',
+            title: story.title,
+            content: story.content,
+            setting: story.setting,
+            themes: story.themes || []
+          }}
+          onClose={() => setShowReadingMode(false)}
+        />
+      )}
     </Card>
   );
 };
