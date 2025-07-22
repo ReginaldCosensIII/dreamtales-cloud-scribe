@@ -325,7 +325,7 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-8 max-w-5xl mx-auto">
             {[
               {
                 name: "Free Dreams",
@@ -353,20 +353,20 @@ const Index = () => {
                 variant: "secondary" as const
               }
             ].map((plan, index) => (
-              <Card key={index} className={`animate-on-scroll relative h-full ${plan.popular ? 'border-primary shadow-dreamy md:scale-105 md:hover:scale-110' : 'border-border/50 shadow-gentle md:hover:scale-105'} bg-card/70 backdrop-blur-md hover:shadow-dreamy transition-cloud`}>
+              <Card key={index} className={`animate-on-scroll relative ${plan.popular ? 'border-primary shadow-dreamy md:scale-105 md:hover:scale-110 mt-6 md:mt-0' : 'border-border/50 shadow-gentle md:hover:scale-105'} bg-card/70 backdrop-blur-md hover:shadow-dreamy transition-cloud`}>
                 {plan.popular && (
-                  <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 gradient-cloud">
+                  <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 gradient-cloud z-10">
                     Most Popular
                   </Badge>
                 )}
-                <CardHeader className="text-center">
+                <CardHeader className="text-center pt-8">
                   <CardTitle className="text-2xl">{plan.name}</CardTitle>
                   <div className="text-3xl font-bold text-primary">
                     {plan.price}
                     <span className="text-lg text-muted-foreground font-normal">/{plan.period}</span>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-4 flex flex-col h-full">
+                <CardContent className="space-y-4 flex flex-col pb-6">
                   <ul className="space-y-3 flex-grow">
                     {plan.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-center gap-2">
@@ -375,7 +375,7 @@ const Index = () => {
                       </li>
                     ))}
                   </ul>
-                  <Button variant={plan.variant} className="w-full mt-auto" size="lg">
+                  <Button variant={plan.variant} className="w-full mt-6" size="lg">
                     {plan.cta}
                   </Button>
                 </CardContent>
