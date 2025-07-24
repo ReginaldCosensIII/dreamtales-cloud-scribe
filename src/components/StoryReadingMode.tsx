@@ -214,16 +214,18 @@ export const StoryReadingMode = ({ story, onClose }: StoryReadingModeProps) => {
                   Previous
                 </Button>
                 
-                <div className="flex gap-2 overflow-x-auto max-w-[200px] sm:max-w-none justify-center px-2">
-                  {storyPages.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentPage(index)}
-                      className={`w-3 h-3 rounded-full transition-colors flex-shrink-0 ${
-                        index === currentPage ? 'bg-primary' : 'bg-muted'
-                      }`}
-                    />
-                  ))}
+                <div className="flex gap-2 overflow-x-auto max-w-[200px] sm:max-w-none justify-center px-2 scrollbar-hide">
+                  <div className="flex gap-2 flex-nowrap">
+                    {storyPages.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentPage(index)}
+                        className={`w-3 h-3 rounded-full transition-colors flex-shrink-0 ${
+                          index === currentPage ? 'bg-primary' : 'bg-muted'
+                        }`}
+                      />
+                    ))}
+                  </div>
                 </div>
                 
                 <Button 

@@ -25,12 +25,14 @@ serve(async (req) => {
       throw new Error('User not authenticated');
     }
 
-    // Get user's profile for subscription info
-    const { data: profile } = await supabaseClient
-      .from('profiles')
-      .select('subscription_tier, stories_this_month')
+    // Get user's places
+    const { data: places, error: placesError } = await supabaseClient
+      .from('places')
+      .select('*')
       .eq('user_id', user.id)
-      .single();
+      .order('created_at', { ascending: false });
+
+    if (placesError) throw placesError;
 
     // Get user's stories
     const { data: stories, error: storiesError } = await supabaseClient
@@ -51,14 +53,10 @@ serve(async (req) => {
     if (charactersError) throw charactersError;
 
     return new Response(JSON.stringify({
-      profile,
+      success: true,
       stories,
       characters,
-      storyLimits: {
-        free: 3,
-        premium: -1, // unlimited
-        dreambook: -1 // unlimited
-      }
+      places
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200,

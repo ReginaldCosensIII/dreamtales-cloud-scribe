@@ -58,7 +58,7 @@ export default function StoryCreator() {
   // Generator modes and states
   const [generatorMode, setGeneratorMode] = useState<"structured" | "freeform">("freeform");
   const [showModeInfo, setShowModeInfo] = useState(false);
-  const [activeTab, setActiveTab] = useState("guided");
+  const [activeTab, setActiveTab] = useState("freeform");
   const [currentStory, setCurrentStory] = useState<{
     title: string;
     content: string;

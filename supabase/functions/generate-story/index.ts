@@ -15,6 +15,8 @@ interface StoryRequest {
   themes?: string[];
   parentalPreferences?: any;
   existingStoryId?: string;
+  selectedCharacters?: string[];
+  selectedPlaces?: string[];
 }
 
 serve(async (req) => {
@@ -37,33 +39,43 @@ serve(async (req) => {
       throw new Error('User not authenticated');
     }
 
-    // Check user's subscription tier and story limit
-    const { data: profile } = await supabaseClient
-      .from('profiles')
-      .select('subscription_tier, stories_this_month')
-      .eq('user_id', user.id)
-      .single();
-
-    if (!profile) {
-      throw new Error('User profile not found');
-    }
-
-    // Check story limits based on tier
-    if (profile.subscription_tier === 'free' && profile.stories_this_month >= 30) {
-      return new Response(JSON.stringify({ 
-        error: 'Story limit reached. Upgrade to Premium for unlimited stories!' 
-      }), {
-        status: 403,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      });
-    }
-
+    // Add selected characters and places support
     const requestData: StoryRequest = await req.json();
 
     // Generate story using OpenAI
     const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
     if (!openAIApiKey) {
       throw new Error('OpenAI API key not configured');
+    }
+
+    // Prepare character and place context
+    let characterContext = '';
+    let placeContext = '';
+
+    if (requestData.selectedCharacters && requestData.selectedCharacters.length > 0) {
+      const { data: characters } = await supabaseClient
+        .from('characters')
+        .select('*')
+        .in('id', requestData.selectedCharacters)
+        .eq('user_id', user.id);
+      
+      if (characters && characters.length > 0) {
+        characterContext = '\n\nCharacters to include:\n' + 
+          characters.map(char => `- ${char.name}: ${char.description || 'A character in the story'}`).join('\n');
+      }
+    }
+
+    if (requestData.selectedPlaces && requestData.selectedPlaces.length > 0) {
+      const { data: places } = await supabaseClient
+        .from('places')
+        .select('*')
+        .in('id', requestData.selectedPlaces)
+        .eq('user_id', user.id);
+      
+      if (places && places.length > 0) {
+        placeContext = '\n\nPlaces to include:\n' + 
+          places.map(place => `- ${place.name}: ${place.description || 'A location in the story'}`).join('\n');
+      }
     }
 
     // Build prompt based on story type and parameters
@@ -79,6 +91,9 @@ serve(async (req) => {
     if (requestData.themes && requestData.themes.length > 0) {
       storyPrompt += ` Themes: ${requestData.themes.join(', ')}.`;
     }
+    
+    // Add character and place context
+    storyPrompt += characterContext + placeContext;
 
     // Adjust length
     const lengthGuide = {
@@ -149,14 +164,6 @@ serve(async (req) => {
 
       if (error) throw error;
       storyData = data;
-
-      // Update user's story count
-      await supabaseClient
-        .from('profiles')
-        .update({
-          stories_this_month: profile.stories_this_month + 1
-        })
-        .eq('user_id', user.id);
     }
 
     return new Response(JSON.stringify({

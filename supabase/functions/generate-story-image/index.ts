@@ -58,11 +58,11 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-image-1',
+        model: 'dall-e-3',
         prompt: `Children's storybook illustration: ${requestData.prompt}. Style: colorful, friendly, age-appropriate, digital art`,
         n: 1,
         size: '1024x1024',
-        quality: 'high'
+        quality: 'standard'
       }),
     });
 

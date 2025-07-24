@@ -216,13 +216,13 @@ export const StoryOutputPreview = ({
           </div>
 
           {/* Secondary Actions Row */}
-          <div className="flex gap-2 flex-wrap">
-            <Button variant="secondary" size="sm" onClick={handleDownload} className="flex-1 min-w-0">
+          <div className="flex gap-2">
+            <Button variant="secondary" size="sm" onClick={handleDownload} className="flex-1">
               <Download className="mr-1 h-3 w-3" />
               <span className="hidden sm:inline">Download</span>
             </Button>
             
-            <Button variant="secondary" size="sm" onClick={() => window.print()} className="flex-1 min-w-0">
+            <Button variant="secondary" size="sm" onClick={() => window.print()} className="flex-1">
               <Printer className="mr-1 h-3 w-3" />
               <span className="hidden sm:inline">Print</span>
             </Button>
@@ -233,7 +233,7 @@ export const StoryOutputPreview = ({
                 size="sm" 
                 onClick={onRegenerate}
                 disabled={isGenerating}
-                className="flex-1 min-w-0"
+                className="flex-1"
               >
                 <RotateCcw className="mr-1 h-3 w-3" />
                 <span className="hidden sm:inline">Retry</span>
