@@ -10,6 +10,8 @@ interface StoryGenerationParams {
   characters?: any[];
   themes?: string[];
   parentalPreferences?: any;
+  selectedCharacters?: string[];
+  selectedPlaces?: string[];
 }
 
 export const useStoryGeneration = () => {

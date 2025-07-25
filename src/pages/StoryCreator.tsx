@@ -167,7 +167,9 @@ export default function StoryCreator() {
     const result = await generateStory({
       prompt: data.prompt,
       storyType: 'freeform',
-      length: data.length
+      length: data.length,
+      selectedCharacters: data.selectedCharacters,
+      selectedPlaces: data.selectedPlaces
     });
 
     if (result) {
