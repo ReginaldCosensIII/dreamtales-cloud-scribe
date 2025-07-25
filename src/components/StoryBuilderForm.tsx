@@ -78,7 +78,7 @@ export const StoryBuilderForm = ({ onGenerate, isGenerating }: StoryBuilderFormP
   };
 
   const handleNext = () => {
-    if (step < 6) setStep(step + 1);
+    if (step < 5) setStep(step + 1);
   };
 
   const handleBack = () => {
@@ -96,7 +96,6 @@ export const StoryBuilderForm = ({ onGenerate, isGenerating }: StoryBuilderFormP
       case 3: return formData.theme !== "";
       case 4: return formData.setting !== "";
       case 5: return true; // Characters optional
-      case 6: return true; // Places optional
       default: return true;
     }
   };
@@ -109,10 +108,10 @@ export const StoryBuilderForm = ({ onGenerate, isGenerating }: StoryBuilderFormP
             <Wand2 className="h-5 w-5 text-primary" />
             Story Builder
           </CardTitle>
-          <Badge variant="secondary">Step {step} of 6</Badge>
+          <Badge variant="secondary">Step {step} of 5</Badge>
         </div>
         <div className="flex gap-2 mt-4">
-          {[1, 2, 3, 4, 5, 6].map((num) => (
+          {[1, 2, 3, 4, 5].map((num) => (
             <div
               key={num}
               className={`h-2 flex-1 rounded-full transition-colors ${
@@ -229,10 +228,10 @@ export const StoryBuilderForm = ({ onGenerate, isGenerating }: StoryBuilderFormP
             <div className="text-center mb-6">
               <MapPin className="h-12 w-12 text-primary mx-auto mb-2" />
               <h3 className="text-lg font-semibold">Where should the adventure take place?</h3>
-              <p className="text-muted-foreground text-sm">Pick the perfect setting for the story</p>
+              <p className="text-muted-foreground text-sm">Pick the perfect setting or use a saved place</p>
             </div>
             
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-3 mb-6">
               {settings.map((setting) => (
                 <Card
                   key={setting.value}
@@ -250,6 +249,36 @@ export const StoryBuilderForm = ({ onGenerate, isGenerating }: StoryBuilderFormP
                 </Card>
               ))}
             </div>
+
+            {/* Saved Places Section */}
+            {places && places.length > 0 && (
+              <div className="border-t pt-4">
+                <Label className="text-sm font-medium mb-3 block flex items-center gap-2">
+                  <MapPin className="h-4 w-4" />
+                  Or use saved places:
+                </Label>
+                <div className="grid gap-2 sm:grid-cols-2 max-h-48 overflow-y-auto">
+                  {places.map((place) => (
+                    <PlaceCard
+                      key={place.id}
+                      place={place}
+                      selectable
+                      selected={formData.selectedPlaces.includes(place.id)}
+                      onSelect={(id) => {
+                        setFormData(prev => ({
+                          ...prev,
+                          selectedPlaces: prev.selectedPlaces.includes(id)
+                            ? prev.selectedPlaces.filter(pId => pId !== id)
+                            : [...prev.selectedPlaces, id]
+                        }));
+                      }}
+                      onUpdate={async () => null}
+                      onDelete={async () => false}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
             
             <div className="mt-6">
               <Label htmlFor="additionalDetails">Any additional details? (Optional)</Label>
@@ -273,7 +302,7 @@ export const StoryBuilderForm = ({ onGenerate, isGenerating }: StoryBuilderFormP
             </div>
             
             {characters && characters.length > 0 ? (
-              <div className="grid gap-3 max-h-80 overflow-y-auto">
+              <div className="grid gap-2 sm:grid-cols-2 max-h-80 overflow-y-auto">
                 {characters.map((character) => (
                   <CharacterCard
                     key={character.id}
@@ -304,45 +333,6 @@ export const StoryBuilderForm = ({ onGenerate, isGenerating }: StoryBuilderFormP
           </div>
         )}
 
-        {step === 6 && (
-          <div className="space-y-4 animate-fade-in">
-            <div className="text-center mb-6">
-              <MapPin className="h-12 w-12 text-primary mx-auto mb-2" />
-              <h3 className="text-lg font-semibold">Add saved places? (Optional)</h3>
-              <p className="text-muted-foreground text-sm">Select any saved places to include in the story</p>
-            </div>
-            
-            {places && places.length > 0 ? (
-              <div className="grid gap-3 max-h-80 overflow-y-auto">
-                {places.map((place) => (
-                  <PlaceCard
-                    key={place.id}
-                    place={place}
-                    selectable
-                    selected={formData.selectedPlaces.includes(place.id)}
-                    onSelect={(id) => {
-                      setFormData(prev => ({
-                        ...prev,
-                        selectedPlaces: prev.selectedPlaces.includes(id)
-                          ? prev.selectedPlaces.filter(pId => pId !== id)
-                          : [...prev.selectedPlaces, id]
-                      }));
-                    }}
-                    onUpdate={async () => null}
-                    onDelete={async () => false}
-                  />
-                ))}
-              </div>
-            ) : (
-              <Card className="border-dashed border-2 border-muted-foreground/25">
-                <CardContent className="p-6 text-center">
-                  <p className="text-muted-foreground">No saved places yet</p>
-                  <p className="text-sm text-muted-foreground mt-1">Skip this step for now</p>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        )}
 
         <div className="flex justify-between pt-4">
           <Button 
@@ -353,7 +343,7 @@ export const StoryBuilderForm = ({ onGenerate, isGenerating }: StoryBuilderFormP
             Back
           </Button>
           
-          {step < 6 ? (
+          {step < 5 ? (
             <Button 
               onClick={handleNext}
               disabled={!isStepValid()}

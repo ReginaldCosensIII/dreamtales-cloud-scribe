@@ -51,14 +51,44 @@ export const PlaceCard = ({
     }
   };
 
+  // For selectable mode, show a more compact version
+  if (selectable) {
+    return (
+      <Card 
+        className={`transition-all duration-200 hover:shadow-md cursor-pointer hover:scale-[1.02] ${
+          selected ? 'ring-2 ring-primary bg-primary/5' : ''
+        }`}
+        onClick={onSelect ? () => onSelect(place.id) : undefined}
+      >
+        <CardContent className="p-3">
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <MapPin className="h-3 w-3 text-muted-foreground flex-shrink-0" />
+                <h4 className="font-medium text-sm truncate">{place.name}</h4>
+              </div>
+              <Badge variant="outline" className="text-xs mb-2">
+                {place.location_type}
+              </Badge>
+              {place.description && (
+                <p className="text-xs text-muted-foreground line-clamp-2">{place.description}</p>
+              )}
+            </div>
+            {selected && (
+              <div className="flex-shrink-0">
+                <Check className="h-4 w-4 text-primary" />
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Full editing mode for management
   return (
     <Card 
-      className={`transition-all duration-200 hover:shadow-lg ${
-        selectable ? 'cursor-pointer hover:scale-105' : ''
-      } ${
-        selected ? 'ring-2 ring-primary bg-primary/5' : ''
-      }`}
-      onClick={selectable && onSelect ? () => onSelect(place.id) : undefined}
+      className="transition-all duration-200 hover:shadow-lg"
     >
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
@@ -76,29 +106,27 @@ export const PlaceCard = ({
             )}
           </div>
           
-          {!selectable && (
-            <div className="flex gap-2">
-              {isEditing ? (
-                <>
-                  <Button size="sm" variant="ghost" onClick={handleSave}>
-                    <Check className="h-4 w-4" />
-                  </Button>
-                  <Button size="sm" variant="ghost" onClick={handleCancel}>
-                    <X className="h-4 w-4" />
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button size="sm" variant="ghost" onClick={() => setIsEditing(true)}>
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button size="sm" variant="ghost" onClick={handleDelete}>
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </>
-              )}
-            </div>
-          )}
+          <div className="flex gap-2">
+            {isEditing ? (
+              <>
+                <Button size="sm" variant="ghost" onClick={handleSave}>
+                  <Check className="h-4 w-4" />
+                </Button>
+                <Button size="sm" variant="ghost" onClick={handleCancel}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button size="sm" variant="ghost" onClick={() => setIsEditing(true)}>
+                  <Edit className="h-4 w-4" />
+                </Button>
+                <Button size="sm" variant="ghost" onClick={handleDelete}>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </>
+            )}
+          </div>
         </div>
         
         <div className="mt-2">

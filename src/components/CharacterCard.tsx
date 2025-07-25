@@ -64,14 +64,55 @@ export const CharacterCard = ({
     }
   };
 
+  // For selectable mode, show a more compact version
+  if (selectable) {
+    return (
+      <Card 
+        className={`transition-all duration-200 hover:shadow-md cursor-pointer hover:scale-[1.02] ${
+          selected ? 'ring-2 ring-primary bg-primary/5' : ''
+        }`}
+        onClick={onSelect ? () => onSelect(character.id) : undefined}
+      >
+        <CardContent className="p-3">
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex-1 min-w-0">
+              <h4 className="font-medium text-sm truncate">{character.name}</h4>
+              {character.age && (
+                <p className="text-xs text-muted-foreground">Age: {character.age}</p>
+              )}
+              {character.description && (
+                <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{character.description}</p>
+              )}
+              {character.traits && character.traits.length > 0 && (
+                <div className="flex flex-wrap gap-1 mt-2">
+                  {character.traits.slice(0, 2).map((trait, index) => (
+                    <Badge key={index} variant="outline" className="text-xs px-1 py-0">
+                      {trait}
+                    </Badge>
+                  ))}
+                  {character.traits.length > 2 && (
+                    <Badge variant="outline" className="text-xs px-1 py-0">
+                      +{character.traits.length - 2}
+                    </Badge>
+                  )}
+                </div>
+              )}
+            </div>
+            {selected && (
+              <div className="flex-shrink-0">
+                <Check className="h-4 w-4 text-primary" />
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Full editing mode for management
   return (
     <Card 
-      className={`transition-all duration-200 hover:shadow-lg ${
-        selectable ? 'cursor-pointer hover:scale-105' : ''
-      } ${
-        selected ? 'ring-2 ring-primary bg-primary/5' : ''
-      }`}
-      onClick={selectable && onSelect ? () => onSelect(character.id) : undefined}
+      className="transition-all duration-200 hover:shadow-lg"
     >
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
@@ -86,29 +127,27 @@ export const CharacterCard = ({
             <CardTitle className="text-lg">{character.name}</CardTitle>
           )}
           
-          {!selectable && (
-            <div className="flex gap-2">
-              {isEditing ? (
-                <>
-                  <Button size="sm" variant="ghost" onClick={handleSave}>
-                    <Check className="h-4 w-4" />
-                  </Button>
-                  <Button size="sm" variant="ghost" onClick={handleCancel}>
-                    <X className="h-4 w-4" />
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button size="sm" variant="ghost" onClick={() => setIsEditing(true)}>
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button size="sm" variant="ghost" onClick={handleDelete}>
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </>
-              )}
-            </div>
-          )}
+          <div className="flex gap-2">
+            {isEditing ? (
+              <>
+                <Button size="sm" variant="ghost" onClick={handleSave}>
+                  <Check className="h-4 w-4" />
+                </Button>
+                <Button size="sm" variant="ghost" onClick={handleCancel}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button size="sm" variant="ghost" onClick={() => setIsEditing(true)}>
+                  <Edit className="h-4 w-4" />
+                </Button>
+                <Button size="sm" variant="ghost" onClick={handleDelete}>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </>
+            )}
+          </div>
         </div>
       </CardHeader>
       
