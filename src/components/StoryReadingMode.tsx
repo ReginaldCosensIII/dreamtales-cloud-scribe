@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { X, Play, Pause, Download, Share2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { StoryImage } from '@/hooks/useStoryImages';
+import { StoryImage, useStoryImages } from '@/hooks/useStoryImages';
 
 interface Story {
   id: string;
@@ -26,12 +26,18 @@ export const StoryReadingMode = ({ story, onClose }: StoryReadingModeProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [storyPages, setStoryPages] = useState<string[]>([]);
   const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
+  const { images, fetchStoryImages } = useStoryImages();
 
-  // Split story into pages
+  // Split story into pages and fetch images
   useEffect(() => {
     const paragraphs = story.content.split('\n\n').filter(p => p.trim());
     setStoryPages(paragraphs);
-  }, [story.content]);
+    
+    // Fetch images for this story
+    if (story.id) {
+      fetchStoryImages(story.id);
+    }
+  }, [story.content, story.id, fetchStoryImages]);
 
   // Cleanup audio on unmount
   useEffect(() => {
@@ -188,10 +194,20 @@ export const StoryReadingMode = ({ story, onClose }: StoryReadingModeProps) => {
           <CardContent className="p-8 h-full flex flex-col">
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center space-y-6">
-                {/* Story Image Placeholder */}
-                <div className="w-full max-w-md mx-auto h-48 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg flex items-center justify-center mb-8">
-                  <p className="text-muted-foreground text-sm">Story Illustration</p>
-                </div>
+                {/* Story Image */}
+                {images.length > 0 ? (
+                  <div className="w-full max-w-md mx-auto mb-8">
+                    <img 
+                      src={images[0].image_url || `data:image/png;base64,${images[0].image_data}`}
+                      alt="Story illustration"
+                      className="w-full h-48 object-cover rounded-lg shadow-lg"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-full max-w-md mx-auto h-48 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg flex items-center justify-center mb-8">
+                    <p className="text-muted-foreground text-sm">Story Illustration</p>
+                  </div>
+                )}
                 
                 {/* Story Text */}
                 <div className="prose prose-lg max-w-none text-center">

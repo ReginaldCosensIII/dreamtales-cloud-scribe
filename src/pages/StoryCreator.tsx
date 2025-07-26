@@ -127,6 +127,9 @@ export default function StoryCreator() {
       return;
     }
 
+    setCurrentStory(null); // Clear previous story
+    toast.info('Generating your story...', { duration: 2000 });
+
     // Build setting from either preset setting or selected places
     const setting = data.setting || (data.selectedPlaces?.length > 0 ? 
       places.filter(p => data.selectedPlaces.includes(p.id)).map(p => p.name).join(', ') : 
@@ -171,6 +174,9 @@ export default function StoryCreator() {
       navigate('/auth');
       return;
     }
+
+    setCurrentStory(null); // Clear previous story
+    toast.info('Generating your story...', { duration: 2000 });
 
     const result = await generateStoryWithElements({
       selectedCharacters: data.selectedCharacters || [],
