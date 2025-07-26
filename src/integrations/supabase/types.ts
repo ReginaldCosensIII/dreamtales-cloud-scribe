@@ -167,6 +167,47 @@ export type Database = {
         }
         Relationships: []
       }
+      story_images: {
+        Row: {
+          created_at: string
+          id: string
+          image_data: string | null
+          image_url: string | null
+          prompt: string
+          section_index: number | null
+          story_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_data?: string | null
+          image_url?: string | null
+          prompt: string
+          section_index?: number | null
+          story_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_data?: string | null
+          image_url?: string | null
+          prompt?: string
+          section_index?: number | null
+          story_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "story_images_story_id_fkey"
+            columns: ["story_id"]
+            isOneToOne: false
+            referencedRelation: "stories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

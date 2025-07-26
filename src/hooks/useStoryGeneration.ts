@@ -37,6 +37,29 @@ export const useStoryGeneration = () => {
         throw functionError;
       }
 
+      // Auto-generate an image for the story if it was successfully created
+      if (data?.story?.id) {
+        try {
+          // Extract a scene from the story content for image generation
+          const storyContent = data.story.content || '';
+          const firstParagraph = storyContent.split('\n\n')[0] || storyContent.substring(0, 200);
+          
+          // Generate image in the background (don't wait for it)
+          supabase.functions.invoke('generate-story-image', {
+            body: {
+              storyId: data.story.id,
+              prompt: `Main scene from this story: ${firstParagraph}`
+            }
+          }).catch(err => {
+            console.log('Auto-image generation failed:', err);
+            // Don't throw error for image generation failure
+          });
+        } catch (imageError) {
+          console.log('Failed to auto-generate image:', imageError);
+          // Continue without image - don't fail the story generation
+        }
+      }
+
       return data;
     } catch (err: any) {
       setError(err.message || 'Failed to generate story');

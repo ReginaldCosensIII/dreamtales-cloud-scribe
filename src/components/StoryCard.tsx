@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { StoryReadingMode } from '@/components/StoryReadingMode';
-import { Edit, Trash2, Check, X, Image, Book, Calendar, BookOpen } from 'lucide-react';
+import { useStoryImages } from '@/hooks/useStoryImages';
+import { Edit, Trash2, Check, X, Image, Book, Calendar, BookOpen, Download } from 'lucide-react';
 
 interface Story {
   id: string;
@@ -28,15 +29,20 @@ interface StoryCardProps {
   story: Story;
   onUpdate?: (id: string, data: Partial<Story>) => Promise<void>;
   onDelete?: (id: string) => Promise<void>;
-  onGenerateImage?: (storyId: string, prompt: string) => Promise<void>;
 }
 
-export const StoryCard = ({ story, onUpdate, onDelete, onGenerateImage }: StoryCardProps) => {
+export const StoryCard = ({ story, onUpdate, onDelete }: StoryCardProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(story.content);
   const [imagePrompt, setImagePrompt] = useState('');
   const [showImageForm, setShowImageForm] = useState(false);
   const [showReadingMode, setShowReadingMode] = useState(false);
+  
+  const { images, isGenerating, generateImage, fetchStoryImages, deleteImage } = useStoryImages();
+
+  useEffect(() => {
+    fetchStoryImages(story.id);
+  }, [story.id, fetchStoryImages]);
 
   const handleSave = async () => {
     if (onUpdate) {
@@ -59,11 +65,20 @@ export const StoryCard = ({ story, onUpdate, onDelete, onGenerateImage }: StoryC
   };
 
   const handleGenerateImage = async () => {
-    if (onGenerateImage && imagePrompt.trim()) {
-      await onGenerateImage(story.id, imagePrompt);
+    if (imagePrompt.trim()) {
+      await generateImage(story.id, imagePrompt);
       setShowImageForm(false);
       setImagePrompt('');
     }
+  };
+
+  const downloadImage = (imageData: string, prompt: string) => {
+    const link = document.createElement('a');
+    link.href = imageData;
+    link.download = `story-image-${prompt.slice(0, 20)}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const formatDate = (dateString: string) => {
@@ -88,16 +103,15 @@ export const StoryCard = ({ story, onUpdate, onDelete, onGenerateImage }: StoryC
             >
               <BookOpen className="h-4 w-4" />
             </Button>
-            {onGenerateImage && (
-              <Button 
-                size="sm" 
-                variant="ghost" 
-                onClick={() => setShowImageForm(!showImageForm)}
-                title="Generate Image"
-              >
-                <Image className="h-4 w-4" />
-              </Button>
-            )}
+            <Button 
+              size="sm" 
+              variant="ghost" 
+              onClick={() => setShowImageForm(!showImageForm)}
+              title="Generate Image"
+              disabled={isGenerating}
+            >
+              <Image className="h-4 w-4" />
+            </Button>
             {onUpdate && (
               <>
                 {isEditing ? (
@@ -179,6 +193,45 @@ export const StoryCard = ({ story, onUpdate, onDelete, onGenerateImage }: StoryC
           )}
         </div>
         
+        {/* Generated Images Display */}
+        {images.length > 0 && (
+          <div className="border-t pt-4 space-y-3">
+            <span className="text-sm font-medium">Generated Images</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {images.map((image) => (
+                <div key={image.id} className="relative group">
+                  <img 
+                    src={image.image_data || image.image_url} 
+                    alt={image.prompt}
+                    className="w-full h-32 object-cover rounded-md"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 rounded-md flex items-center justify-center opacity-0 group-hover:opacity-100">
+                    <div className="flex gap-1">
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => downloadImage(image.image_data || image.image_url || '', image.prompt)}
+                        title="Download Image"
+                      >
+                        <Download className="h-3 w-3" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => deleteImage(image.id)}
+                        title="Delete Image"
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1 truncate">{image.prompt}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {showImageForm && (
           <div className="border-t pt-4 space-y-3">
             <div>
@@ -192,8 +245,12 @@ export const StoryCard = ({ story, onUpdate, onDelete, onGenerateImage }: StoryC
               />
             </div>
             <div className="flex gap-2">
-              <Button size="sm" onClick={handleGenerateImage} disabled={!imagePrompt.trim()}>
-                Generate Image
+              <Button 
+                size="sm" 
+                onClick={handleGenerateImage} 
+                disabled={!imagePrompt.trim() || isGenerating}
+              >
+                {isGenerating ? 'Generating...' : 'Generate Image'}
               </Button>
               <Button size="sm" variant="secondary" onClick={() => setShowImageForm(false)}>
                 Cancel
@@ -211,7 +268,8 @@ export const StoryCard = ({ story, onUpdate, onDelete, onGenerateImage }: StoryC
             title: story.title,
             content: story.content,
             setting: story.setting,
-            themes: story.themes
+            themes: story.themes,
+            images: images
           }}
           onClose={() => setShowReadingMode(false)}
         />

@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { X, Play, Pause, Download, Share2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { StoryImage } from '@/hooks/useStoryImages';
 
 interface Story {
   id: string;
@@ -11,7 +12,7 @@ interface Story {
   content: string;
   setting?: string;
   themes: string[];
-  images?: string[];
+  images?: StoryImage[];
 }
 
 interface StoryReadingModeProps {

@@ -653,7 +653,7 @@ export default function StoryCreator() {
                     // Handle story deletion
                     await refetch();
                   }}
-                  onGenerateImage={generateStoryImage}
+                  
                 />
               ))}
             </div>
