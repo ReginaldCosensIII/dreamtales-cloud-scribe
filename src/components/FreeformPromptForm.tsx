@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,7 +39,7 @@ const toneOptions = [
 
 export const FreeformPromptForm = ({ onGenerate, isGenerating, initialPrompt = "" }: FreeformPromptFormProps) => {
   const { characters } = useUserData();
-  const { places } = useStoryCreation();
+  const { places, fetchPlaces } = useStoryCreation();
   const [formData, setFormData] = useState<FreeformData>({
     prompt: initialPrompt,
     length: 'medium',
@@ -47,6 +47,11 @@ export const FreeformPromptForm = ({ onGenerate, isGenerating, initialPrompt = "
     selectedCharacters: [],
     selectedPlaces: []
   });
+
+  // Fetch places when component mounts
+  useEffect(() => {
+    fetchPlaces();
+  }, []);
 
   const handleGenerate = () => {
     if (formData.prompt.trim()) {

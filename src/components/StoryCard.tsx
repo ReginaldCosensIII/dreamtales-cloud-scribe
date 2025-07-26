@@ -249,8 +249,19 @@ export const StoryCard = ({ story, onUpdate, onDelete }: StoryCardProps) => {
                 size="sm" 
                 onClick={handleGenerateImage} 
                 disabled={!imagePrompt.trim() || isGenerating}
+                className="flex items-center gap-2"
               >
-                {isGenerating ? 'Generating...' : 'Generate Image'}
+                {isGenerating ? (
+                  <>
+                    <div className="animate-spin h-3 w-3 border-2 border-current border-t-transparent rounded-full" />
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Image className="h-3 w-3" />
+                    Generate Image
+                  </>
+                )}
               </Button>
               <Button size="sm" variant="secondary" onClick={() => setShowImageForm(false)}>
                 Cancel

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -47,7 +47,7 @@ const settings = [
 
 export const StoryBuilderForm = ({ onGenerate, isGenerating }: StoryBuilderFormProps) => {
   const { characters } = useUserData();
-  const { places } = useStoryCreation();
+  const { places, fetchPlaces } = useStoryCreation();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<StoryBuilderData>({
     childName: "",
@@ -59,6 +59,11 @@ export const StoryBuilderForm = ({ onGenerate, isGenerating }: StoryBuilderFormP
     selectedPlaces: []
   });
   const [newFavoriteThing, setNewFavoriteThing] = useState("");
+
+  // Fetch places when component mounts
+  useEffect(() => {
+    fetchPlaces();
+  }, []);
 
   const addFavoriteThing = () => {
     if (newFavoriteThing.trim() && formData.favoriteThings.length < 5) {
@@ -94,7 +99,7 @@ export const StoryBuilderForm = ({ onGenerate, isGenerating }: StoryBuilderFormP
       case 1: return formData.childName.trim() !== "";
       case 2: return formData.favoriteThings.length > 0;
       case 3: return formData.theme !== "";
-      case 4: return formData.setting !== "";
+      case 4: return formData.setting !== "" || formData.selectedPlaces.length > 0;
       case 5: return true; // Characters optional
       default: return true;
     }

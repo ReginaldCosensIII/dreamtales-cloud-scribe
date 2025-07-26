@@ -127,7 +127,12 @@ export default function StoryCreator() {
       return;
     }
 
-    const structuredPrompt = `Write a ${data.theme} children's story about ${data.childName} in a ${data.setting}. 
+    // Build setting from either preset setting or selected places
+    const setting = data.setting || (data.selectedPlaces?.length > 0 ? 
+      places.filter(p => data.selectedPlaces.includes(p.id)).map(p => p.name).join(', ') : 
+      'a magical place');
+
+    const structuredPrompt = `Write a ${data.theme} children's story about ${data.childName} in a ${setting}. 
     Include these favorite things: ${data.favoriteThings.join(', ')}. 
     ${data.additionalDetails ? `Additional details: ${data.additionalDetails}` : ''}
     Make it age-appropriate, engaging, and about 3-5 paragraphs long.`;
@@ -136,9 +141,11 @@ export default function StoryCreator() {
       prompt: structuredPrompt,
       storyType: 'structured',
       length: 'medium',
-      setting: data.setting,
+      setting: setting,
       themes: [data.theme],
-      characters: [{ name: data.childName, traits: data.favoriteThings }]
+      characters: [{ name: data.childName, traits: data.favoriteThings }],
+      selectedCharacters: data.selectedCharacters || [],
+      selectedPlaces: data.selectedPlaces || []
     });
 
     if (result) {
@@ -164,19 +171,19 @@ export default function StoryCreator() {
       return;
     }
 
-    const result = await generateStory({
+    const result = await generateStoryWithElements({
+      selectedCharacters: data.selectedCharacters || [],
+      selectedPlaces: data.selectedPlaces || [],
       prompt: data.prompt,
-      storyType: 'freeform',
       length: data.length,
-      selectedCharacters: data.selectedCharacters,
-      selectedPlaces: data.selectedPlaces
+      themes: data.tone ? [data.tone] : []
     });
 
     if (result) {
       setCurrentStory({
-        title: result.title || "Your Custom Story",
-        content: result.content,
-        isComplete: result.is_complete || true
+        title: result.story?.title || "Your Custom Story",
+        content: result.story?.content || "",
+        isComplete: result.story?.is_complete || true
       });
       toast.success('Story generated successfully!');
       // Scroll to the generated story
