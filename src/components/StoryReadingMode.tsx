@@ -196,15 +196,31 @@ export const StoryReadingMode = ({ story, onClose }: StoryReadingModeProps) => {
               <div className="text-center space-y-6">
                 {/* Story Image */}
                 {images.length > 0 ? (
-                  <div className="w-full max-w-md mx-auto mb-8">
-                    <img 
-                      src={images[0].image_url || `data:image/png;base64,${images[0].image_data}`}
-                      alt="Story illustration"
-                      className="w-full h-48 object-cover rounded-lg shadow-lg"
-                    />
+                  <div className="w-full max-w-lg mx-auto mb-8">
+                    {(() => {
+                      // Find image for current page/section
+                      const pageImage = images.find(img => img.section_index === currentPage) || images[0];
+                      const imageSource = pageImage.image_url || `data:image/png;base64,${pageImage.image_data}`;
+                      
+                      return (
+                        <div className="relative">
+                          <img 
+                            src={imageSource}
+                            alt={`Story illustration for page ${currentPage + 1}`}
+                            className="w-full aspect-square object-cover rounded-lg shadow-lg"
+                            style={{ maxHeight: '400px' }}
+                          />
+                          {images.length > 1 && (
+                            <div className="absolute bottom-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
+                              {pageImage.section_index + 1} of {images.length}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
                   </div>
                 ) : (
-                  <div className="w-full max-w-md mx-auto h-48 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg flex items-center justify-center mb-8">
+                  <div className="w-full max-w-lg mx-auto aspect-square bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg flex items-center justify-center mb-8" style={{ maxHeight: '400px' }}>
                     <p className="text-muted-foreground text-sm">Story Illustration</p>
                   </div>
                 )}
