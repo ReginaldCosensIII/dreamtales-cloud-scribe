@@ -189,48 +189,45 @@ export const StoryReadingMode = ({ story, onClose }: StoryReadingModeProps) => {
       </div>
 
       {/* Story Content */}
-      <div className="flex-1 flex items-center justify-center p-8">
-        <Card className="w-full max-w-4xl h-full max-h-[70vh] bg-card/70 backdrop-blur-md shadow-dreamy">
-          <CardContent className="p-8 h-full flex flex-col">
-            <div className="flex-1 flex items-center justify-center">
-              <div className="text-center space-y-6">
-                {/* Story Image */}
-                {images.length > 0 ? (
-                  <div className="w-full max-w-lg mx-auto mb-8">
-                    {(() => {
-                      // Find image for current page/section
-                      const pageImage = images.find(img => img.section_index === currentPage) || images[0];
-                      const imageSource = pageImage.image_url || `data:image/png;base64,${pageImage.image_data}`;
-                      
-                      return (
-                        <div className="relative">
-                          <img 
-                            src={imageSource}
-                            alt={`Story illustration for page ${currentPage + 1}`}
-                            className="w-full aspect-square object-cover rounded-lg shadow-lg"
-                            style={{ maxHeight: '400px' }}
-                          />
-                          {images.length > 1 && (
-                            <div className="absolute bottom-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
-                              {pageImage.section_index + 1} of {images.length}
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })()}
-                  </div>
-                ) : (
-                  <div className="w-full max-w-lg mx-auto aspect-square bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg flex items-center justify-center mb-8" style={{ maxHeight: '400px' }}>
-                    <p className="text-muted-foreground text-sm">Story Illustration</p>
-                  </div>
-                )}
-                
-                {/* Story Text */}
-                <div className="prose prose-lg max-w-none text-center">
-                  <p className="text-lg leading-relaxed whitespace-pre-wrap">
-                    {currentText}
-                  </p>
+      <div className="flex-1 overflow-auto p-8">
+        <Card className="w-full max-w-4xl mx-auto bg-card/70 backdrop-blur-md shadow-dreamy">
+          <CardContent className="p-8">
+            <div className="space-y-8">
+              {/* Story Image */}
+              {images.length > 0 ? (
+                <div className="w-full max-w-md mx-auto">
+                  {(() => {
+                    // Find image for current page/section
+                    const pageImage = images.find(img => img.section_index === currentPage) || images[0];
+                    const imageSource = pageImage.image_url || `data:image/png;base64,${pageImage.image_data}`;
+                    
+                    return (
+                      <div className="relative">
+                        <img 
+                          src={imageSource}
+                          alt={`Story illustration for page ${currentPage + 1}`}
+                          className="w-full aspect-square object-cover rounded-lg shadow-lg"
+                        />
+                        {images.length > 1 && (
+                          <div className="absolute bottom-2 right-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
+                            {pageImage.section_index + 1} of {images.length}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </div>
+              ) : (
+                <div className="w-full max-w-md mx-auto aspect-square bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg flex items-center justify-center">
+                  <p className="text-muted-foreground text-sm">Story Illustration</p>
+                </div>
+              )}
+              
+              {/* Story Text */}
+              <div className="text-center">
+                <p className="text-lg leading-relaxed whitespace-pre-wrap max-w-2xl mx-auto">
+                  {currentText}
+                </p>
               </div>
             </div>
 
