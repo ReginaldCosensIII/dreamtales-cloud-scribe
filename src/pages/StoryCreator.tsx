@@ -145,7 +145,8 @@ export default function StoryCreator() {
       themes: [data.theme],
       characters: [{ name: data.childName, traits: data.favoriteThings }],
       selectedCharacters: data.selectedCharacters || [],
-      selectedPlaces: data.selectedPlaces || []
+      selectedPlaces: data.selectedPlaces || [],
+      generateImages: data.generateImages
     });
 
     if (result) {
@@ -176,7 +177,8 @@ export default function StoryCreator() {
       selectedPlaces: data.selectedPlaces || [],
       prompt: data.prompt,
       length: data.length,
-      themes: data.tone ? [data.tone] : []
+      themes: data.tone ? [data.tone] : [],
+      generateImages: data.generateImages
     });
 
     if (result) {

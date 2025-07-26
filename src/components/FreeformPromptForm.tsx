@@ -5,11 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { CharacterCard } from "@/components/CharacterCard";
 import { PlaceCard } from "@/components/PlaceCard";
 import { useUserData } from "@/hooks/useUserData";
 import { useStoryCreation } from "@/hooks/useStoryCreation";
-import { Sparkles, Clock, Smile, Palette, Users, MapPin } from "lucide-react";
+import { Sparkles, Clock, Smile, Palette, Users, MapPin, Image } from "lucide-react";
 
 interface FreeformData {
   prompt: string;
@@ -17,6 +18,7 @@ interface FreeformData {
   tone: 'calm' | 'funny' | 'magical';
   selectedCharacters: string[];
   selectedPlaces: string[];
+  generateImages: boolean;
 }
 
 interface FreeformPromptFormProps {
@@ -45,7 +47,8 @@ export const FreeformPromptForm = ({ onGenerate, isGenerating, initialPrompt = "
     length: 'medium',
     tone: 'magical',
     selectedCharacters: [],
-    selectedPlaces: []
+    selectedPlaces: [],
+    generateImages: true
   });
 
   // Fetch places when component mounts
@@ -242,6 +245,25 @@ export const FreeformPromptForm = ({ onGenerate, isGenerating, initialPrompt = "
             </div>
           </div>
         )}
+
+        {/* Image Generation Toggle */}
+        <div className="flex items-center justify-between p-4 border border-border/50 rounded-lg bg-card/50">
+          <div className="flex items-center gap-3">
+            <Image className="h-5 w-5 text-primary" />
+            <div>
+              <Label className="text-base font-medium">Generate Images</Label>
+              <p className="text-sm text-muted-foreground">
+                Automatically create illustrations for your story
+              </p>
+            </div>
+          </div>
+          <Switch
+            checked={formData.generateImages}
+            onCheckedChange={(checked) => 
+              setFormData(prev => ({ ...prev, generateImages: checked }))
+            }
+          />
+        </div>
 
         <Button 
           onClick={handleGenerate}

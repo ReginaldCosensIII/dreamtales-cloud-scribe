@@ -125,6 +125,7 @@ export const useStoryCreation = () => {
     prompt: string;
     length: 'short' | 'medium' | 'long';
     themes?: string[];
+    generateImages?: boolean;
   }) => {
     if (!user) {
       setError('Please sign in to generate stories');
@@ -157,8 +158,8 @@ export const useStoryCreation = () => {
         throw functionError;
       }
 
-      // Auto-generate an image for the story if it was successfully created
-      if (data?.story?.id) {
+      // Auto-generate an image for the story if it was successfully created and requested
+      if (data?.story?.id && params.generateImages) {
         try {
           // Extract a scene from the story content for image generation
           const storyContent = data.story.content || '';

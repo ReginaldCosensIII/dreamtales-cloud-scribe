@@ -6,7 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { User, Heart, Wand2, MapPin, ChevronRight, Plus, X, Users } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { User, Heart, Wand2, MapPin, ChevronRight, Plus, X, Users, Image } from "lucide-react";
 import { CharacterCard } from "@/components/CharacterCard";
 import { PlaceCard } from "@/components/PlaceCard";
 import { useUserData } from "@/hooks/useUserData";
@@ -20,6 +21,7 @@ interface StoryBuilderData {
   additionalDetails: string;
   selectedCharacters: string[];
   selectedPlaces: string[];
+  generateImages: boolean;
 }
 
 interface StoryBuilderFormProps {
@@ -56,7 +58,8 @@ export const StoryBuilderForm = ({ onGenerate, isGenerating }: StoryBuilderFormP
     setting: "",
     additionalDetails: "",
     selectedCharacters: [],
-    selectedPlaces: []
+    selectedPlaces: [],
+    generateImages: true
   });
   const [newFavoriteThing, setNewFavoriteThing] = useState("");
 
@@ -335,9 +338,27 @@ export const StoryBuilderForm = ({ onGenerate, isGenerating }: StoryBuilderFormP
                 </CardContent>
               </Card>
             )}
+
+            {/* Image Generation Toggle */}
+            <div className="flex items-center justify-between p-4 border border-border/50 rounded-lg bg-card/50 mt-6">
+              <div className="flex items-center gap-3">
+                <Image className="h-5 w-5 text-primary" />
+                <div>
+                  <Label className="text-base font-medium">Generate Images</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Automatically create illustrations for your story
+                  </p>
+                </div>
+              </div>
+              <Switch
+                checked={formData.generateImages}
+                onCheckedChange={(checked) => 
+                  setFormData(prev => ({ ...prev, generateImages: checked }))
+                }
+              />
+            </div>
           </div>
         )}
-
 
         <div className="flex justify-between pt-4">
           <Button 

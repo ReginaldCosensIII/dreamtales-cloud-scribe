@@ -64,19 +64,18 @@ serve(async (req) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            model: 'gpt-image-1',
+            model: 'dall-e-3',
             prompt: `Children's storybook illustration: ${requestData.prompt}. Style: colorful, friendly, age-appropriate, digital art, vibrant colors`,
             size: '1024x1024',
-            quality: 'high',
-            output_format: 'png'
+            quality: 'hd',
+            n: 1
           }),
         });
 
         if (response.ok) {
           const imageData = await response.json();
-          // gpt-image-1 returns base64 data directly
-          const base64Data = imageData.data[0].b64_json;
-          imageUrl = `data:image/png;base64,${base64Data}`;
+          // DALL-E 3 returns URL
+          imageUrl = imageData.data[0].url;
           break;
         } else {
           const errorData = await response.json();
@@ -112,7 +111,7 @@ serve(async (req) => {
       .from('story_images')
       .insert({
         story_id: requestData.storyId,
-        image_data: imageUrl,
+        image_url: imageUrl,
         prompt: requestData.prompt,
         section_index: 0
       })
