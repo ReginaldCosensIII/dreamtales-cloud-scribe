@@ -10,6 +10,9 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { toast } from 'sonner';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { StoryReadingMode } from '@/components/StoryReadingMode';
+import { supabase } from '@/integrations/supabase/client';
 import { 
   Plus, 
   Users, 
@@ -64,6 +67,8 @@ export default function StoryCreator() {
     content: string;
     isComplete: boolean;
   } | null>(null);
+  const [showSaveConfirmDialog, setShowSaveConfirmDialog] = useState(false);
+  const [showReadingMode, setShowReadingMode] = useState(false);
 
   // Redirect if not signed in
   useEffect(() => {
@@ -682,9 +687,7 @@ export default function StoryCreator() {
           <StoryOutputPreview 
             story={currentStory}
             onSave={() => {
-              // TODO: Implement save functionality
-              console.log('Saving story:', currentStory);
-              toast.success('Story saved successfully!');
+              setShowSaveConfirmDialog(true);
             }}
             onContinue={() => {
               // TODO: Implement continue functionality
@@ -698,6 +701,101 @@ export default function StoryCreator() {
             canContinue={!currentStory.isComplete}
           />
         </div>
+      )}
+
+      {/* Save Confirmation Dialog */}
+      <AlertDialog open={showSaveConfirmDialog} onOpenChange={setShowSaveConfirmDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Story Saved Successfully!</AlertDialogTitle>
+            <AlertDialogDescription>
+              Would you like to read your story now?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={async () => {
+              // Save story and close
+              try {
+                const { error } = await supabase
+                  .from('stories')
+                  .insert({
+                    user_id: user.id,
+                    title: currentStory?.title || 'Untitled Story',
+                    content: currentStory?.content || '',
+                    prompt: 'Generated story',
+                    story_type: 'structured',
+                    length: 'medium',
+                    setting: '',
+                    characters: [],
+                    themes: [],
+                    parental_preferences: {},
+                    is_complete: currentStory?.isComplete || true,
+                    generation_status: 'complete'
+                  });
+
+                if (error) throw error;
+                
+                setCurrentStory(null);
+                setShowSaveConfirmDialog(false);
+                toast.success('Story saved to your library!');
+              } catch (error) {
+                console.error('Error saving story:', error);
+                toast.error('Failed to save story. Please try again.');
+              }
+            }}>
+              Maybe Later
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={async () => {
+              // Save story and open reading mode
+              try {
+                const { error } = await supabase
+                  .from('stories')
+                  .insert({
+                    user_id: user.id,
+                    title: currentStory?.title || 'Untitled Story',
+                    content: currentStory?.content || '',
+                    prompt: 'Generated story',
+                    story_type: 'structured',
+                    length: 'medium',
+                    setting: '',
+                    characters: [],
+                    themes: [],
+                    parental_preferences: {},
+                    is_complete: currentStory?.isComplete || true,
+                    generation_status: 'complete'
+                  });
+
+                if (error) throw error;
+                
+                setShowSaveConfirmDialog(false);
+                setShowReadingMode(true);
+                toast.success('Story saved to your library!');
+              } catch (error) {
+                console.error('Error saving story:', error);
+                toast.error('Failed to save story. Please try again.');
+              }
+            }}>
+              Read Now
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Reading Mode Modal */}
+      {showReadingMode && currentStory && (
+        <StoryReadingMode
+          story={{
+            id: '',
+            title: currentStory.title,
+            content: currentStory.content,
+            setting: '',
+            themes: []
+          }}
+          onClose={() => {
+            setShowReadingMode(false);
+            setCurrentStory(null);
+          }}
+        />
       )}
     </div>
   );
