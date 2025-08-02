@@ -148,29 +148,51 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
       const angleStep = (2 * Math.PI) / totalItems;
       const currentAngle = (index - currentIndex) * angleStep;
       
-      // Calculate position in a 3D circle
-      const radius = 350;
+      // Calculate position in a horizontal circle
+      const radius = 300;
       const x = Math.sin(currentAngle) * radius;
-      const z = Math.cos(currentAngle) * radius;
+      const z = Math.cos(currentAngle) * radius; // For depth
       
-      // Determine visibility and properties based on z position
-      // z > 0 means closer to viewer (front), z < 0 means further (back)
-      let scale, opacity, zIndex;
+      // Normalize angle to 0-2π range
+      let normalizedAngle = currentAngle;
+      while (normalizedAngle < 0) normalizedAngle += 2 * Math.PI;
+      while (normalizedAngle >= 2 * Math.PI) normalizedAngle -= 2 * Math.PI;
       
-      if (z > 250) {
-        // Front center card
+      // Convert to degrees for easier calculation
+      const degrees = (normalizedAngle * 180) / Math.PI;
+      
+      let scale = 0.6;
+      let opacity = 0.2;
+      let zIndex = 1;
+      
+      // Front center (around 0 degrees)
+      if (degrees <= 45 || degrees >= 315) {
         scale = 1;
         opacity = 1;
         zIndex = 10;
-      } else if (z > 0) {
-        // Front-side cards (partially visible)
+      }
+      // Front left and right (visible sides)
+      else if ((degrees > 315 && degrees <= 360) || (degrees >= 0 && degrees <= 45)) {
+        scale = 1;
+        opacity = 1;
+        zIndex = 10;
+      }
+      else if (degrees > 45 && degrees <= 135) {
+        // Right side
         scale = 0.85;
-        opacity = 0.8;
+        opacity = 0.7;
         zIndex = 5;
-      } else {
-        // Back cards (hidden)
+      }
+      else if (degrees >= 225 && degrees < 315) {
+        // Left side
+        scale = 0.85;
+        opacity = 0.7;
+        zIndex = 5;
+      }
+      // Back cards (135-225 degrees) stay hidden with low opacity
+      else {
         scale = 0.6;
-        opacity = 0;
+        opacity = 0.1;
         zIndex = 1;
       }
       
@@ -181,7 +203,7 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
         scale,
         opacity,
         zIndex,
-        angle: currentAngle
+        degrees
       };
     });
   };
@@ -189,18 +211,18 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
   const visibleTestimonials = getVisibleTestimonials();
 
   return (
-    <div className="w-full flex flex-col items-center justify-center py-8 min-h-[500px]">
+    <div className="w-full flex flex-col items-center justify-center py-8 bg-red-500/20 min-h-[500px]">
+      {/* DEBUG: Added red background to see container boundaries */}
+      <div className="text-center mb-4 p-2 bg-blue-500/20">
+        <p className="text-sm">DEBUG: Carousel Container - Should be centered</p>
+      </div>
+      
       {/* Carousel Container */}
-      <div className="relative w-full max-w-4xl h-[400px] flex items-center justify-center mx-auto">
-        <div className="relative w-full h-full flex items-center justify-center">
+      <div className="relative w-full max-w-4xl h-[400px] flex items-center justify-center mx-auto bg-green-500/20">
+        <div className="relative w-full h-full flex items-center justify-center bg-yellow-500/20">
           {visibleTestimonials.map((testimonial) => {
             const PlatformIcon = platformIcons[testimonial.platform as keyof typeof platformIcons];
             const platformColor = platformColors[testimonial.platform as keyof typeof platformColors];
-            
-            // Only show center card and adjacent cards (3 total)
-            if (testimonial.opacity < 0.7) {
-              return null;
-            }
             
             return (
               <motion.div
@@ -215,7 +237,7 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
                   duration: 0.8,
                   ease: "easeInOut"
                 }}
-                className="absolute w-80 h-auto"
+                className="absolute w-80 h-auto bg-purple-500/30"
                 style={{
                   left: "50%",
                   top: "50%",
@@ -224,6 +246,10 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
                   zIndex: testimonial.zIndex
                 }}
               >
+                {/* DEBUG: Added purple background to see card boundaries */}
+                <div className="p-1 bg-orange-500/30">
+                  <p className="text-xs">Card {testimonial.id} - X: {Math.round(testimonial.x)} - Scale: {testimonial.scale.toFixed(2)}</p>
+                </div>
                 <Card className="bg-card/90 backdrop-blur-md border-border/50 shadow-dreamy hover:shadow-cloud transition-cloud overflow-hidden">
                   <CardContent className="p-4">
                     {/* Header with profile info */}
