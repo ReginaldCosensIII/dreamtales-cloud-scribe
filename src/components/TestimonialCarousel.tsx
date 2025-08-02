@@ -236,7 +236,7 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
                   duration: 0.8,
                   ease: "easeInOut"
                 }}
-                className="absolute w-80 h-auto"
+                className="absolute w-80 h-auto bg-purple-500/30"
                 style={{
                   left: "50%",
                   top: "50%",
@@ -244,6 +244,10 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
                   zIndex: testimonial.zIndex
                 }}
               >
+                {/* DEBUG: Added purple background to see card boundaries */}
+                <div className="p-1 bg-orange-500/30">
+                  <p className="text-xs">Card {testimonial.id} - X: {Math.round(testimonial.x)} - Scale: {testimonial.scale.toFixed(2)}</p>
+                </div>
                 <Card className="bg-card/90 backdrop-blur-md border-border/50 shadow-dreamy hover:shadow-cloud transition-cloud overflow-hidden">
                   <CardContent className="p-4">
                     {/* Header with profile info */}
