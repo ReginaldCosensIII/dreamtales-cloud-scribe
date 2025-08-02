@@ -149,19 +149,19 @@ const Layout = ({ children }: LayoutProps) => {
 
             {/* Quick Links */}
             <div>
-              <h3 className="font-semibold text-foreground mb-4">Quick Links</h3>
+              <h3 className="font-semibold text-primary mb-4">Quick Links</h3>
               <div className="space-y-2">
-                <Link to="/" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
                   Home
                 </Link>
-                <Link to="/about" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/about" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
                   About
                 </Link>
-                <Link to="/generator" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/generator" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
                   Story Generator
                 </Link>
                 {user && (
-                  <Link to="/account" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <Link to="/account" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
                     Account
                   </Link>
                 )}
@@ -170,21 +170,21 @@ const Layout = ({ children }: LayoutProps) => {
 
             {/* Support */}
             <div>
-              <h3 className="font-semibold text-foreground mb-4">Support</h3>
+              <h3 className="font-semibold text-primary mb-4">Support</h3>
               <div className="space-y-2">
-                <a href="#" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <a href="#" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
                   Help Center
                 </a>
-                <Link to="/contact" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/contact" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
                   Contact Us
                 </Link>
-                <a href="#" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <a href="#" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
                   Privacy Policy
                 </a>
-                <a href="#" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <a href="#" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
                   Terms of Service
                 </a>
-                <Link to="/social-partnership" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/social-partnership" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
                   Creator Partnership
                 </Link>
               </div>
@@ -192,23 +192,19 @@ const Layout = ({ children }: LayoutProps) => {
 
             {/* Social */}
             <div>
-              <h3 className="font-semibold text-foreground mb-4">Follow Us</h3>
+              <h3 className="font-semibold text-primary mb-4">Follow Us</h3>
               <div className="flex space-x-4">
                 <a href="#" className="group relative">
-                  <Instagram className="h-5 w-5 text-muted-foreground group-hover:text-transparent transition-all duration-300" />
-                  <Instagram className="h-5 w-5 absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 gradient-cloud bg-clip-text text-transparent" style={{ backgroundImage: 'var(--gradient-cloud)' }} />
+                  <Instagram className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors duration-300" />
                 </a>
                 <a href="#" className="group relative">
-                  <Twitter className="h-5 w-5 text-muted-foreground group-hover:text-transparent transition-all duration-300" />
-                  <Twitter className="h-5 w-5 absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 gradient-cloud bg-clip-text text-transparent" style={{ backgroundImage: 'var(--gradient-cloud)' }} />
+                  <Twitter className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors duration-300" />
                 </a>
                 <a href="#" className="group relative">
-                  <Youtube className="h-5 w-5 text-muted-foreground group-hover:text-transparent transition-all duration-300" />
-                  <Youtube className="h-5 w-5 absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 gradient-cloud bg-clip-text text-transparent" style={{ backgroundImage: 'var(--gradient-cloud)' }} />
+                  <Youtube className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors duration-300" />
                 </a>
                 <a href="#" className="group relative">
-                  <Facebook className="h-5 w-5 text-muted-foreground group-hover:text-transparent transition-all duration-300" />
-                  <Facebook className="h-5 w-5 absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 gradient-cloud bg-clip-text text-transparent" style={{ backgroundImage: 'var(--gradient-cloud)' }} />
+                  <Facebook className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors duration-300" />
                 </a>
               </div>
             </div>
