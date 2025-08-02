@@ -146,42 +146,44 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
     const totalItems = testimonials.length;
     const visibleCards = [];
     
-    // Only show 3 cards: previous, current, and next
-    for (let i = -1; i <= 1; i++) {
-      const index = (currentIndex + i + totalItems) % totalItems;
-      const testimonial = testimonials[index];
-      
-      let x, scale, opacity, zIndex;
-      
-      if (i === 0) {
-        // Center card
-        x = 0;
-        scale = 1;
-        opacity = 1;
-        zIndex = 10;
-      } else if (i === -1) {
-        // Left card
-        x = -250;
-        scale = 0.85;
-        opacity = 0.7;
-        zIndex = 5;
-      } else {
-        // Right card
-        x = 250;
-        scale = 0.85;
-        opacity = 0.7;
-        zIndex = 5;
-      }
-      
-      visibleCards.push({
-        ...testimonial,
-        x,
-        scale,
-        opacity,
-        zIndex,
-        position: i
-      });
-    }
+    // Calculate indices for the 3 visible cards in 360-degree rotation
+    // Center card: currentIndex
+    // Left card: next card (currentIndex + 1) 
+    // Right card: previous card (currentIndex - 1)
+    
+    const centerIndex = currentIndex;
+    const leftIndex = (currentIndex + 1) % totalItems;
+    const rightIndex = (currentIndex - 1 + totalItems) % totalItems;
+    
+    // Center card (active)
+    visibleCards.push({
+      ...testimonials[centerIndex],
+      x: 0,
+      scale: 1,
+      opacity: 1,
+      zIndex: 10,
+      position: 'center'
+    });
+    
+    // Left card (where cards move to from center)
+    visibleCards.push({
+      ...testimonials[leftIndex],
+      x: -250,
+      scale: 0.85,
+      opacity: 0.7,
+      zIndex: 5,
+      position: 'left'
+    });
+    
+    // Right card (where cards come from to center)
+    visibleCards.push({
+      ...testimonials[rightIndex],
+      x: 250,
+      scale: 0.85,
+      opacity: 0.7,
+      zIndex: 5,
+      position: 'right'
+    });
     
     return visibleCards;
   };
