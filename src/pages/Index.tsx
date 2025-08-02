@@ -366,8 +366,8 @@ const Index = () => {
                     <span className="text-lg text-muted-foreground font-normal">/{plan.period}</span>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-4 flex flex-col pb-6">
-                  <ul className="space-y-3 flex-grow">
+                <CardContent className="flex flex-col h-full pb-6">
+                  <ul className="space-y-3 flex-grow mb-6">
                     {plan.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-center gap-2">
                         <Star className="h-4 w-4 text-primary fill-primary" />
@@ -375,7 +375,7 @@ const Index = () => {
                       </li>
                     ))}
                   </ul>
-                  <Button variant={plan.variant} className="w-full mt-6" size="lg">
+                  <Button variant={plan.variant} className="w-full mt-auto" size="lg">
                     {plan.cta}
                   </Button>
                 </CardContent>
