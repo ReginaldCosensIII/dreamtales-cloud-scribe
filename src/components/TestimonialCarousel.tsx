@@ -143,69 +143,47 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
   }, [usePlaceholders]);
 
   const getVisibleTestimonials = () => {
-    return testimonials.map((testimonial, index) => {
-      const totalItems = testimonials.length;
-      const angleStep = (2 * Math.PI) / totalItems;
-      const currentAngle = (index - currentIndex) * angleStep;
+    const totalItems = testimonials.length;
+    const visibleCards = [];
+    
+    // Only show 3 cards: previous, current, and next
+    for (let i = -1; i <= 1; i++) {
+      const index = (currentIndex + i + totalItems) % totalItems;
+      const testimonial = testimonials[index];
       
-      // Calculate position in a horizontal circle
-      const radius = 300;
-      const x = Math.sin(currentAngle) * radius;
-      const z = Math.cos(currentAngle) * radius; // For depth
+      let x, scale, opacity, zIndex;
       
-      // Normalize angle to 0-2π range
-      let normalizedAngle = currentAngle;
-      while (normalizedAngle < 0) normalizedAngle += 2 * Math.PI;
-      while (normalizedAngle >= 2 * Math.PI) normalizedAngle -= 2 * Math.PI;
-      
-      // Convert to degrees for easier calculation
-      const degrees = (normalizedAngle * 180) / Math.PI;
-      
-      let scale = 0.6;
-      let opacity = 0.2;
-      let zIndex = 1;
-      
-      // Front center (around 0 degrees)
-      if (degrees <= 45 || degrees >= 315) {
+      if (i === 0) {
+        // Center card
+        x = 0;
         scale = 1;
         opacity = 1;
         zIndex = 10;
-      }
-      // Front left and right (visible sides)
-      else if ((degrees > 315 && degrees <= 360) || (degrees >= 0 && degrees <= 45)) {
-        scale = 1;
-        opacity = 1;
-        zIndex = 10;
-      }
-      else if (degrees > 45 && degrees <= 135) {
-        // Right side
+      } else if (i === -1) {
+        // Left card
+        x = -250;
+        scale = 0.85;
+        opacity = 0.7;
+        zIndex = 5;
+      } else {
+        // Right card
+        x = 250;
         scale = 0.85;
         opacity = 0.7;
         zIndex = 5;
       }
-      else if (degrees >= 225 && degrees < 315) {
-        // Left side
-        scale = 0.85;
-        opacity = 0.7;
-        zIndex = 5;
-      }
-      // Back cards (135-225 degrees) stay hidden with low opacity
-      else {
-        scale = 0.6;
-        opacity = 0.1;
-        zIndex = 1;
-      }
       
-      return {
+      visibleCards.push({
         ...testimonial,
         x,
-        z,
         scale,
         opacity,
         zIndex,
-        degrees
-      };
-    });
+        position: i
+      });
+    }
+    
+    return visibleCards;
   };
 
   const visibleTestimonials = getVisibleTestimonials();
