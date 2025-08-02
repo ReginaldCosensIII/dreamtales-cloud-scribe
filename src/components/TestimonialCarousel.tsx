@@ -146,14 +146,14 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
     const totalItems = testimonials.length;
     const visibleCards = [];
     
-    // Calculate indices for the 3 visible cards in 360-degree rotation
-    // Center card: currentIndex
-    // Left card: next card (currentIndex + 1) 
-    // Right card: previous card (currentIndex - 1)
+    // For right-to-left movement in a 360-degree carousel:
+    // Center: currentIndex
+    // Left: next card in sequence (currentIndex + 1)
+    // Right: previous card in sequence (currentIndex - 1)
     
     const centerIndex = currentIndex;
-    const leftIndex = (currentIndex + 1) % totalItems;
-    const rightIndex = (currentIndex - 1 + totalItems) % totalItems;
+    const leftIndex = (currentIndex + 1) % totalItems;  // Next card (moves from center to left)
+    const rightIndex = (currentIndex - 1 + totalItems) % totalItems;  // Previous card (comes from right)
     
     // Center card (active)
     visibleCards.push({
@@ -165,7 +165,7 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
       position: 'center'
     });
     
-    // Left card (where cards move to from center)
+    // Left card (next in sequence)
     visibleCards.push({
       ...testimonials[leftIndex],
       x: -250,
@@ -175,7 +175,7 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
       position: 'left'
     });
     
-    // Right card (where cards come from to center)
+    // Right card (previous in sequence)
     visibleCards.push({
       ...testimonials[rightIndex],
       x: 250,
