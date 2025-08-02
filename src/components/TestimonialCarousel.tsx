@@ -211,9 +211,9 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
   const visibleTestimonials = getVisibleTestimonials();
 
   return (
-    <div className="w-full flex flex-col items-center justify-center min-h-[600px]">
+    <div className="w-full flex flex-col items-center justify-center">
       {/* Carousel Container */}
-      <div className="relative w-full h-[450px] flex items-center justify-center overflow-hidden">
+      <div className="relative w-full h-[400px] flex items-center justify-center overflow-visible">
         <div className="relative w-80 h-full flex items-center justify-center">
           {visibleTestimonials.map((testimonial) => {
             const PlatformIcon = platformIcons[testimonial.platform as keyof typeof platformIcons];
