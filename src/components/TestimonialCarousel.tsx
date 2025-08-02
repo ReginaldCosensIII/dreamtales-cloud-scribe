@@ -71,6 +71,32 @@ const mockTestimonials = [
     likes: 91,
     comments: 23,
     image: "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=300&h=200&fit=crop"
+  },
+  {
+    id: "6",
+    name: "The Miller Family",
+    handle: "@miller_adventures",
+    avatar: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=100&h=100&fit=crop&crop=face",
+    quote: "Our evenings are now filled with wonder thanks to DreamTales! 🌟",
+    platform: "Facebook",
+    tag: "#DreamTalesMagic",
+    timestamp: "8h",
+    likes: 64,
+    comments: 11,
+    image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=300&h=200&fit=crop"
+  },
+  {
+    id: "7",
+    name: "Alex P.",
+    handle: "@alex_parentlife",
+    avatar: "https://images.unsplash.com/photo-1535268647677-300dbf3d78d1?w=100&h=100&fit=crop&crop=face",
+    quote: "My kids love the interactive stories. It's a fantastic educational tool! 📚✨",
+    platform: "Instagram",
+    tag: "#FamilyStorytime",
+    timestamp: "5h",
+    likes: 47,
+    comments: 7,
+    image: null
   }
 ];
 
@@ -119,50 +145,70 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
   const getVisibleTestimonials = () => {
     return testimonials.map((testimonial, index) => {
       const totalItems = testimonials.length;
-      const relativeIndex = (index - currentIndex + totalItems) % totalItems;
+      const angleStep = (2 * Math.PI) / totalItems;
+      const currentAngle = (index - currentIndex) * angleStep;
       
-      // Show only 3 cards: center, left, right
-      let position = 'hidden';
-      let scale = 0.7;
-      let opacity = 0;
-      let translateX = 0;
+      // Calculate position in a horizontal circle
+      const radius = 300;
+      const x = Math.sin(currentAngle) * radius;
+      const z = Math.cos(currentAngle) * radius; // For depth
+      
+      // Normalize angle to 0-2π range
+      let normalizedAngle = currentAngle;
+      while (normalizedAngle < 0) normalizedAngle += 2 * Math.PI;
+      while (normalizedAngle >= 2 * Math.PI) normalizedAngle -= 2 * Math.PI;
+      
+      // Convert to degrees for easier calculation
+      const degrees = (normalizedAngle * 180) / Math.PI;
+      
+      let scale = 0.6;
+      let opacity = 0.2;
       let zIndex = 1;
       
-      if (relativeIndex === 0) {
-        // Center card
-        position = 'center';
+      // Front center (around 0 degrees)
+      if (degrees <= 45 || degrees >= 315) {
         scale = 1;
         opacity = 1;
-        translateX = 0;
         zIndex = 10;
-      } else if (relativeIndex === 1) {
-        // Right card
-        position = 'right';
+      }
+      // Front left and right (visible sides)
+      else if ((degrees > 315 && degrees <= 360) || (degrees >= 0 && degrees <= 45)) {
+        scale = 1;
+        opacity = 1;
+        zIndex = 10;
+      }
+      else if (degrees > 45 && degrees <= 135) {
+        // Right side
         scale = 0.85;
         opacity = 0.7;
-        translateX = 350;
         zIndex = 5;
-      } else if (relativeIndex === totalItems - 1) {
-        // Left card
-        position = 'left';
+      }
+      else if (degrees >= 225 && degrees < 315) {
+        // Left side
         scale = 0.85;
         opacity = 0.7;
-        translateX = -350;
         zIndex = 5;
+      }
+      // Back cards (135-225 degrees) stay hidden with low opacity
+      else {
+        scale = 0.6;
+        opacity = 0.1;
+        zIndex = 1;
       }
       
       return {
         ...testimonial,
-        position,
+        x,
+        z,
         scale,
         opacity,
-        translateX,
-        zIndex
+        zIndex,
+        degrees
       };
     });
   };
 
-  const visibleTestimonials = getVisibleTestimonials().filter(t => t.position !== 'hidden');
+  const visibleTestimonials = getVisibleTestimonials();
 
   return (
     <div className="w-full flex flex-col items-center justify-center min-h-[600px]">
@@ -177,7 +223,7 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
               <motion.div
                 key={testimonial.id}
                 animate={{ 
-                  x: testimonial.translateX,
+                  x: testimonial.x,
                   scale: testimonial.scale,
                   opacity: testimonial.opacity
                 }}
@@ -187,6 +233,9 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
                 }}
                 className="absolute w-80 h-auto"
                 style={{
+                  left: "50%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)",
                   zIndex: testimonial.zIndex
                 }}
               >
