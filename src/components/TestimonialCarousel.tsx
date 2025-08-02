@@ -120,17 +120,19 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
   const [currentIndex, setCurrentIndex] = useState(0);
   const [testimonials, setTestimonials] = useState(mockTestimonials);
 
-  // Auto-rotate the carousel (slower for debugging)
+  // Auto-rotate the carousel
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-    }, 6000); // Slower rotation to see the motion
+    }, 4000);
 
     return () => clearInterval(interval);
   }, [testimonials.length]);
 
   // Future: Fetch social media posts
   const fetchSocialPosts = async () => {
+    // TODO: Implement social media API integration
+    // For now, return mock data
     return mockTestimonials;
   };
 
@@ -142,70 +144,78 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
 
   const getVisibleTestimonials = () => {
     return testimonials.map((testimonial, index) => {
-      const totalItems = testimonials.length; // Should be 7
-      const angleStep = (2 * Math.PI) / totalItems; // 360 degrees / 7 = ~51.4 degrees each
+      const totalItems = testimonials.length;
+      const angleStep = (2 * Math.PI) / totalItems;
       const currentAngle = (index - currentIndex) * angleStep;
       
-      // Position on horizontal circle
-      const radius = 400;
+      // Calculate position in a horizontal circle
+      const radius = 300;
       const x = Math.sin(currentAngle) * radius;
-      const y = Math.cos(currentAngle) * 30; // Slight vertical for depth
+      const z = Math.cos(currentAngle) * radius; // For depth
       
-      // Determine visibility - only show 3 cards
+      // Normalize angle to 0-2π range
       let normalizedAngle = currentAngle;
-      // Normalize to [-π, π] range
-      while (normalizedAngle > Math.PI) normalizedAngle -= 2 * Math.PI;
-      while (normalizedAngle < -Math.PI) normalizedAngle += 2 * Math.PI;
+      while (normalizedAngle < 0) normalizedAngle += 2 * Math.PI;
+      while (normalizedAngle >= 2 * Math.PI) normalizedAngle -= 2 * Math.PI;
       
-      let scale, opacity, zIndex, isVisible;
+      // Convert to degrees for easier calculation
+      const degrees = (normalizedAngle * 180) / Math.PI;
       
-      // Center card (front) - index 0 relative to current
-      if (Math.abs(normalizedAngle) < Math.PI / 6) {
+      let scale = 0.6;
+      let opacity = 0.2;
+      let zIndex = 1;
+      
+      // Front center (around 0 degrees)
+      if (degrees <= 45 || degrees >= 315) {
         scale = 1;
         opacity = 1;
         zIndex = 10;
-        isVisible = true;
       }
-      // Left and right cards - immediate neighbors
-      else if (Math.abs(normalizedAngle) < Math.PI / 3) {
+      // Front left and right (visible sides)
+      else if ((degrees > 315 && degrees <= 360) || (degrees >= 0 && degrees <= 45)) {
+        scale = 1;
+        opacity = 1;
+        zIndex = 10;
+      }
+      else if (degrees > 45 && degrees <= 135) {
+        // Right side
         scale = 0.85;
-        opacity = 0.8;
-        zIndex = 8;
-        isVisible = true;
+        opacity = 0.7;
+        zIndex = 5;
       }
-      // Hide all other cards completely
+      else if (degrees >= 225 && degrees < 315) {
+        // Left side
+        scale = 0.85;
+        opacity = 0.7;
+        zIndex = 5;
+      }
+      // Back cards (135-225 degrees) stay hidden with low opacity
       else {
         scale = 0.6;
-        opacity = 0;
+        opacity = 0.1;
         zIndex = 1;
-        isVisible = false;
       }
       
       return {
         ...testimonial,
         x,
-        y,
+        z,
         scale,
         opacity,
         zIndex,
-        isVisible
+        degrees
       };
-    }).filter(item => item.isVisible); // Only return visible cards
+    });
   };
 
   const visibleTestimonials = getVisibleTestimonials();
 
   return (
-    <div className="w-full flex flex-col items-center justify-center">
-      {/* Debug info */}
-      <div className="mb-4 text-sm text-muted-foreground">
-        Showing {testimonials.length} cards | Current: {currentIndex + 1}
-      </div>
-      
+    <div className="w-full flex flex-col items-center justify-center min-h-[600px]">
       {/* Carousel Container */}
-      <div className="relative w-full h-[450px] flex items-center justify-center">
-        <div className="relative w-full h-full flex items-center justify-center max-w-4xl mx-auto">
-          {visibleTestimonials.map((testimonial, originalIndex) => {
+      <div className="relative w-full h-[450px] flex items-center justify-center overflow-hidden">
+        <div className="relative w-80 h-full flex items-center justify-center">
+          {visibleTestimonials.map((testimonial) => {
             const PlatformIcon = platformIcons[testimonial.platform as keyof typeof platformIcons];
             const platformColor = platformColors[testimonial.platform as keyof typeof platformColors];
             
@@ -214,15 +224,14 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
                 key={testimonial.id}
                 animate={{ 
                   x: testimonial.x,
-                  y: testimonial.y,
                   scale: testimonial.scale,
                   opacity: testimonial.opacity
                 }}
                 transition={{ 
-                  duration: 1.2,
+                  duration: 0.8,
                   ease: "easeInOut"
                 }}
-                className="absolute w-80"
+                className="absolute w-80 h-auto"
                 style={{
                   left: "50%",
                   top: "50%",
@@ -301,14 +310,12 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
           <button
             key={index}
             onClick={() => setCurrentIndex(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 text-xs ${
+            className={`w-2 h-2 rounded-full transition-all duration-300 ${
               index === currentIndex 
                 ? "bg-primary scale-125" 
                 : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
             }`}
-          >
-            {index + 1}
-          </button>
+          />
         ))}
       </div>
     </div>
