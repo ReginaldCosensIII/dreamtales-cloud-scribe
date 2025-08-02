@@ -159,8 +159,9 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
   const visibleTestimonials = getVisibleTestimonials();
 
   return (
-    <div className="w-full flex items-center justify-center py-8">
-      <div className="relative w-full max-w-6xl h-[400px] flex items-center justify-center">
+    <div className="w-full">
+      {/* Carousel Container */}
+      <div className="relative h-[500px] w-full max-w-4xl mx-auto flex items-center justify-center">
         {visibleTestimonials.map((testimonial) => {
           const PlatformIcon = platformIcons[testimonial.platform as keyof typeof platformIcons];
           const platformColor = platformColors[testimonial.platform as keyof typeof platformColors];
@@ -179,7 +180,7 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
               }}
               className="absolute w-80"
               style={{
-                left: "50%",
+                left: `calc(50% + ${testimonial.x}px)`,
                 top: "50%",
                 transform: "translate(-50%, -50%)",
                 zIndex: testimonial.zIndex
@@ -250,18 +251,20 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
       </div>
 
       {/* Navigation dots */}
-      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 flex gap-2">
-        {testimonials.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentIndex(index)}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
-              index === currentIndex 
-                ? "bg-primary scale-125" 
-                : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
-            }`}
-          />
-        ))}
+      <div className="flex justify-center mt-8">
+        <div className="flex gap-2">
+          {testimonials.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentIndex(index)}
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                index === currentIndex 
+                  ? "bg-primary scale-125" 
+                  : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
+              }`}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
