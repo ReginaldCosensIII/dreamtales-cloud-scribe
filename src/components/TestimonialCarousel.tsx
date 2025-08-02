@@ -119,48 +119,58 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
   const getVisibleTestimonials = () => {
     return testimonials.map((testimonial, index) => {
       const totalItems = testimonials.length;
-      const angleStep = (2 * Math.PI) / totalItems;
-      const currentAngle = (index - currentIndex) * angleStep;
+      const baseAngle = (2 * Math.PI) / totalItems;
+      const currentAngle = (index - currentIndex) * baseAngle;
       
-      // Circular positioning
-      const radius = 250;
-      const x = Math.cos(currentAngle) * radius;
-      const z = Math.sin(currentAngle) * radius;
+      // Calculate position in a horizontal circle (side to side)
+      const radius = 200;
+      const x = Math.sin(currentAngle) * radius; // Use sin for horizontal movement
+      const z = Math.cos(currentAngle) * radius; // Use cos for depth
       
-      // Calculate which cards should be visible (front 3)
-      const normalizedIndex = ((index - currentIndex) % totalItems + totalItems) % totalItems;
+      // Determine which position this card is in relative to center
+      let normalizedAngle = currentAngle;
+      while (normalizedAngle < 0) normalizedAngle += 2 * Math.PI;
+      while (normalizedAngle >= 2 * Math.PI) normalizedAngle -= 2 * Math.PI;
       
-      let scale = 0.6;
-      let opacity = 0;
-      let y = 0;
+      // Convert to degrees for easier calculation
+      const degrees = (normalizedAngle * 180) / Math.PI;
       
-      // Center card
-      if (normalizedIndex === 0) {
+      let scale = 0.7;
+      let opacity = 0.3;
+      let zIndex = 1;
+      
+      // Front center (around 0 degrees)
+      if (degrees <= 30 || degrees >= 330) {
         scale = 1;
         opacity = 1;
-        y = 0;
+        zIndex = 10;
       }
-      // Left and right cards
-      else if (normalizedIndex === 1 || normalizedIndex === totalItems - 1) {
-        scale = 0.8;
+      // Left side (around 270-330 degrees)
+      else if (degrees >= 270 && degrees < 330) {
+        scale = 0.85;
         opacity = 0.8;
-        y = 20;
+        zIndex = 5;
       }
-      // Semi-visible side cards
-      else if (normalizedIndex === 2 || normalizedIndex === totalItems - 2) {
+      // Right side (around 30-90 degrees)
+      else if (degrees > 30 && degrees <= 90) {
+        scale = 0.85;
+        opacity = 0.8;
+        zIndex = 5;
+      }
+      // Hide back cards
+      else {
         scale = 0.6;
-        opacity = 0.4;
-        y = 40;
+        opacity = 0;
+        zIndex = 1;
       }
       
       return {
         ...testimonial,
         x,
-        y,
         z,
         scale,
         opacity,
-        index: normalizedIndex
+        zIndex
       };
     });
   };
@@ -168,8 +178,11 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
   const visibleTestimonials = getVisibleTestimonials();
 
   return (
-    <div className="relative h-[600px] w-full flex items-center justify-center overflow-hidden">
-      <div className="relative w-full max-w-6xl h-full flex items-center justify-center">
+    <div className="relative h-[600px] w-full flex items-center justify-center">
+      <div 
+        className="relative w-full h-full flex items-center justify-center"
+        style={{ perspective: "1200px" }}
+      >
         {visibleTestimonials.map((testimonial) => {
           const PlatformIcon = platformIcons[testimonial.platform as keyof typeof platformIcons];
           const platformColor = platformColors[testimonial.platform as keyof typeof platformColors];
@@ -177,16 +190,8 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
           return (
             <motion.div
               key={testimonial.id}
-              initial={{ 
-                x: testimonial.x,
-                y: testimonial.y,
-                z: testimonial.z,
-                scale: 0.5,
-                opacity: 0
-              }}
               animate={{ 
                 x: testimonial.x,
-                y: testimonial.y,
                 z: testimonial.z,
                 scale: testimonial.scale,
                 opacity: testimonial.opacity
@@ -195,12 +200,13 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
                 duration: 0.8,
                 ease: "easeInOut"
               }}
-              className="absolute w-80 h-auto"
+              className="absolute w-80"
               style={{
-                transform: `translate(-50%, -50%) translate3d(${testimonial.x}px, ${testimonial.y}px, ${testimonial.z}px)`,
                 left: "50%",
                 top: "50%",
-                zIndex: testimonial.index === 0 ? 10 : 5 - testimonial.index
+                transform: `translate(-50%, -50%) translateX(${testimonial.x}px) translateZ(${testimonial.z}px) scale(${testimonial.scale})`,
+                transformStyle: "preserve-3d",
+                zIndex: testimonial.zIndex
               }}
             >
               <Card className="bg-card/90 backdrop-blur-md border-border/50 shadow-dreamy hover:shadow-cloud transition-cloud overflow-hidden">
