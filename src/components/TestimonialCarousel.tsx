@@ -211,10 +211,10 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
   const visibleTestimonials = getVisibleTestimonials();
 
   return (
-    <div className="w-full flex flex-col items-center justify-center">
+    <div className="w-full flex flex-col items-center justify-center py-8">
       {/* Carousel Container */}
-      <div className="relative w-full h-[400px] flex items-center justify-center overflow-visible">
-        <div className="relative w-80 h-full flex items-center justify-center">
+      <div className="relative w-full max-w-4xl h-[400px] flex items-center justify-center mx-auto">
+        <div className="relative w-full h-full flex items-center justify-center">
           {visibleTestimonials.map((testimonial) => {
             const PlatformIcon = platformIcons[testimonial.platform as keyof typeof platformIcons];
             const platformColor = platformColors[testimonial.platform as keyof typeof platformColors];
@@ -305,7 +305,7 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
       </div>
 
       {/* Navigation dots */}
-      <div className="flex gap-2 mt-6">
+      <div className="flex gap-2 mt-8">
         {testimonials.map((_, index) => (
           <button
             key={index}
