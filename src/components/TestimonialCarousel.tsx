@@ -178,9 +178,9 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
   const visibleTestimonials = getVisibleTestimonials();
 
   return (
-    <div className="relative h-[600px] w-full flex items-center justify-center">
+    <div className="relative h-[500px] w-full flex items-center justify-center mx-auto">
       <div 
-        className="relative w-full h-full flex items-center justify-center"
+        className="relative w-full h-full flex items-center justify-center max-w-5xl mx-auto"
         style={{ perspective: "1200px" }}
       >
         {visibleTestimonials.map((testimonial) => {
@@ -274,7 +274,7 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
       </div>
 
       {/* Navigation dots */}
-      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 flex gap-2">
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
         {testimonials.map((_, index) => (
           <button
             key={index}
