@@ -149,61 +149,58 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
       const currentAngle = (index - currentIndex) * angleStep;
       
       // Calculate position in a horizontal circle
-      const radius = 300;
+      const radius = 350;
       const x = Math.sin(currentAngle) * radius;
-      const z = Math.cos(currentAngle) * radius; // For depth
+      const y = Math.cos(currentAngle) * 50; // Small vertical movement for depth
       
-      // Normalize angle to 0-2π range
-      let normalizedAngle = currentAngle;
-      while (normalizedAngle < 0) normalizedAngle += 2 * Math.PI;
-      while (normalizedAngle >= 2 * Math.PI) normalizedAngle -= 2 * Math.PI;
-      
-      // Convert to degrees for easier calculation
-      const degrees = (normalizedAngle * 180) / Math.PI;
-      
-      let scale = 0.6;
-      let opacity = 0.2;
+      // Determine scale and opacity based on position
+      let scale = 0.7;
+      let opacity = 0.4;
       let zIndex = 1;
       
-      // Front center (around 0 degrees)
-      if (degrees <= 45 || degrees >= 315) {
+      // Normalize angle to determine front/back position
+      let normalizedAngle = currentAngle;
+      while (normalizedAngle < -Math.PI) normalizedAngle += 2 * Math.PI;
+      while (normalizedAngle > Math.PI) normalizedAngle -= 2 * Math.PI;
+      
+      // Front center
+      if (Math.abs(normalizedAngle) < Math.PI / 6) {
         scale = 1;
         opacity = 1;
         zIndex = 10;
       }
-      // Front left and right (visible sides)
-      else if ((degrees > 315 && degrees <= 360) || (degrees >= 0 && degrees <= 45)) {
-        scale = 1;
-        opacity = 1;
-        zIndex = 10;
+      // Front sides
+      else if (Math.abs(normalizedAngle) < Math.PI / 3) {
+        scale = 0.9;
+        opacity = 0.8;
+        zIndex = 8;
       }
-      else if (degrees > 45 && degrees <= 135) {
-        // Right side
-        scale = 0.85;
-        opacity = 0.7;
-        zIndex = 5;
+      // Side positions
+      else if (Math.abs(normalizedAngle) < Math.PI / 2) {
+        scale = 0.8;
+        opacity = 0.6;
+        zIndex = 6;
       }
-      else if (degrees >= 225 && degrees < 315) {
-        // Left side
-        scale = 0.85;
-        opacity = 0.7;
-        zIndex = 5;
+      // Further back
+      else if (Math.abs(normalizedAngle) < (2 * Math.PI) / 3) {
+        scale = 0.7;
+        opacity = 0.4;
+        zIndex = 4;
       }
-      // Back cards (135-225 degrees) stay hidden with low opacity
+      // Back positions
       else {
         scale = 0.6;
-        opacity = 0.1;
-        zIndex = 1;
+        opacity = 0.2;
+        zIndex = 2;
       }
       
       return {
         ...testimonial,
         x,
-        z,
+        y,
         scale,
         opacity,
-        zIndex,
-        degrees
+        zIndex
       };
     });
   };
@@ -214,7 +211,7 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
     <div className="w-full flex flex-col items-center justify-center min-h-[600px]">
       {/* Carousel Container */}
       <div className="relative w-full h-[450px] flex items-center justify-center overflow-hidden">
-        <div className="relative w-80 h-full flex items-center justify-center">
+        <div className="relative w-full h-full flex items-center justify-center max-w-6xl">
           {visibleTestimonials.map((testimonial) => {
             const PlatformIcon = platformIcons[testimonial.platform as keyof typeof platformIcons];
             const platformColor = platformColors[testimonial.platform as keyof typeof platformColors];
@@ -224,6 +221,7 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
                 key={testimonial.id}
                 animate={{ 
                   x: testimonial.x,
+                  y: testimonial.y,
                   scale: testimonial.scale,
                   opacity: testimonial.opacity
                 }}
