@@ -148,51 +148,29 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
       const angleStep = (2 * Math.PI) / totalItems;
       const currentAngle = (index - currentIndex) * angleStep;
       
-      // Calculate position in a horizontal circle
-      const radius = 300;
+      // Calculate position in a 3D circle
+      const radius = 350;
       const x = Math.sin(currentAngle) * radius;
-      const z = Math.cos(currentAngle) * radius; // For depth
+      const z = Math.cos(currentAngle) * radius;
       
-      // Normalize angle to 0-2π range
-      let normalizedAngle = currentAngle;
-      while (normalizedAngle < 0) normalizedAngle += 2 * Math.PI;
-      while (normalizedAngle >= 2 * Math.PI) normalizedAngle -= 2 * Math.PI;
+      // Determine visibility and properties based on z position
+      // z > 0 means closer to viewer (front), z < 0 means further (back)
+      let scale, opacity, zIndex;
       
-      // Convert to degrees for easier calculation
-      const degrees = (normalizedAngle * 180) / Math.PI;
-      
-      let scale = 0.6;
-      let opacity = 0.2;
-      let zIndex = 1;
-      
-      // Front center (around 0 degrees)
-      if (degrees <= 45 || degrees >= 315) {
+      if (z > 250) {
+        // Front center card
         scale = 1;
         opacity = 1;
         zIndex = 10;
-      }
-      // Front left and right (visible sides)
-      else if ((degrees > 315 && degrees <= 360) || (degrees >= 0 && degrees <= 45)) {
-        scale = 1;
-        opacity = 1;
-        zIndex = 10;
-      }
-      else if (degrees > 45 && degrees <= 135) {
-        // Right side
+      } else if (z > 0) {
+        // Front-side cards (partially visible)
         scale = 0.85;
-        opacity = 0.7;
+        opacity = 0.8;
         zIndex = 5;
-      }
-      else if (degrees >= 225 && degrees < 315) {
-        // Left side
-        scale = 0.85;
-        opacity = 0.7;
-        zIndex = 5;
-      }
-      // Back cards (135-225 degrees) stay hidden with low opacity
-      else {
+      } else {
+        // Back cards (hidden)
         scale = 0.6;
-        opacity = 0.1;
+        opacity = 0;
         zIndex = 1;
       }
       
@@ -203,7 +181,7 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
         scale,
         opacity,
         zIndex,
-        degrees
+        angle: currentAngle
       };
     });
   };
@@ -211,7 +189,7 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
   const visibleTestimonials = getVisibleTestimonials();
 
   return (
-    <div className="w-full flex flex-col items-center justify-center py-16 min-h-[500px]">
+    <div className="w-full flex flex-col items-center justify-center py-8 min-h-[500px]">
       {/* Carousel Container */}
       <div className="relative w-full max-w-4xl h-[400px] flex items-center justify-center mx-auto">
         <div className="relative w-full h-full flex items-center justify-center">
