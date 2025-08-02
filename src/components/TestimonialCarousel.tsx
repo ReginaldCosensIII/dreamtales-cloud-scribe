@@ -119,152 +119,155 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
   const getVisibleTestimonials = () => {
     return testimonials.map((testimonial, index) => {
       const totalItems = testimonials.length;
-      const angleStep = (2 * Math.PI) / totalItems;
-      const currentAngle = (index - currentIndex) * angleStep;
-      
-      // Horizontal circular positioning
-      const radius = 180;
-      const x = Math.sin(currentAngle) * radius;
-      
-      // Simple visibility logic based on index position
       const relativeIndex = (index - currentIndex + totalItems) % totalItems;
       
+      // Show only 3 cards: center, left, right
+      let position = 'hidden';
       let scale = 0.7;
-      let opacity = 0.3;
+      let opacity = 0;
+      let translateX = 0;
       let zIndex = 1;
       
-      // Center card (index 0)
       if (relativeIndex === 0) {
+        // Center card
+        position = 'center';
         scale = 1;
         opacity = 1;
+        translateX = 0;
         zIndex = 10;
-      }
-      // Immediate neighbors (index 1 and last)
-      else if (relativeIndex === 1 || relativeIndex === totalItems - 1) {
+      } else if (relativeIndex === 1) {
+        // Right card
+        position = 'right';
         scale = 0.85;
         opacity = 0.7;
+        translateX = 350;
+        zIndex = 5;
+      } else if (relativeIndex === totalItems - 1) {
+        // Left card
+        position = 'left';
+        scale = 0.85;
+        opacity = 0.7;
+        translateX = -350;
         zIndex = 5;
       }
       
       return {
         ...testimonial,
-        x,
+        position,
         scale,
         opacity,
+        translateX,
         zIndex
       };
     });
   };
 
-  const visibleTestimonials = getVisibleTestimonials();
+  const visibleTestimonials = getVisibleTestimonials().filter(t => t.position !== 'hidden');
 
   return (
-    <div className="w-full">
+    <div className="w-full flex flex-col items-center justify-center min-h-[600px]">
       {/* Carousel Container */}
-      <div className="relative h-[500px] w-full max-w-4xl mx-auto flex items-center justify-center">
-        {visibleTestimonials.map((testimonial) => {
-          const PlatformIcon = platformIcons[testimonial.platform as keyof typeof platformIcons];
-          const platformColor = platformColors[testimonial.platform as keyof typeof platformColors];
-          
-          return (
-            <motion.div
-              key={testimonial.id}
-              animate={{ 
-                x: testimonial.x,
-                scale: testimonial.scale,
-                opacity: testimonial.opacity
-              }}
-              transition={{ 
-                duration: 0.8,
-                ease: "easeInOut"
-              }}
-              className="absolute w-80"
-              style={{
-                left: `calc(50% + ${testimonial.x}px)`,
-                top: "50%",
-                transform: "translate(-50%, -50%)",
-                zIndex: testimonial.zIndex
-              }}
-            >
-              <Card className="bg-card/90 backdrop-blur-md border-border/50 shadow-dreamy hover:shadow-cloud transition-cloud overflow-hidden">
-                <CardContent className="p-4">
-                  {/* Header with profile info */}
-                  <div className="flex items-center gap-3 mb-3">
-                    <Avatar className="h-12 w-12">
-                      <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
-                      <AvatarFallback className="bg-primary/20 text-primary">
-                        {testimonial.name.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-semibold text-sm text-foreground">{testimonial.name}</h3>
-                        <PlatformIcon className={`h-4 w-4 ${platformColor}`} />
+      <div className="relative w-full h-[450px] flex items-center justify-center overflow-hidden">
+        <div className="relative w-80 h-full flex items-center justify-center">
+          {visibleTestimonials.map((testimonial) => {
+            const PlatformIcon = platformIcons[testimonial.platform as keyof typeof platformIcons];
+            const platformColor = platformColors[testimonial.platform as keyof typeof platformColors];
+            
+            return (
+              <motion.div
+                key={testimonial.id}
+                animate={{ 
+                  x: testimonial.translateX,
+                  scale: testimonial.scale,
+                  opacity: testimonial.opacity
+                }}
+                transition={{ 
+                  duration: 0.8,
+                  ease: "easeInOut"
+                }}
+                className="absolute w-80 h-auto"
+                style={{
+                  zIndex: testimonial.zIndex
+                }}
+              >
+                <Card className="bg-card/90 backdrop-blur-md border-border/50 shadow-dreamy hover:shadow-cloud transition-cloud overflow-hidden">
+                  <CardContent className="p-4">
+                    {/* Header with profile info */}
+                    <div className="flex items-center gap-3 mb-3">
+                      <Avatar className="h-12 w-12">
+                        <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
+                        <AvatarFallback className="bg-primary/20 text-primary">
+                          {testimonial.name.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-semibold text-sm text-foreground">{testimonial.name}</h3>
+                          <PlatformIcon className={`h-4 w-4 ${platformColor}`} />
+                        </div>
+                        <p className="text-xs text-muted-foreground">{testimonial.handle}</p>
                       </div>
-                      <p className="text-xs text-muted-foreground">{testimonial.handle}</p>
+                      <span className="text-xs text-muted-foreground">{testimonial.timestamp}</span>
                     </div>
-                    <span className="text-xs text-muted-foreground">{testimonial.timestamp}</span>
-                  </div>
 
-                  {/* Content */}
-                  <p className="text-sm text-foreground mb-3 leading-relaxed">
-                    {testimonial.quote}
-                  </p>
+                    {/* Content */}
+                    <p className="text-sm text-foreground mb-3 leading-relaxed">
+                      {testimonial.quote}
+                    </p>
 
-                  {/* Image if available */}
-                  {testimonial.image && (
-                    <div className="mb-3 rounded-lg overflow-hidden">
-                      <img 
-                        src={testimonial.image} 
-                        alt="Post content"
-                        className="w-full h-32 object-cover"
-                      />
-                    </div>
-                  )}
+                    {/* Image if available */}
+                    {testimonial.image && (
+                      <div className="mb-3 rounded-lg overflow-hidden">
+                        <img 
+                          src={testimonial.image} 
+                          alt="Post content"
+                          className="w-full h-32 object-cover"
+                        />
+                      </div>
+                    )}
 
-                  {/* Hashtag */}
-                  <div className="mb-3">
-                    <Badge variant="secondary" className="text-xs bg-primary/10 text-primary border-primary/20">
-                      {testimonial.tag}
-                    </Badge>
-                  </div>
+                    {/* Hashtag */}
+                    <div className="mb-3">
+                      <Badge variant="secondary" className="text-xs bg-primary/10 text-primary border-primary/20">
+                        {testimonial.tag}
+                      </Badge>
+                    </div>
 
-                  {/* Engagement stats */}
-                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Heart className="h-3 w-3" />
-                      <span>{testimonial.likes}</span>
+                    {/* Engagement stats */}
+                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <Heart className="h-3 w-3" />
+                        <span>{testimonial.likes}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <MessageCircle className="h-3 w-3" />
+                        <span>{testimonial.comments}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Share className="h-3 w-3" />
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <MessageCircle className="h-3 w-3" />
-                      <span>{testimonial.comments}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Share className="h-3 w-3" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          );
-        })}
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
 
       {/* Navigation dots */}
-      <div className="flex justify-center mt-8">
-        <div className="flex gap-2">
-          {testimonials.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentIndex(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                index === currentIndex 
-                  ? "bg-primary scale-125" 
-                  : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
-              }`}
-            />
-          ))}
-        </div>
+      <div className="flex gap-2 mt-6">
+        {testimonials.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentIndex(index)}
+            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+              index === currentIndex 
+                ? "bg-primary scale-125" 
+                : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
+            }`}
+          />
+        ))}
       </div>
     </div>
   );
