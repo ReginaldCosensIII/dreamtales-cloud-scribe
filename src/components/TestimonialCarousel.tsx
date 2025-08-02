@@ -120,24 +120,49 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
     return testimonials.map((testimonial, index) => {
       const totalItems = testimonials.length;
       const angle = (index - currentIndex) * (360 / totalItems);
-      const radius = 280;
+      const radius = 300;
       
-      // Calculate position on circle
-      const x = Math.cos((angle * Math.PI) / 180) * radius;
-      const y = Math.sin((angle * Math.PI) / 180) * radius;
-      
-      // Calculate scale and opacity based on position
+      // Normalize angle to 0-360
       const normalizedAngle = ((angle % 360) + 360) % 360;
-      const isFront = normalizedAngle < 90 || normalizedAngle > 270;
-      const scale = isFront ? 1 : 0.7;
-      const opacity = isFront ? 1 : 0.4;
-      const zIndex = isFront ? 10 : 1;
+      
+      // Calculate 3D position
+      const rotateY = angle;
+      const translateZ = radius;
+      
+      // Determine visibility and scale based on position
+      let scale = 0.7;
+      let opacity = 0.3;
+      let zIndex = 1;
+      
+      // Front center card (0 degrees)
+      if (normalizedAngle >= 340 || normalizedAngle <= 20) {
+        scale = 1;
+        opacity = 1;
+        zIndex = 10;
+      }
+      // Left side card (around 300-340 degrees)
+      else if (normalizedAngle >= 300 && normalizedAngle < 340) {
+        scale = 0.8;
+        opacity = 0.7;
+        zIndex = 5;
+      }
+      // Right side card (around 20-60 degrees)
+      else if (normalizedAngle > 20 && normalizedAngle <= 60) {
+        scale = 0.8;
+        opacity = 0.7;
+        zIndex = 5;
+      }
+      // Hidden cards
+      else {
+        scale = 0.5;
+        opacity = 0;
+        zIndex = 1;
+      }
       
       return {
         ...testimonial,
-        x,
-        y,
-        angle,
+        rotateY,
+        translateZ,
         scale,
         opacity,
         zIndex
@@ -149,38 +174,53 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
 
   return (
     <div className="relative h-[600px] flex items-center justify-center overflow-hidden">
-      <div className="relative w-full h-full flex items-center justify-center">
-        <AnimatePresence>
-          {visibleTestimonials.map((testimonial) => {
-            const PlatformIcon = platformIcons[testimonial.platform as keyof typeof platformIcons];
-            const platformColor = platformColors[testimonial.platform as keyof typeof platformColors];
-            
-            return (
-              <motion.div
-                key={testimonial.id}
-                initial={{ 
-                  x: testimonial.x,
-                  y: testimonial.y,
-                  scale: testimonial.scale,
-                  opacity: 0
-                }}
-                animate={{ 
-                  x: testimonial.x,
-                  y: testimonial.y,
-                  scale: testimonial.scale,
-                  opacity: testimonial.opacity
-                }}
-                transition={{ 
-                  duration: 0.8,
-                  ease: "easeInOut"
-                }}
-                className="absolute w-80"
-                style={{
-                  zIndex: testimonial.zIndex,
-                  transformOrigin: "center center"
-                }}
-              >
-                <Card className="bg-card/90 backdrop-blur-md border-border/50 shadow-dreamy hover:shadow-cloud transition-cloud overflow-hidden">
+      {/* 3D Container */}
+      <div 
+        className="relative w-full h-full flex items-center justify-center"
+        style={{
+          perspective: "1000px",
+          perspectiveOrigin: "center center"
+        }}
+      >
+        <div 
+          className="relative w-80 h-80"
+          style={{
+            transformStyle: "preserve-3d"
+          }}
+        >
+          <AnimatePresence>
+            {visibleTestimonials.map((testimonial) => {
+              const PlatformIcon = platformIcons[testimonial.platform as keyof typeof platformIcons];
+              const platformColor = platformColors[testimonial.platform as keyof typeof platformColors];
+              
+              return (
+                <motion.div
+                  key={testimonial.id}
+                  initial={{ 
+                    rotateY: testimonial.rotateY,
+                    translateZ: testimonial.translateZ,
+                    scale: 0.5,
+                    opacity: 0
+                  }}
+                  animate={{ 
+                    rotateY: testimonial.rotateY,
+                    translateZ: testimonial.translateZ,
+                    scale: testimonial.scale,
+                    opacity: testimonial.opacity
+                  }}
+                  transition={{ 
+                    duration: 0.8,
+                    ease: "easeInOut"
+                  }}
+                  className="absolute top-1/2 left-1/2 w-80"
+                  style={{
+                    transform: "translate(-50%, -50%)",
+                    transformStyle: "preserve-3d",
+                    zIndex: testimonial.zIndex,
+                    backfaceVisibility: "hidden"
+                  }}
+                >
+                  <Card className="bg-card/90 backdrop-blur-md border-border/50 shadow-dreamy hover:shadow-cloud transition-cloud overflow-hidden">
                   <CardContent className="p-4">
                     {/* Header with profile info */}
                     <div className="flex items-center gap-3 mb-3">
@@ -239,10 +279,11 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
                     </div>
                   </CardContent>
                 </Card>
-              </motion.div>
-            );
-          })}
-        </AnimatePresence>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </div>
       </div>
 
       {/* Navigation dots */}
