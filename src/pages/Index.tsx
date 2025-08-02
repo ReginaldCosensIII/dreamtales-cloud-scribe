@@ -33,6 +33,7 @@ import { useUserData } from "@/hooks/useUserData";
 import { StoryBuilderForm } from "@/components/StoryBuilderForm";
 import { FreeformPromptForm } from "@/components/FreeformPromptForm";
 import { StoryOutputPreview } from "@/components/StoryOutputPreview";
+import { TestimonialCarousel } from "@/components/TestimonialCarousel";
 import heroClouds from "@/assets/hero-clouds.jpg";
 import cloudCharacter from "@/assets/cloud-character.jpg";
 
@@ -272,43 +273,8 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {[
-              {
-                quote: "My daughter asks for DreamTales stories every night! The personalized adventures featuring her pet hamster have become our favorite bonding time.",
-                author: "Sarah M.",
-                role: "Mother of 2",
-                avatar: "👩‍🦰"
-              },
-              {
-                quote: "As a busy dad, DreamTales helps me create special moments with my son. The AI generates stories about his favorite dinosaurs that keep him engaged.",
-                author: "Mike T.",
-                role: "Father of 1",
-                avatar: "👨‍🦲"
-              },
-              {
-                quote: "The stories are so creative and age-appropriate. My twins love hearing adventures about their favorite characters, and I love the peaceful bedtimes!",
-                author: "Emily R.",
-                role: "Mother of twins",
-                avatar: "👩‍🦱"
-              }
-            ].map((testimonial, index) => (
-              <Card key={index} className="animate-on-scroll bg-card/60 backdrop-blur-sm border-border/50 shadow-gentle hover:shadow-cloud transition-cloud">
-                <CardContent className="pt-6">
-                  <Quote className="h-8 w-8 text-primary mb-4" />
-                  <p className="text-muted-foreground mb-6 leading-relaxed">
-                    "{testimonial.quote}"
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <div className="text-2xl">{testimonial.avatar}</div>
-                    <div>
-                      <div className="font-semibold text-foreground">{testimonial.author}</div>
-                      <div className="text-sm text-muted-foreground">{testimonial.role}</div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="animate-on-scroll">
+            <TestimonialCarousel usePlaceholders={true} />
           </div>
         </div>
       </section>
