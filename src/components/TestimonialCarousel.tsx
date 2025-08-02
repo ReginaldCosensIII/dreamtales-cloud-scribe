@@ -196,15 +196,15 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
   const visibleTestimonials = getVisibleTestimonials();
 
   return (
-    <div className="w-full flex flex-col items-center justify-center min-h-[600px]">
+    <div className="w-full flex flex-col items-center justify-center">
       {/* Debug info */}
       <div className="mb-4 text-sm text-muted-foreground">
         Showing {testimonials.length} cards | Current: {currentIndex + 1}
       </div>
       
       {/* Carousel Container */}
-      <div className="relative w-full h-[450px] flex items-center justify-center overflow-visible">
-        <div className="relative w-full h-full flex items-center justify-center max-w-6xl">
+      <div className="relative w-full h-[450px] flex items-center justify-center">
+        <div className="relative w-full h-full flex items-center justify-center max-w-4xl mx-auto">
           {visibleTestimonials.map((testimonial, originalIndex) => {
             const PlatformIcon = platformIcons[testimonial.platform as keyof typeof platformIcons];
             const platformColor = platformColors[testimonial.platform as keyof typeof platformColors];
