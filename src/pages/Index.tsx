@@ -262,9 +262,9 @@ const Index = () => {
       </section>
 
       {/* Social Proof Section */}
-      <section className="py-16 bg-gradient-to-b from-accent/10 to-primary/5">
+      <section className="py-20 bg-gradient-to-b from-accent/10 to-primary/5">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 animate-on-scroll">
+          <div className="text-center mb-16 animate-on-scroll">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-foreground">
               Loved by Families Everywhere
             </h2>
@@ -273,7 +273,7 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="animate-on-scroll">
+          <div className="flex justify-center animate-on-scroll">
             <TestimonialCarousel usePlaceholders={true} />
           </div>
         </div>

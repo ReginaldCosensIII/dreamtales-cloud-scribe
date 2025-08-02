@@ -151,37 +151,34 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
       const x = Math.sin(currentAngle) * radius;
       const y = Math.cos(currentAngle) * 30; // Slight vertical for depth
       
-      // Determine visibility and scale based on angle
+      // Determine visibility - only show 3 cards
       let normalizedAngle = currentAngle;
       // Normalize to [-π, π] range
       while (normalizedAngle > Math.PI) normalizedAngle -= 2 * Math.PI;
       while (normalizedAngle < -Math.PI) normalizedAngle += 2 * Math.PI;
       
-      let scale, opacity, zIndex;
+      let scale, opacity, zIndex, isVisible;
       
-      // Center card (front)
-      if (Math.abs(normalizedAngle) < Math.PI / 7) {
+      // Center card (front) - index 0 relative to current
+      if (Math.abs(normalizedAngle) < Math.PI / 6) {
         scale = 1;
         opacity = 1;
         zIndex = 10;
+        isVisible = true;
       }
-      // Side cards (left and right of center)
-      else if (Math.abs(normalizedAngle) < (3 * Math.PI) / 7) {
+      // Left and right cards - immediate neighbors
+      else if (Math.abs(normalizedAngle) < Math.PI / 3) {
         scale = 0.85;
         opacity = 0.8;
         zIndex = 8;
+        isVisible = true;
       }
-      // Further side cards
-      else if (Math.abs(normalizedAngle) < (5 * Math.PI) / 7) {
-        scale = 0.7;
-        opacity = 0.5;
-        zIndex = 6;
-      }
-      // Back cards (hidden)
+      // Hide all other cards completely
       else {
         scale = 0.6;
-        opacity = 0.1;
-        zIndex = 2;
+        opacity = 0;
+        zIndex = 1;
+        isVisible = false;
       }
       
       return {
@@ -190,9 +187,10 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
         y,
         scale,
         opacity,
-        zIndex
+        zIndex,
+        isVisible
       };
-    });
+    }).filter(item => item.isVisible); // Only return visible cards
   };
 
   const visibleTestimonials = getVisibleTestimonials();
