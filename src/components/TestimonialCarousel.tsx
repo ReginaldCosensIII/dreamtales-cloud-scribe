@@ -117,60 +117,67 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
   }, [usePlaceholders]);
 
   const getVisibleTestimonials = () => {
-    const visible = [];
-    const total = testimonials.length;
-    
-    for (let i = 0; i < Math.min(3, total); i++) {
-      const index = (currentIndex + i) % total;
-      visible.push({
-        ...testimonials[index],
-        position: i
-      });
-    }
-    
-    return visible;
+    return testimonials.map((testimonial, index) => {
+      const totalItems = testimonials.length;
+      const angle = (index - currentIndex) * (360 / totalItems);
+      const radius = 280;
+      
+      // Calculate position on circle
+      const x = Math.cos((angle * Math.PI) / 180) * radius;
+      const y = Math.sin((angle * Math.PI) / 180) * radius;
+      
+      // Calculate scale and opacity based on position
+      const normalizedAngle = ((angle % 360) + 360) % 360;
+      const isFront = normalizedAngle < 90 || normalizedAngle > 270;
+      const scale = isFront ? 1 : 0.7;
+      const opacity = isFront ? 1 : 0.4;
+      const zIndex = isFront ? 10 : 1;
+      
+      return {
+        ...testimonial,
+        x,
+        y,
+        angle,
+        scale,
+        opacity,
+        zIndex
+      };
+    });
   };
 
   const visibleTestimonials = getVisibleTestimonials();
 
   return (
-    <div className="relative h-[500px] flex items-center justify-center">
-      <div className="relative w-full max-w-4xl">
-        <AnimatePresence mode="wait">
-          {visibleTestimonials.map((testimonial, index) => {
+    <div className="relative h-[600px] flex items-center justify-center overflow-hidden">
+      <div className="relative w-full h-full flex items-center justify-center">
+        <AnimatePresence>
+          {visibleTestimonials.map((testimonial) => {
             const PlatformIcon = platformIcons[testimonial.platform as keyof typeof platformIcons];
             const platformColor = platformColors[testimonial.platform as keyof typeof platformColors];
             
             return (
               <motion.div
-                key={`${testimonial.id}-${currentIndex}`}
+                key={testimonial.id}
                 initial={{ 
-                  opacity: 0,
-                  scale: 0.8,
-                  rotateY: index === 1 ? 0 : index === 0 ? -25 : 25,
-                  x: index === 0 ? -200 : index === 2 ? 200 : 0,
-                  z: index === 1 ? 0 : -100
+                  x: testimonial.x,
+                  y: testimonial.y,
+                  scale: testimonial.scale,
+                  opacity: 0
                 }}
                 animate={{ 
-                  opacity: index === 1 ? 1 : 0.6,
-                  scale: index === 1 ? 1 : 0.85,
-                  rotateY: index === 1 ? 0 : index === 0 ? -15 : 15,
-                  x: index === 0 ? -180 : index === 2 ? 180 : 0,
-                  z: index === 1 ? 0 : -50
-                }}
-                exit={{ 
-                  opacity: 0,
-                  scale: 0.7,
-                  x: index === 0 ? -300 : index === 2 ? 300 : 0
+                  x: testimonial.x,
+                  y: testimonial.y,
+                  scale: testimonial.scale,
+                  opacity: testimonial.opacity
                 }}
                 transition={{ 
                   duration: 0.8,
                   ease: "easeInOut"
                 }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80"
+                className="absolute w-80"
                 style={{
-                  transformStyle: "preserve-3d",
-                  perspective: "1000px"
+                  zIndex: testimonial.zIndex,
+                  transformOrigin: "center center"
                 }}
               >
                 <Card className="bg-card/90 backdrop-blur-md border-border/50 shadow-dreamy hover:shadow-cloud transition-cloud overflow-hidden">
