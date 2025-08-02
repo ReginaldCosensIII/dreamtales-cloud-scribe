@@ -273,9 +273,7 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="animate-on-scroll">
-            <TestimonialCarousel usePlaceholders={true} />
-          </div>
+          <TestimonialCarousel usePlaceholders={true} />
         </div>
       </section>
 
