@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -119,53 +119,48 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
   const getVisibleTestimonials = () => {
     return testimonials.map((testimonial, index) => {
       const totalItems = testimonials.length;
-      const angle = (index - currentIndex) * (360 / totalItems);
-      const radius = 300;
+      const angleStep = (2 * Math.PI) / totalItems;
+      const currentAngle = (index - currentIndex) * angleStep;
       
-      // Normalize angle to 0-360
-      const normalizedAngle = ((angle % 360) + 360) % 360;
+      // Circular positioning
+      const radius = 250;
+      const x = Math.cos(currentAngle) * radius;
+      const z = Math.sin(currentAngle) * radius;
       
-      // Calculate 3D position
-      const rotateY = angle;
-      const translateZ = radius;
+      // Calculate which cards should be visible (front 3)
+      const normalizedIndex = ((index - currentIndex) % totalItems + totalItems) % totalItems;
       
-      // Determine visibility and scale based on position
-      let scale = 0.7;
-      let opacity = 0.3;
-      let zIndex = 1;
+      let scale = 0.6;
+      let opacity = 0;
+      let y = 0;
       
-      // Front center card (0 degrees)
-      if (normalizedAngle >= 340 || normalizedAngle <= 20) {
+      // Center card
+      if (normalizedIndex === 0) {
         scale = 1;
         opacity = 1;
-        zIndex = 10;
+        y = 0;
       }
-      // Left side card (around 300-340 degrees)
-      else if (normalizedAngle >= 300 && normalizedAngle < 340) {
+      // Left and right cards
+      else if (normalizedIndex === 1 || normalizedIndex === totalItems - 1) {
         scale = 0.8;
-        opacity = 0.7;
-        zIndex = 5;
+        opacity = 0.8;
+        y = 20;
       }
-      // Right side card (around 20-60 degrees)
-      else if (normalizedAngle > 20 && normalizedAngle <= 60) {
-        scale = 0.8;
-        opacity = 0.7;
-        zIndex = 5;
-      }
-      // Hidden cards
-      else {
-        scale = 0.5;
-        opacity = 0;
-        zIndex = 1;
+      // Semi-visible side cards
+      else if (normalizedIndex === 2 || normalizedIndex === totalItems - 2) {
+        scale = 0.6;
+        opacity = 0.4;
+        y = 40;
       }
       
       return {
         ...testimonial,
-        rotateY,
-        translateZ,
+        x,
+        y,
+        z,
         scale,
         opacity,
-        zIndex
+        index: normalizedIndex
       };
     });
   };
@@ -173,117 +168,103 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
   const visibleTestimonials = getVisibleTestimonials();
 
   return (
-    <div className="relative h-[600px] flex items-center justify-center overflow-hidden">
-      {/* 3D Container */}
-      <div 
-        className="relative w-full h-full flex items-center justify-center"
-        style={{
-          perspective: "1000px",
-          perspectiveOrigin: "center center"
-        }}
-      >
-        <div 
-          className="relative w-80 h-80"
-          style={{
-            transformStyle: "preserve-3d"
-          }}
-        >
-          <AnimatePresence>
-            {visibleTestimonials.map((testimonial) => {
-              const PlatformIcon = platformIcons[testimonial.platform as keyof typeof platformIcons];
-              const platformColor = platformColors[testimonial.platform as keyof typeof platformColors];
-              
-              return (
-                <motion.div
-                  key={testimonial.id}
-                  initial={{ 
-                    rotateY: testimonial.rotateY,
-                    translateZ: testimonial.translateZ,
-                    scale: 0.5,
-                    opacity: 0
-                  }}
-                  animate={{ 
-                    rotateY: testimonial.rotateY,
-                    translateZ: testimonial.translateZ,
-                    scale: testimonial.scale,
-                    opacity: testimonial.opacity
-                  }}
-                  transition={{ 
-                    duration: 0.8,
-                    ease: "easeInOut"
-                  }}
-                  className="absolute top-1/2 left-1/2 w-80"
-                  style={{
-                    transform: "translate(-50%, -50%)",
-                    transformStyle: "preserve-3d",
-                    zIndex: testimonial.zIndex,
-                    backfaceVisibility: "hidden"
-                  }}
-                >
-                  <Card className="bg-card/90 backdrop-blur-md border-border/50 shadow-dreamy hover:shadow-cloud transition-cloud overflow-hidden">
-                  <CardContent className="p-4">
-                    {/* Header with profile info */}
-                    <div className="flex items-center gap-3 mb-3">
-                      <Avatar className="h-12 w-12">
-                        <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
-                        <AvatarFallback className="bg-primary/20 text-primary">
-                          {testimonial.name.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-semibold text-sm text-foreground">{testimonial.name}</h3>
-                          <PlatformIcon className={`h-4 w-4 ${platformColor}`} />
-                        </div>
-                        <p className="text-xs text-muted-foreground">{testimonial.handle}</p>
+    <div className="relative h-[600px] w-full flex items-center justify-center overflow-hidden">
+      <div className="relative w-full max-w-6xl h-full flex items-center justify-center">
+        {visibleTestimonials.map((testimonial) => {
+          const PlatformIcon = platformIcons[testimonial.platform as keyof typeof platformIcons];
+          const platformColor = platformColors[testimonial.platform as keyof typeof platformColors];
+          
+          return (
+            <motion.div
+              key={testimonial.id}
+              initial={{ 
+                x: testimonial.x,
+                y: testimonial.y,
+                z: testimonial.z,
+                scale: 0.5,
+                opacity: 0
+              }}
+              animate={{ 
+                x: testimonial.x,
+                y: testimonial.y,
+                z: testimonial.z,
+                scale: testimonial.scale,
+                opacity: testimonial.opacity
+              }}
+              transition={{ 
+                duration: 0.8,
+                ease: "easeInOut"
+              }}
+              className="absolute w-80 h-auto"
+              style={{
+                transform: `translate(-50%, -50%) translate3d(${testimonial.x}px, ${testimonial.y}px, ${testimonial.z}px)`,
+                left: "50%",
+                top: "50%",
+                zIndex: testimonial.index === 0 ? 10 : 5 - testimonial.index
+              }}
+            >
+              <Card className="bg-card/90 backdrop-blur-md border-border/50 shadow-dreamy hover:shadow-cloud transition-cloud overflow-hidden">
+                <CardContent className="p-4">
+                  {/* Header with profile info */}
+                  <div className="flex items-center gap-3 mb-3">
+                    <Avatar className="h-12 w-12">
+                      <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
+                      <AvatarFallback className="bg-primary/20 text-primary">
+                        {testimonial.name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-semibold text-sm text-foreground">{testimonial.name}</h3>
+                        <PlatformIcon className={`h-4 w-4 ${platformColor}`} />
                       </div>
-                      <span className="text-xs text-muted-foreground">{testimonial.timestamp}</span>
+                      <p className="text-xs text-muted-foreground">{testimonial.handle}</p>
                     </div>
+                    <span className="text-xs text-muted-foreground">{testimonial.timestamp}</span>
+                  </div>
 
-                    {/* Content */}
-                    <p className="text-sm text-foreground mb-3 leading-relaxed">
-                      {testimonial.quote}
-                    </p>
+                  {/* Content */}
+                  <p className="text-sm text-foreground mb-3 leading-relaxed">
+                    {testimonial.quote}
+                  </p>
 
-                    {/* Image if available */}
-                    {testimonial.image && (
-                      <div className="mb-3 rounded-lg overflow-hidden">
-                        <img 
-                          src={testimonial.image} 
-                          alt="Post content"
-                          className="w-full h-32 object-cover"
-                        />
-                      </div>
-                    )}
-
-                    {/* Hashtag */}
-                    <div className="mb-3">
-                      <Badge variant="secondary" className="text-xs bg-primary/10 text-primary border-primary/20">
-                        {testimonial.tag}
-                      </Badge>
+                  {/* Image if available */}
+                  {testimonial.image && (
+                    <div className="mb-3 rounded-lg overflow-hidden">
+                      <img 
+                        src={testimonial.image} 
+                        alt="Post content"
+                        className="w-full h-32 object-cover"
+                      />
                     </div>
+                  )}
 
-                    {/* Engagement stats */}
-                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <Heart className="h-3 w-3" />
-                        <span>{testimonial.likes}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <MessageCircle className="h-3 w-3" />
-                        <span>{testimonial.comments}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Share className="h-3 w-3" />
-                      </div>
+                  {/* Hashtag */}
+                  <div className="mb-3">
+                    <Badge variant="secondary" className="text-xs bg-primary/10 text-primary border-primary/20">
+                      {testimonial.tag}
+                    </Badge>
+                  </div>
+
+                  {/* Engagement stats */}
+                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-1">
+                      <Heart className="h-3 w-3" />
+                      <span>{testimonial.likes}</span>
                     </div>
-                  </CardContent>
-                </Card>
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
-        </div>
+                    <div className="flex items-center gap-1">
+                      <MessageCircle className="h-3 w-3" />
+                      <span>{testimonial.comments}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Share className="h-3 w-3" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          );
+        })}
       </div>
 
       {/* Navigation dots */}
