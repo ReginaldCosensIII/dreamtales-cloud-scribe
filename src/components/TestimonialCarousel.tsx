@@ -119,55 +119,36 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
   const getVisibleTestimonials = () => {
     return testimonials.map((testimonial, index) => {
       const totalItems = testimonials.length;
-      const baseAngle = (2 * Math.PI) / totalItems;
-      const currentAngle = (index - currentIndex) * baseAngle;
+      const angleStep = (2 * Math.PI) / totalItems;
+      const currentAngle = (index - currentIndex) * angleStep;
       
-      // Calculate position in a horizontal circle (side to side)
-      const radius = 200;
-      const x = Math.sin(currentAngle) * radius; // Use sin for horizontal movement
-      const z = Math.cos(currentAngle) * radius; // Use cos for depth
+      // Horizontal circular positioning
+      const radius = 180;
+      const x = Math.sin(currentAngle) * radius;
       
-      // Determine which position this card is in relative to center
-      let normalizedAngle = currentAngle;
-      while (normalizedAngle < 0) normalizedAngle += 2 * Math.PI;
-      while (normalizedAngle >= 2 * Math.PI) normalizedAngle -= 2 * Math.PI;
-      
-      // Convert to degrees for easier calculation
-      const degrees = (normalizedAngle * 180) / Math.PI;
+      // Simple visibility logic based on index position
+      const relativeIndex = (index - currentIndex + totalItems) % totalItems;
       
       let scale = 0.7;
       let opacity = 0.3;
       let zIndex = 1;
       
-      // Front center (around 0 degrees)
-      if (degrees <= 30 || degrees >= 330) {
+      // Center card (index 0)
+      if (relativeIndex === 0) {
         scale = 1;
         opacity = 1;
         zIndex = 10;
       }
-      // Left side (around 270-330 degrees)
-      else if (degrees >= 270 && degrees < 330) {
+      // Immediate neighbors (index 1 and last)
+      else if (relativeIndex === 1 || relativeIndex === totalItems - 1) {
         scale = 0.85;
-        opacity = 0.8;
+        opacity = 0.7;
         zIndex = 5;
-      }
-      // Right side (around 30-90 degrees)
-      else if (degrees > 30 && degrees <= 90) {
-        scale = 0.85;
-        opacity = 0.8;
-        zIndex = 5;
-      }
-      // Hide back cards
-      else {
-        scale = 0.6;
-        opacity = 0;
-        zIndex = 1;
       }
       
       return {
         ...testimonial,
         x,
-        z,
         scale,
         opacity,
         zIndex
@@ -178,11 +159,8 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
   const visibleTestimonials = getVisibleTestimonials();
 
   return (
-    <div className="relative h-[500px] w-full flex items-center justify-center mx-auto">
-      <div 
-        className="relative w-full h-full flex items-center justify-center max-w-5xl mx-auto"
-        style={{ perspective: "1200px" }}
-      >
+    <div className="w-full flex items-center justify-center py-8">
+      <div className="relative w-full max-w-6xl h-[400px] flex items-center justify-center">
         {visibleTestimonials.map((testimonial) => {
           const PlatformIcon = platformIcons[testimonial.platform as keyof typeof platformIcons];
           const platformColor = platformColors[testimonial.platform as keyof typeof platformColors];
@@ -192,7 +170,6 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
               key={testimonial.id}
               animate={{ 
                 x: testimonial.x,
-                z: testimonial.z,
                 scale: testimonial.scale,
                 opacity: testimonial.opacity
               }}
@@ -204,8 +181,7 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
               style={{
                 left: "50%",
                 top: "50%",
-                transform: `translate(-50%, -50%) translateX(${testimonial.x}px) translateZ(${testimonial.z}px) scale(${testimonial.scale})`,
-                transformStyle: "preserve-3d",
+                transform: "translate(-50%, -50%)",
                 zIndex: testimonial.zIndex
               }}
             >
@@ -274,7 +250,7 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
       </div>
 
       {/* Navigation dots */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 flex gap-2">
         {testimonials.map((_, index) => (
           <button
             key={index}
