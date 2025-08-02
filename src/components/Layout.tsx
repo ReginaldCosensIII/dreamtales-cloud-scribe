@@ -151,17 +151,17 @@ const Layout = ({ children }: LayoutProps) => {
             <div>
               <h3 className="font-semibold text-foreground mb-4">Quick Links</h3>
               <div className="space-y-2">
-                <Link to="/" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/" className="block text-sm text-primary hover:gradient-iridescent hover:text-white hover:bg-clip-text hover:bg-transparent hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700">
                   Home
                 </Link>
-                <Link to="/about" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/about" className="block text-sm text-primary hover:gradient-iridescent hover:text-white hover:bg-clip-text hover:bg-transparent hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700">
                   About
                 </Link>
-                <Link to="/generator" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/generator" className="block text-sm text-primary hover:gradient-iridescent hover:text-white hover:bg-clip-text hover:bg-transparent hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700">
                   Story Generator
                 </Link>
                 {user && (
-                  <Link to="/account" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <Link to="/account" className="block text-sm text-primary hover:gradient-iridescent hover:text-white hover:bg-clip-text hover:bg-transparent hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700">
                     Account
                   </Link>
                 )}
@@ -172,19 +172,19 @@ const Layout = ({ children }: LayoutProps) => {
             <div>
               <h3 className="font-semibold text-foreground mb-4">Support</h3>
               <div className="space-y-2">
-                <a href="#" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <a href="#" className="block text-sm text-primary hover:gradient-iridescent hover:text-white hover:bg-clip-text hover:bg-transparent hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700">
                   Help Center
                 </a>
-                <Link to="/contact" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/contact" className="block text-sm text-primary hover:gradient-iridescent hover:text-white hover:bg-clip-text hover:bg-transparent hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700">
                   Contact Us
                 </Link>
-                <a href="#" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <a href="#" className="block text-sm text-primary hover:gradient-iridescent hover:text-white hover:bg-clip-text hover:bg-transparent hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700">
                   Privacy Policy
                 </a>
-                <a href="#" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <a href="#" className="block text-sm text-primary hover:gradient-iridescent hover:text-white hover:bg-clip-text hover:bg-transparent hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700">
                   Terms of Service
                 </a>
-                <Link to="/social-partnership" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/social-partnership" className="block text-sm text-primary hover:gradient-iridescent hover:text-white hover:bg-clip-text hover:bg-transparent hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700">
                   Creator Partnership
                 </Link>
               </div>
@@ -194,21 +194,29 @@ const Layout = ({ children }: LayoutProps) => {
             <div>
               <h3 className="font-semibold text-foreground mb-4">Follow Us</h3>
               <div className="flex space-x-4">
-                <a href="#" className="group relative">
-                  <Instagram className="h-5 w-5 text-muted-foreground group-hover:text-transparent transition-all duration-300" />
-                  <Instagram className="h-5 w-5 absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 gradient-cloud bg-clip-text text-transparent" style={{ backgroundImage: 'var(--gradient-cloud)' }} />
+                <a href="#" className="relative group">
+                  <Instagram className="h-5 w-5 text-primary hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700" />
+                  <div className="absolute inset-0 gradient-iridescent opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    <Instagram className="h-5 w-5 text-white" />
+                  </div>
                 </a>
-                <a href="#" className="group relative">
-                  <Twitter className="h-5 w-5 text-muted-foreground group-hover:text-transparent transition-all duration-300" />
-                  <Twitter className="h-5 w-5 absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 gradient-cloud bg-clip-text text-transparent" style={{ backgroundImage: 'var(--gradient-cloud)' }} />
+                <a href="#" className="relative group">
+                  <Twitter className="h-5 w-5 text-primary hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700" />
+                  <div className="absolute inset-0 gradient-iridescent opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    <Twitter className="h-5 w-5 text-white" />
+                  </div>
                 </a>
-                <a href="#" className="group relative">
-                  <Youtube className="h-5 w-5 text-muted-foreground group-hover:text-transparent transition-all duration-300" />
-                  <Youtube className="h-5 w-5 absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 gradient-cloud bg-clip-text text-transparent" style={{ backgroundImage: 'var(--gradient-cloud)' }} />
+                <a href="#" className="relative group">
+                  <Youtube className="h-5 w-5 text-primary hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700" />
+                  <div className="absolute inset-0 gradient-iridescent opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    <Youtube className="h-5 w-5 text-white" />
+                  </div>
                 </a>
-                <a href="#" className="group relative">
-                  <Facebook className="h-5 w-5 text-muted-foreground group-hover:text-transparent transition-all duration-300" />
-                  <Facebook className="h-5 w-5 absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 gradient-cloud bg-clip-text text-transparent" style={{ backgroundImage: 'var(--gradient-cloud)' }} />
+                <a href="#" className="relative group">
+                  <Facebook className="h-5 w-5 text-primary hover:shadow-lg hover:shadow-primary/30 transition-all duration-300 relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700" />
+                  <div className="absolute inset-0 gradient-iridescent opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    <Facebook className="h-5 w-5 text-white" />
+                  </div>
                 </a>
               </div>
             </div>
