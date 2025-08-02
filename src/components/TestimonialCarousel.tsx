@@ -120,19 +120,17 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
   const [currentIndex, setCurrentIndex] = useState(0);
   const [testimonials, setTestimonials] = useState(mockTestimonials);
 
-  // Auto-rotate the carousel
+  // Auto-rotate the carousel (slower for debugging)
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-    }, 4000);
+    }, 6000); // Slower rotation to see the motion
 
     return () => clearInterval(interval);
   }, [testimonials.length]);
 
   // Future: Fetch social media posts
   const fetchSocialPosts = async () => {
-    // TODO: Implement social media API integration
-    // For now, return mock data
     return mockTestimonials;
   };
 
@@ -144,53 +142,45 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
 
   const getVisibleTestimonials = () => {
     return testimonials.map((testimonial, index) => {
-      const totalItems = testimonials.length;
-      const angleStep = (2 * Math.PI) / totalItems;
+      const totalItems = testimonials.length; // Should be 7
+      const angleStep = (2 * Math.PI) / totalItems; // 360 degrees / 7 = ~51.4 degrees each
       const currentAngle = (index - currentIndex) * angleStep;
       
-      // Calculate position in a horizontal circle
-      const radius = 350;
+      // Position on horizontal circle
+      const radius = 400;
       const x = Math.sin(currentAngle) * radius;
-      const y = Math.cos(currentAngle) * 50; // Small vertical movement for depth
+      const y = Math.cos(currentAngle) * 30; // Slight vertical for depth
       
-      // Determine scale and opacity based on position
-      let scale = 0.7;
-      let opacity = 0.4;
-      let zIndex = 1;
-      
-      // Normalize angle to determine front/back position
+      // Determine visibility and scale based on angle
       let normalizedAngle = currentAngle;
-      while (normalizedAngle < -Math.PI) normalizedAngle += 2 * Math.PI;
+      // Normalize to [-π, π] range
       while (normalizedAngle > Math.PI) normalizedAngle -= 2 * Math.PI;
+      while (normalizedAngle < -Math.PI) normalizedAngle += 2 * Math.PI;
       
-      // Front center
-      if (Math.abs(normalizedAngle) < Math.PI / 6) {
+      let scale, opacity, zIndex;
+      
+      // Center card (front)
+      if (Math.abs(normalizedAngle) < Math.PI / 7) {
         scale = 1;
         opacity = 1;
         zIndex = 10;
       }
-      // Front sides
-      else if (Math.abs(normalizedAngle) < Math.PI / 3) {
-        scale = 0.9;
+      // Side cards (left and right of center)
+      else if (Math.abs(normalizedAngle) < (3 * Math.PI) / 7) {
+        scale = 0.85;
         opacity = 0.8;
         zIndex = 8;
       }
-      // Side positions
-      else if (Math.abs(normalizedAngle) < Math.PI / 2) {
-        scale = 0.8;
-        opacity = 0.6;
+      // Further side cards
+      else if (Math.abs(normalizedAngle) < (5 * Math.PI) / 7) {
+        scale = 0.7;
+        opacity = 0.5;
         zIndex = 6;
       }
-      // Further back
-      else if (Math.abs(normalizedAngle) < (2 * Math.PI) / 3) {
-        scale = 0.7;
-        opacity = 0.4;
-        zIndex = 4;
-      }
-      // Back positions
+      // Back cards (hidden)
       else {
         scale = 0.6;
-        opacity = 0.2;
+        opacity = 0.1;
         zIndex = 2;
       }
       
@@ -209,10 +199,15 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
 
   return (
     <div className="w-full flex flex-col items-center justify-center min-h-[600px]">
+      {/* Debug info */}
+      <div className="mb-4 text-sm text-muted-foreground">
+        Showing {testimonials.length} cards | Current: {currentIndex + 1}
+      </div>
+      
       {/* Carousel Container */}
-      <div className="relative w-full h-[450px] flex items-center justify-center overflow-hidden">
+      <div className="relative w-full h-[450px] flex items-center justify-center overflow-visible">
         <div className="relative w-full h-full flex items-center justify-center max-w-6xl">
-          {visibleTestimonials.map((testimonial) => {
+          {visibleTestimonials.map((testimonial, originalIndex) => {
             const PlatformIcon = platformIcons[testimonial.platform as keyof typeof platformIcons];
             const platformColor = platformColors[testimonial.platform as keyof typeof platformColors];
             
@@ -226,10 +221,10 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
                   opacity: testimonial.opacity
                 }}
                 transition={{ 
-                  duration: 0.8,
+                  duration: 1.2,
                   ease: "easeInOut"
                 }}
-                className="absolute w-80 h-auto"
+                className="absolute w-80"
                 style={{
                   left: "50%",
                   top: "50%",
@@ -308,12 +303,14 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
           <button
             key={index}
             onClick={() => setCurrentIndex(index)}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+            className={`w-3 h-3 rounded-full transition-all duration-300 text-xs ${
               index === currentIndex 
                 ? "bg-primary scale-125" 
                 : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
             }`}
-          />
+          >
+            {index + 1}
+          </button>
         ))}
       </div>
     </div>
