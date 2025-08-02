@@ -229,6 +229,7 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
                 key={testimonial.id}
                 animate={{ 
                   x: testimonial.x,
+                  y: 0,
                   scale: testimonial.scale,
                   opacity: testimonial.opacity
                 }}
@@ -240,7 +241,8 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
                 style={{
                   left: "50%",
                   top: "50%",
-                  transform: "translate(-50%, -50%)",
+                  marginLeft: "-160px", // Half of w-80 (320px/2)
+                  marginTop: "-100px", // Approximate half height
                   zIndex: testimonial.zIndex
                 }}
               >
