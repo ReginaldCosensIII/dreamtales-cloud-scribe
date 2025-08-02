@@ -325,7 +325,7 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-20 md:gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-32 md:gap-8 max-w-5xl mx-auto">
             {[
               {
                 name: "Free Dreams",
