@@ -211,10 +211,15 @@ export const TestimonialCarousel = ({ usePlaceholders = true }: TestimonialCarou
   const visibleTestimonials = getVisibleTestimonials();
 
   return (
-    <div className="w-full flex flex-col items-center justify-center py-8">
+    <div className="w-full flex flex-col items-center justify-center py-8 bg-red-500/20 min-h-[500px]">
+      {/* DEBUG: Added red background to see container boundaries */}
+      <div className="text-center mb-4 p-2 bg-blue-500/20">
+        <p className="text-sm">DEBUG: Carousel Container - Should be centered</p>
+      </div>
+      
       {/* Carousel Container */}
-      <div className="relative w-full max-w-4xl h-[400px] flex items-center justify-center mx-auto">
-        <div className="relative w-full h-full flex items-center justify-center">
+      <div className="relative w-full max-w-4xl h-[400px] flex items-center justify-center mx-auto bg-green-500/20">
+        <div className="relative w-full h-full flex items-center justify-center bg-yellow-500/20">
           {visibleTestimonials.map((testimonial) => {
             const PlatformIcon = platformIcons[testimonial.platform as keyof typeof platformIcons];
             const platformColor = platformColors[testimonial.platform as keyof typeof platformColors];
