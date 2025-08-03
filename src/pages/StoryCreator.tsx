@@ -713,15 +713,21 @@ export default function StoryCreator() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={async () => {
+          <AlertDialogCancel onClick={async () => {
               // Save story and close
               try {
+                if (!currentStory) {
+                  toast.error('No story to save');
+                  return;
+                }
+
+                toast.info('Saving story...');
                 const { error } = await supabase
                   .from('stories')
                   .insert({
                     user_id: user.id,
-                    title: currentStory?.title || 'Untitled Story',
-                    content: currentStory?.content || '',
+                    title: currentStory.title || 'Untitled Story',
+                    content: currentStory.content || '',
                     prompt: 'Generated story',
                     story_type: 'structured',
                     length: 'medium',
@@ -729,18 +735,22 @@ export default function StoryCreator() {
                     characters: [],
                     themes: [],
                     parental_preferences: {},
-                    is_complete: currentStory?.isComplete || true,
+                    is_complete: currentStory.isComplete || true,
                     generation_status: 'complete'
                   });
 
-                if (error) throw error;
+                if (error) {
+                  console.error('Database error:', error);
+                  throw new Error(error.message || 'Failed to save to database');
+                }
                 
                 setCurrentStory(null);
                 setShowSaveConfirmDialog(false);
                 toast.success('Story saved to your library!');
-              } catch (error) {
+                refetch(); // Refresh the stories list
+              } catch (error: any) {
                 console.error('Error saving story:', error);
-                toast.error('Failed to save story. Please try again.');
+                toast.error(error.message || 'Failed to save story. Please try again.');
               }
             }}>
               Maybe Later
@@ -748,12 +758,18 @@ export default function StoryCreator() {
             <AlertDialogAction onClick={async () => {
               // Save story and open reading mode
               try {
+                if (!currentStory) {
+                  toast.error('No story to save');
+                  return;
+                }
+
+                toast.info('Saving story...');
                 const { error } = await supabase
                   .from('stories')
                   .insert({
                     user_id: user.id,
-                    title: currentStory?.title || 'Untitled Story',
-                    content: currentStory?.content || '',
+                    title: currentStory.title || 'Untitled Story',
+                    content: currentStory.content || '',
                     prompt: 'Generated story',
                     story_type: 'structured',
                     length: 'medium',
@@ -761,18 +777,22 @@ export default function StoryCreator() {
                     characters: [],
                     themes: [],
                     parental_preferences: {},
-                    is_complete: currentStory?.isComplete || true,
+                    is_complete: currentStory.isComplete || true,
                     generation_status: 'complete'
                   });
 
-                if (error) throw error;
+                if (error) {
+                  console.error('Database error:', error);
+                  throw new Error(error.message || 'Failed to save to database');
+                }
                 
                 setShowSaveConfirmDialog(false);
                 setShowReadingMode(true);
                 toast.success('Story saved to your library!');
-              } catch (error) {
+                refetch(); // Refresh the stories list
+              } catch (error: any) {
                 console.error('Error saving story:', error);
-                toast.error('Failed to save story. Please try again.');
+                toast.error(error.message || 'Failed to save story. Please try again.');
               }
             }}>
               Read Now

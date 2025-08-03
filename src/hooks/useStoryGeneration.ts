@@ -35,7 +35,11 @@ export const useStoryGeneration = () => {
       });
 
       if (functionError) {
-        throw functionError;
+        throw new Error(functionError.message || 'Story generation failed');
+      }
+
+      if (!data?.story) {
+        throw new Error('No story was generated. Please try again.');
       }
 
       // Auto-generate multiple images for the story if it was successfully created and requested
@@ -61,7 +65,9 @@ export const useStoryGeneration = () => {
 
       return data;
     } catch (err: any) {
-      setError(err.message || 'Failed to generate story');
+      const errorMessage = err.message || 'Failed to generate story';
+      setError(errorMessage);
+      console.error('Story generation error:', err);
       return null;
     } finally {
       setIsGenerating(false);

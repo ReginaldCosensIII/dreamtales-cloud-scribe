@@ -56,22 +56,22 @@ export const useStoryImages = () => {
       });
 
       if (functionError) {
-        throw functionError;
+        throw new Error(functionError.message || 'Failed to generate image');
       }
 
-      if (data.success) {
-        // Refresh the images for this story
-        await fetchStoryImages(storyId);
-        
-        toast({
-          title: "Image Generated",
-          description: "Your story image has been created successfully!",
-        });
-
-        return data;
-      } else {
-        throw new Error(data.error || 'Failed to generate image');
+      if (!data?.success) {
+        throw new Error(data?.error || 'Image generation failed');
       }
+
+      // Refresh the images for this story
+      await fetchStoryImages(storyId);
+      
+      toast({
+        title: "Image Generated",
+        description: "Your story image has been created successfully!",
+      });
+
+      return data;
     } catch (err: any) {
       const errorMessage = err.message || 'Failed to generate image';
       setError(errorMessage);

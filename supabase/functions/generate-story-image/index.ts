@@ -20,21 +20,75 @@ serve(async (req) => {
   }
 
   try {
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    );
+    // Validate environment variables
+    const supabaseUrl = Deno.env.get('SUPABASE_URL');
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    
+    if (!supabaseUrl || !supabaseServiceKey) {
+      console.error('Missing required environment variables');
+      return new Response(JSON.stringify({ 
+        error: 'Server configuration error',
+        success: false 
+      }), {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 
-    // Get authenticated user
-    const authHeader = req.headers.get('Authorization')!;
+    const supabaseClient = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Validate Authorization header
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      console.error('Missing or invalid Authorization header');
+      return new Response(JSON.stringify({ 
+        error: 'Authentication required. Please sign in and try again.',
+        success: false 
+      }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     const token = authHeader.replace('Bearer ', '');
     const { data: { user }, error: authError } = await supabaseClient.auth.getUser(token);
     
     if (authError || !user) {
-      throw new Error('User not authenticated');
+      console.error('User authentication failed:', authError?.message);
+      return new Response(JSON.stringify({ 
+        error: 'Authentication failed. Please sign in and try again.',
+        success: false 
+      }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
-    const requestData: ImageRequest = await req.json();
+    // Parse and validate request data
+    let requestData: ImageRequest;
+    try {
+      requestData = await req.json();
+    } catch (error) {
+      console.error('Invalid JSON in request body:', error);
+      return new Response(JSON.stringify({ 
+        error: 'Invalid request format. Please check your data and try again.',
+        success: false 
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Validate required fields
+    if (!requestData.storyId || typeof requestData.storyId !== 'string') {
+      return new Response(JSON.stringify({ 
+        error: 'Story ID is required.',
+        success: false 
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
     
     // Verify the story belongs to the user
     const { data: story, error: storyError } = await supabaseClient
@@ -45,7 +99,14 @@ serve(async (req) => {
       .single();
 
     if (storyError || !story) {
-      throw new Error('Story not found or access denied');
+      console.error('Story lookup failed:', storyError?.message);
+      return new Response(JSON.stringify({ 
+        error: 'Story not found or you do not have permission to access it.',
+        success: false 
+      }), {
+        status: 404,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     // Determine number of images based on story length or request
@@ -75,7 +136,14 @@ serve(async (req) => {
     // Generate images using OpenAI with retry logic
     const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
     if (!openAIApiKey) {
-      throw new Error('OpenAI API key not configured');
+      console.error('OpenAI API key not configured');
+      return new Response(JSON.stringify({ 
+        error: 'AI service is temporarily unavailable. Please try again later.',
+        success: false 
+      }), {
+        status: 503,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     const savedImages = [];
