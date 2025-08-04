@@ -197,6 +197,34 @@ export const useStoryEngine = (): EngineState & EngineActions => {
     }
   }, [user?.id]);
 
+  const loadStory = useCallback((story: any) => {
+    // Convert saved story format to StoryContent format
+    const storyContent: StoryContent = {
+      id: story.id,
+      title: story.title,
+      content: story.content,
+      status: story.generation_status as any || 'draft',
+      prompt: {
+        text: story.prompt,
+        type: story.story_type,
+        length: story.length,
+        tone: 'magical', // Default tone
+        selectedCharacters: [],
+        selectedPlaces: [],
+        generateImages: false
+      },
+      metadata: {
+        wordCount: story.content?.split(' ').length || 0,
+        estimatedReadTime: Math.max(1, Math.ceil((story.content?.split(' ').length || 0) / 200)),
+        version: 1,
+        createdAt: story.created_at,
+        updatedAt: story.updated_at
+      }
+    };
+    setCurrentStory(storyContent);
+    toast.success('Story loaded successfully!');
+  }, []);
+
   const clearState = useCallback(() => {
     setCurrentStory(null);
     setError(null);
@@ -214,6 +242,7 @@ export const useStoryEngine = (): EngineState & EngineActions => {
     getCoachSuggestions,
     generateImages,
     saveStory,
+    loadStory,
     clearState
   };
 };

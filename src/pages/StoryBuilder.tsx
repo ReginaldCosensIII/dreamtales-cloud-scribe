@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useStoryEngine } from '@/engine/useStoryEngine';
 import { useUserData } from '@/hooks/useUserData';
+import { useStoryCreation } from '@/hooks/useStoryCreation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -28,7 +29,8 @@ import { StoryLength, StoryTone } from '@/engine/types/StoryTypes';
 
 export default function StoryBuilder() {
   const storyEngine = useStoryEngine();
-  const { characters, profile } = useUserData();
+  const { characters, stories, profile } = useUserData();
+  const { places, fetchPlaces } = useStoryCreation();
   
   const [prompt, setPrompt] = useState('');
   const [selectedCharacters, setSelectedCharacters] = useState<string[]>([]);
@@ -37,6 +39,15 @@ export default function StoryBuilder() {
   const [storyTone, setStoryTone] = useState<StoryTone>('magical');
   const [coachRequest, setCoachRequest] = useState('');
   const [editInstructions, setEditInstructions] = useState('');
+
+  // Fetch places on component mount
+  useEffect(() => {
+    fetchPlaces();
+  }, []);
+
+  const handleSelectStory = (story: any) => {
+    storyEngine.loadStory(story);
+  };
 
   const handleGenerateStory = async () => {
     if (!prompt.trim()) {
@@ -176,13 +187,64 @@ export default function StoryBuilder() {
 
               <Separator />
 
-              <div>
-                <h4 className="font-medium mb-2 flex items-center gap-2">
-                  <MapPin className="h-4 w-4" />
-                  Places
-                </h4>
-                <p className="text-sm text-muted-foreground">Places library coming soon</p>
-              </div>
+                <div>
+                  <h4 className="font-medium mb-2 flex items-center gap-2">
+                    <MapPin className="h-4 w-4" />
+                    Places
+                  </h4>
+                  <div className="space-y-2">
+                    {places.map((place) => (
+                      <Button
+                        key={place.id}
+                        variant={selectedPlaces.includes(place.id) ? "primary" : "secondary"}
+                        size="sm"
+                        className="w-full justify-start"
+                        onClick={() => {
+                          if (selectedPlaces.includes(place.id)) {
+                            setSelectedPlaces(prev => prev.filter(id => id !== place.id));
+                          } else {
+                            setSelectedPlaces(prev => [...prev, place.id]);
+                          }
+                        }}
+                      >
+                        {place.name}
+                      </Button>
+                    ))}
+                    {places.length === 0 && (
+                      <p className="text-sm text-muted-foreground">No places yet</p>
+                    )}
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div>
+                  <h4 className="font-medium mb-2 flex items-center gap-2">
+                    <BookOpen className="h-4 w-4" />
+                    Saved Stories
+                  </h4>
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
+                    {stories.map((story) => (
+                      <Button
+                        key={story.id}
+                        variant={storyEngine.currentStory?.id === story.id ? "primary" : "ghost"}
+                        size="sm"
+                        className="w-full justify-start text-left h-auto py-2"
+                        onClick={() => handleSelectStory(story)}
+                      >
+                        <div className="truncate">
+                          <div className="font-medium truncate">{story.title}</div>
+                          <div className="text-xs text-muted-foreground truncate">
+                            {story.content.substring(0, 50)}...
+                          </div>
+                        </div>
+                      </Button>
+                    ))}
+                    {stories.length === 0 && (
+                      <p className="text-sm text-muted-foreground">No saved stories yet</p>
+                    )}
+                  </div>
+                </div>
             </CardContent>
           </Card>
 

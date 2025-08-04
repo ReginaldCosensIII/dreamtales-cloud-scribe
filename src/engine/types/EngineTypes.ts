@@ -39,5 +39,6 @@ export interface EngineActions {
   getCoachSuggestions: (content: string, request: string) => Promise<string[]>;
   generateImages: (storyId: string, scenes?: string[]) => Promise<string[]>;
   saveStory: (story: StoryContent) => Promise<boolean>;
+  loadStory: (story: any) => void;
   clearState: () => void;
 }
