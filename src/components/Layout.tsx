@@ -60,6 +60,14 @@ const Layout = ({ children }: LayoutProps) => {
               >
                 Story Generator
               </Link>
+              <Link 
+                to="/builder" 
+                className={`text-muted-foreground hover:text-foreground transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary after:transition-transform after:duration-300 ${
+                  location.pathname === '/builder' ? 'text-primary font-medium after:scale-x-100' : 'after:scale-x-0 hover:after:scale-x-100'
+                }`}
+              >
+                Story Builder
+              </Link>
               {user ? (
                 <UserDropdown />
               ) : (
@@ -112,6 +120,15 @@ const Layout = ({ children }: LayoutProps) => {
                 >
                   Story Generator
                 </Link>
+                <Link 
+                  to="/builder" 
+                  className={`transition-colors ${
+                    location.pathname === '/builder' ? 'text-primary font-medium' : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Story Builder
+                </Link>
                 {user ? (
                   <UserDropdown />
                 ) : (
@@ -159,6 +176,9 @@ const Layout = ({ children }: LayoutProps) => {
                 </Link>
                 <Link to="/generator" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
                   Story Generator
+                </Link>
+                <Link to="/builder" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
+                  Story Builder
                 </Link>
                 {user && (
                   <Link to="/account" className="block text-sm text-muted-foreground hover:text-primary transition-colors">

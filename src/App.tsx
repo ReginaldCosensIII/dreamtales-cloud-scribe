@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import About from "./pages/About";
 import Auth from "./pages/Auth";
 import StoryCreator from "./pages/StoryCreator";
+import StoryBuilder from "./pages/StoryBuilder";
 import Account from "./pages/Account";
 import NotFound from "./pages/NotFound";
 import SocialPartnership from "./pages/SocialPartnership";
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/generator" element={<StoryCreator />} />
             <Route path="/creator" element={<StoryCreator />} />
+            <Route path="/builder" element={<StoryBuilder />} />
             <Route path="/account" element={<Account />} />
             <Route path="/social-partnership" element={<SocialPartnership />} />
             <Route path="/contact" element={<Contact />} />
