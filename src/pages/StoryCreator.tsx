@@ -35,6 +35,7 @@ import { useStoryCreation } from '@/hooks/useStoryCreation';
 import { useStoryGeneration } from '@/hooks/useStoryGeneration';
 import { useUserData } from '@/hooks/useUserData';
 import { useAuth } from '@/contexts/AuthContext';
+import { useStoryEngine } from '@/engine/useStoryEngine';
 
 export default function StoryCreator() {
   const { user } = useAuth();
@@ -42,6 +43,9 @@ export default function StoryCreator() {
   const [searchParams] = useSearchParams();
   const { createCharacter, profile } = useUserData();
   const { generateStory, isGenerating: isGeneratingSimple, error: generationError } = useStoryGeneration();
+  
+  // NEW: Test the story engine
+  const storyEngine = useStoryEngine();
   const {
     places,
     stories,
@@ -181,24 +185,27 @@ export default function StoryCreator() {
     }
 
     setCurrentStory(null); // Clear previous story
-    toast.info('Generating your story...', { duration: 2000 });
+    toast.info('Testing new story engine...', { duration: 2000 });
 
-    const result = await generateStoryWithElements({
+    // NEW: Test the story engine
+    const story = await storyEngine.generateStory({
+      text: data.prompt,
+      length: data.length as 'short' | 'medium' | 'long',
+      tone: data.tone,
+      type: 'freeform',
       selectedCharacters: data.selectedCharacters || [],
       selectedPlaces: data.selectedPlaces || [],
-      prompt: data.prompt,
-      length: data.length,
-      themes: data.tone ? [data.tone] : [],
-      generateImages: data.generateImages
+      generateImages: data.generateImages || false,
+      additionalContext: data.additionalContext
     });
 
-    if (result) {
+    if (story) {
       setCurrentStory({
-        title: result.story?.title || "Your Custom Story",
-        content: result.story?.content || "",
-        isComplete: result.story?.is_complete || true
+        title: story.title,
+        content: story.content,
+        isComplete: story.status === 'final' || story.status === 'book-ready'
       });
-      toast.success('Story generated successfully!');
+      toast.success('Story generated with new engine!');
       // Scroll to the generated story
       setTimeout(() => {
         const storyElement = document.querySelector('[data-story-output]');
@@ -449,9 +456,35 @@ export default function StoryCreator() {
           )}
           <FreeformPromptForm 
             onGenerate={handleFreeformGenerate}
-            isGenerating={isGeneratingSimple}
+            isGenerating={storyEngine.isProcessing || isGeneratingSimple}
             initialPrompt={searchParams.get('prompt') || ''}
           />
+
+          {/* NEW: Show engine progress */}
+          {storyEngine.progress && (
+            <Card className="mt-4 bg-primary/5 border-primary/20">
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-3">
+                  <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">{storyEngine.progress.message}</p>
+                    <p className="text-xs text-muted-foreground">
+                      Step {storyEngine.progress.currentStep} of {storyEngine.progress.totalSteps}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* NEW: Show engine errors */}
+          {storyEngine.error && (
+            <Alert className="mt-4">
+              <AlertDescription className="text-destructive">
+                Engine Error: {storyEngine.error}
+              </AlertDescription>
+            </Alert>
+          )}
         </TabsContent>
 
 
