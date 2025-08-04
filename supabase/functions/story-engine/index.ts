@@ -7,22 +7,62 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface EngineRequest {
-  operation: 'generate' | 'continue' | 'edit' | 'coach' | 'illustrate';
-  storyId?: string;
-  prompt?: {
-    text: string;
-    length: 'short' | 'medium' | 'long';
-    tone?: string;
-    type: 'guided' | 'freeform';
-    selectedCharacters?: string[];
-    selectedPlaces?: string[];
-    generateImages?: boolean;
-    additionalContext?: string;
+// Types aligned with frontend engine types
+type EngineOperation = 'generate' | 'continue' | 'edit' | 'coach' | 'illustrate';
+type StoryStatus = 'prompt' | 'generating' | 'draft' | 'editing' | 'final' | 'book-ready';
+type StoryLength = 'short' | 'medium' | 'long';
+type StoryTone = 'calm' | 'funny' | 'magical' | 'adventure' | 'educational';
+type StoryType = 'guided' | 'freeform';
+
+interface StoryPrompt {
+  text: string;
+  length: StoryLength;
+  tone?: StoryTone;
+  type: StoryType;
+  selectedCharacters?: string[];
+  selectedPlaces?: string[];
+  generateImages?: boolean;
+  additionalContext?: string;
+}
+
+interface StoryImage {
+  id: string;
+  url: string;
+  prompt: string;
+  sectionIndex: number;
+}
+
+interface StoryContent {
+  id: string;
+  title: string;
+  content: string;
+  status: StoryStatus;
+  prompt: StoryPrompt;
+  metadata: {
+    wordCount: number;
+    estimatedReadTime: number;
+    createdAt: string;
+    updatedAt: string;
+    version: number;
   };
+  images?: StoryImage[];
+}
+
+interface EngineRequest {
+  operation: EngineOperation;
+  storyId?: string;
+  prompt?: StoryPrompt;
   content?: string;
   editInstructions?: string;
   coachRequest?: string;
+}
+
+interface EngineResponse {
+  success: boolean;
+  story?: StoryContent;
+  suggestions?: string[];
+  images?: string[];
+  error?: string;
 }
 
 serve(async (req) => {
@@ -210,11 +250,12 @@ async function handleGenerate(request: EngineRequest, userId: string, supabase: 
     }
   }
 
-  const story = {
+  // Build proper StoryContent response
+  const story: StoryContent = {
     id: storyId,
     title,
     content,
-    status: 'draft',
+    status: 'draft' as StoryStatus,
     prompt,
     metadata: {
       wordCount: content.split(' ').length,
@@ -223,7 +264,12 @@ async function handleGenerate(request: EngineRequest, userId: string, supabase: 
       updatedAt: new Date().toISOString(),
       version: 1
     },
-    images
+    images: images.map((url: string, index: number) => ({
+      id: crypto.randomUUID(),
+      url,
+      prompt: `Illustration for ${title}`,
+      sectionIndex: index
+    }))
   };
 
   return {
@@ -297,17 +343,31 @@ async function handleContinue(request: EngineRequest, userId: string, supabase: 
     throw new Error(`Database error: ${updateError.message}`);
   }
 
+  // Build proper StoryContent response
+  const updatedStory: StoryContent = {
+    id: story.id,
+    title: story.title,
+    content: updatedContent,
+    status: 'draft' as StoryStatus,
+    prompt: {
+      text: story.prompt,
+      length: story.length as StoryLength,
+      tone: story.themes?.[0] as StoryTone,
+      type: story.story_type as StoryType,
+      generateImages: false,
+    },
+    metadata: {
+      wordCount: updatedContent.split(' ').length,
+      estimatedReadTime: Math.ceil(updatedContent.split(' ').length / 200),
+      createdAt: story.created_at,
+      updatedAt: new Date().toISOString(),
+      version: (story.version || 1) + 1
+    }
+  };
+
   return {
     success: true,
-    story: {
-      ...story,
-      content: updatedContent,
-      metadata: {
-        wordCount: updatedContent.split(' ').length,
-        estimatedReadTime: Math.ceil(updatedContent.split(' ').length / 200),
-        updatedAt: new Date().toISOString(),
-      }
-    }
+    story: updatedStory
   };
 }
 
@@ -317,12 +377,89 @@ async function handleEdit(request: EngineRequest, userId: string, supabase: any,
     throw new Error('Story ID and edit instructions required');
   }
 
-  // Implementation similar to continue but with editing focus
-  // This is a simplified version - full implementation would be more sophisticated
-  
+  // Fetch existing story
+  const { data: story, error } = await supabase
+    .from('stories')
+    .select('*')
+    .eq('id', storyId)
+    .eq('user_id', userId)
+    .single();
+
+  if (error || !story) {
+    throw new Error('Story not found');
+  }
+
+  // Generate edited version
+  const systemPrompt = "You are a skilled children's story writer. Edit the given story according to the user's instructions while maintaining the story's essence and flow.";
+  const userPrompt = `Current story:\n${story.content}\n\nEdit instructions: ${editInstructions}\n\nProvide the complete edited story.`;
+
+  const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${openAIApiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'gpt-4.1-2025-04-14',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ],
+      temperature: 0.7,
+      max_tokens: 2000,
+    }),
+  });
+
+  if (!openAIResponse.ok) {
+    throw new Error(`OpenAI API error: ${openAIResponse.statusText}`);
+  }
+
+  const openAIData = await openAIResponse.json();
+  const editedContent = openAIData.choices[0]?.message?.content;
+
+  if (!editedContent) {
+    throw new Error('No edited content generated');
+  }
+
+  // Update story
+  const { error: updateError } = await supabase
+    .from('stories')
+    .update({
+      content: editedContent,
+      generation_status: 'editing',
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', storyId);
+
+  if (updateError) {
+    throw new Error(`Database error: ${updateError.message}`);
+  }
+
+  // Build proper StoryContent response
+  const updatedStory: StoryContent = {
+    id: story.id,
+    title: story.title,
+    content: editedContent,
+    status: 'editing' as StoryStatus,
+    prompt: {
+      text: story.prompt,
+      length: story.length as StoryLength,
+      tone: story.themes?.[0] as StoryTone,
+      type: story.story_type as StoryType,
+      generateImages: false,
+    },
+    metadata: {
+      wordCount: editedContent.split(' ').length,
+      estimatedReadTime: Math.ceil(editedContent.split(' ').length / 200),
+      createdAt: story.created_at,
+      updatedAt: new Date().toISOString(),
+      version: (story.version || 1) + 1
+    }
+  };
+
   return {
     success: true,
-    story: { /* edited story */ }
+    story: updatedStory
   };
 }
 
